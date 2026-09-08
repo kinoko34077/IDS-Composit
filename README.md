@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # IDS-Composit
 
 IDS型の構造記述を用いて、既存Unicode文字部品をWeb上で一文字相当に合成表示するためのプロトタイプです。
@@ -32,3 +33,6 @@ IDS型の構造記述を用いて、既存Unicode文字部品をWeb上で一文�
 ## License
 
 ライセンスは未決定です。
+=======
+# IDS-Composit
+>>>>>>> origin/main
