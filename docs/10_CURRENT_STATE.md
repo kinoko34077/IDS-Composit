@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**仕様再定義完了 / 実装開始前**
+**Phase 0 完了 / Phase 1 実装中**
 
 ## 最新確定方針
 
@@ -18,15 +18,18 @@ Updated: 2026-09-08
 - 構図ごとの比率は当面一律。
 - SVG/KAGE/Canvas/font生成は対象外。
 
+## 実装済み
+
+- Phase 0 Foundation: TypeScript/Vitest 基盤、Core型、IDC/Layout/Variantデータ境界、サンプルページ
+
 ## 次作業
 
-`agent/PHASE_00_FOUNDATION.md`
+`agent/PHASE_01_PARSER.md`
 
 ## 未確定
 
-- repository/package名
-- build tool
 - exact public API
+- build tool
 - CHISE timeout/cache値
 - 初期font-family
 - baseline補正値
