@@ -68,7 +68,9 @@ validation pageへ `writing-mode: vertical-rl` の試験欄を追加した。固
 
 ### Release metadata and CI
 
-公開packageのlicenseをMITとして `package.json` と `LICENSE` に明記した。CIはtest、typecheckに加えてlibrary buildと`npm pack --dry-run`によるpackage contents checkを実行する。GitHub Actionsの最新push結果は、push後に対象commitのrun statusを確認してからRelease Candidate判定とする。
+公開packageのlicenseをMITとして `package.json` と `LICENSE` に明記した。CIはtest、typecheckに加えてlibrary buildと`npm pack --dry-run`によるpackage contents checkを実行する。GitHub Actionsでは対象commitのrun statusを確認してからRelease Candidate判定とする。
+
+2026-09-09 JST、対象commit `3b36e3e7279ed865a9a806c581822ca41491b5cb` のGitHub Actions `CI #9` はcompleted successfullyとなった。したがって本commit時点のv0.1 Release Candidate gateをPASSと判定する。
 
 ## 回帰コマンド
 

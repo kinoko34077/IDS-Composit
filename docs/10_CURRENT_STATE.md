@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 9.1 Release Audit 実装済み / v0.1 Release Candidate確認中**
+**Phase 9.1 Release Audit 実装済み / v0.1 Release Candidate確認済み**
 
 ## 最新確定方針
 
@@ -36,7 +36,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-GitHub Actionsの対象commitがgreenであることを確認した後、v0.1 Release Candidateとして実サイトdogfoodingへ進む。追加課題は実利用で再現した箇所だけ小さく改善する。
+対象commit `3b36e3e` のGitHub Actions CI Run #9がgreenであることを確認済み。v0.1 Release Candidateとして実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 
