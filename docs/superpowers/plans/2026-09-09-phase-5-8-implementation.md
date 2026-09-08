@@ -193,7 +193,7 @@ git push origin main
 
 - [ ] **Step 1: Add the validation sample content and run the dev server route check**
 
-The page must include these literal sources: `⟦⿰木可⟧`, `⟦⿰水青⟧`, `⟦⿱艹明⟧`, `⟦⿴囗王⟧`, `⟦⿰木⿱日月⟧`, `⟦⿲彳圭亍⟧`, `⟦⿳士冖豆⟧`, `⟦⿰鬱青⟧`, and `⟦⿱龜心⟧`.
+The page must include these currently supported literal sources: `⟦⿰木可⟧`, `⟦⿰水青⟧`, `⟦⿱艹明⟧`, `⟦⿴囗王⟧`, `⟦⿰木⿱日月⟧`, `⟦⿰鬱青⟧`, and `⟦⿱龜心⟧`. The `⿲` and `⿳` examples are added to the page in Task 4 after their data tables exist.
 
 Run: `npm run dev -- --host 127.0.0.1`
 Expected: Vite serves `/validation.html`; stop the server after the route returns HTTP 200.
@@ -258,9 +258,9 @@ it('places three horizontal children in thirds', () => {
 Run: `npx vitest run tests/parser/parse-ids.test.ts tests/composition/layout.test.ts tests/renderer/dom-renderer.test.ts`
 Expected: the new `⿲`/`⿳` cases fail as unsupported operators or missing templates.
 
-- [ ] **Step 3: Add only the three-part IDC data**
+- [ ] **Step 3: Add only the three-part IDC data and extend the validation sample**
 
-Add arity 3 and role arrays to `src/data/idc.ts`, and geometry-only third slots to `src/data/layout-templates.ts`. Do not add enclosure/overlay/unary operators in this phase.
+Add arity 3 and role arrays to `src/data/idc.ts`, geometry-only third slots to `src/data/layout-templates.ts`, and the literal `⟦⿲彳圭亍⟧` / `⟦⿳士冖豆⟧` rows to `examples/validation.html`. Do not add enclosure/overlay/unary operators in this phase.
 
 - [ ] **Step 4: Run focused tests, full tests, and typecheck**
 
