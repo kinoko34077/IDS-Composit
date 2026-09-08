@@ -1,0 +1,32 @@
+{
+  "name": "CHISE IDS Inline Renderer specification bundle",
+  "version": "0.1",
+  "created": "2026-09-08",
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "docs/00_INDEX.md",
+    "docs/01_REQUIREMENTS.md",
+    "docs/02_ARCHITECTURE.md",
+    "docs/03_CHISE_DEPENDENCY.md",
+    "docs/04_IDS_INPUT_AND_PARSER.md",
+    "docs/05_COMPOSITION_LAYOUT.md",
+    "docs/06_DOM_RENDERING.md",
+    "docs/07_VARIANT_POLICY.md",
+    "docs/08_TEST_AND_ACCEPTANCE.md",
+    "docs/09_ROADMAP.md",
+    "docs/10_CURRENT_STATE.md",
+    "docs/11_ADR.md",
+    "docs/12_TRACEABILITY.md",
+    "docs/agent/PHASE_00_FOUNDATION.md",
+    "docs/agent/PHASE_01_PARSER.md",
+    "docs/agent/PHASE_02_COMPOSITION.md",
+    "docs/agent/PHASE_03_DOM_RENDERER.md",
+    "docs/agent/PHASE_04_VARIANTS.md",
+    "docs/agent/PHASE_05_CHISE.md",
+    "docs/agent/PHASE_06_VALIDATION.md",
+    "docs/agent/PHASE_07_COVERAGE.md",
+    "docs/agent/PHASE_08_PACKAGE.md"
+  ],
+  "scope": "CHISE-backed IDS recognition + native-Unicode preference + DOM/CSS composition fallback"
+}

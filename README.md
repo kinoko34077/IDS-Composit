@@ -1,34 +1,36 @@
-# IDS-Composit
+# CHISE IDS Inline Renderer
 
-IDS型の構造記述を用いて、既存Unicode文字部品をWeb上で一文字相当に合成表示するためのプロトタイプです。
+CHISE を文字情報基盤として利用し、IDS（Ideographic Description Sequence）を通常の Web 本文中で簡易合成表示する軽量ライブラリです。
 
-## 位置付け
+## 現在の方針
 
-このプロジェクトは、Unicodeを置き換えるものではありません。Unicodeで通常表示できる文字は既存のフォント・フォールバックを優先し、Unicode外または明示的に指定された字形を補完する構成層を目指します。
-
-現在の初期プロトタイプでは、次の流れを検証対象とします。
+文字情報・文字同定・IDS データベースを新規構築せず、CHISE を基盤として利用します。本プロジェクトは Web 表示層に限定し、CHISE で既存文字へ解決できる場合は native Unicode を優先し、未解決の場合に既存 Unicode 部品を DOM/CSS で合成します。
 
 ```text
-本文 + ⟦IDS式⟧
-  → Scanner
-  → IDS Parser / AST
-  → Structural Role Resolver
-  → Position Variant Resolver
-  → Composition / Layout Model
-  → HTML/CSS Inline Display Adapter
+本文 + ⟦IDS⟧
+  → Scanner → Parser → CHISE Resolver
+  → native Unicode または Composition
+  → Layout Model → DOM/CSS display
 ```
 
-## 要件定義
+## ドキュメント
 
-- [Generic Glyph System／IDS文字合成機構 要件定義書 v0.1](docs/requirements/generic-glyph-system-requirements-v0.1.md)：Registry、Resolver、Composition、Renderer等を含む長期構想
-- [IDS型文字部品合成表示機構 要件定義書 v0.1](docs/requirements/ids-composition-display-requirements-v0.1.md)：RegistryやSVGを導入しない初期プロトタイプの具体仕様
-- [Generic Glyph System / IDS文字合成機構 ロードマップ](docs/roadmap/generic-glyph-system-roadmap/00_INDEX.md)：Stage 0〜14の実装順序、設計境界、品質ゲート
+- [ドキュメント索引](docs/00_INDEX.md)
+- [要求仕様](docs/01_REQUIREMENTS.md)
+- [アーキテクチャ](docs/02_ARCHITECTURE.md)
+- [CHISE 依存境界](docs/03_CHISE_DEPENDENCY.md)
+- [現在の状態](docs/10_CURRENT_STATE.md)
+- [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
 
-初期実装は後者の範囲に限定し、SVG、Canvas、KAGE、Glyph Registry、OpenType生成、高度な組版は対象外とします。
+旧方針の要件定義書・ロードマップは [docs/archive](docs/archive/) に保存しています。現在の仕様と混同せず、方針変更の履歴・参考資料として扱います。
+
+## 現行スコープ外
+
+独自 Glyph Registry、独自文字 DB、SVG、Canvas、KAGE、OpenType/WebFont 生成、IME、OS font fallback hook、独自文字コードは現行 v0.1 の対象外です。
 
 ## 開発状況
 
-現在はリポジトリと要件文書の初期セットアップ段階です。実装開始前の設計・受入条件の確認を行います。
+仕様再定義完了・実装開始前です。次の作業は [Phase 00 — Foundation](docs/agent/PHASE_00_FOUNDATION.md) から開始します。
 
 ## License
 

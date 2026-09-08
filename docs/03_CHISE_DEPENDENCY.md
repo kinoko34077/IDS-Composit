@@ -1,0 +1,99 @@
+# CHISE Dependency Specification
+
+## 1. 位置付け
+
+CHISE（CHaracter Information Service Environment）を、本プロジェクトの文字情報・文字同定側の基盤として利用する。
+
+本ライブラリはCHISEを「丸ごとクライアントへ再実装する」のではなく、必要な問い合わせをAdapter経由で利用する。
+
+## 2. 現行確認済みWeb API
+
+2026-09-08時点で確認したCHISE / Concord Web API v0.4には、少なくとも以下がある。
+
+```text
+GET https://api.chise.org/v0/character/ids-match?ids=<IDS>
+GET https://api.chise.org/v0/character/get?character=<character>&feature=<feature>
+GET https://api.chise.org/v0/character/get-spec?character=<character>
+GET https://api.chise.org/v0/character/encode?character=<character>&ccs=<CCS>
+```
+
+本プロジェクトの最初の主要依存は `ids-match`。
+
+参考：
+- CHISE / Concord Web API 説明書 v0.4
+- https://www.chise.org/specs/chise-web-api_v0.4_ja.pdf
+
+## 3. Adapter
+
+外部APIは以下のような最小interfaceへ正規化する。
+
+```ts
+interface CharacterKnowledgeProvider {
+  matchIds(ids: string): Promise<IdsMatchResult>;
+}
+
+type IdsMatchResult =
+  | { found: true; text: string; raw?: unknown }
+  | { found: false }
+  | { found: false; unavailable: true; error?: unknown };
+```
+
+具体レスポンス形式をCoreへ漏らさない。
+
+## 4. Resolver規則
+
+```text
+IDS
+↓
+CHISE ids-match
+├─ usable native character found
+│   → native
+├─ no match
+│   → compose
+└─ unavailable/error
+    → compose + diagnostic
+```
+
+API障害はCompositionを止めない。
+
+## 5. Cache
+
+同じIDSに対する繰返し問い合わせを避けるためcacheを許可する。
+
+最低限のcache key：
+
+```text
+normalized IDS string
+```
+
+cacheはCHISEの代替正本ではない。
+
+TTL、永続化方式は実装時に決める。無期限の独自DB化を避ける。
+
+## 6. Local Fixtures
+
+テスト安定性のため、CHISE応答fixtureを保存してよい。
+
+fixtureの目的：
+
+- Adapter unit test
+- offline CI
+- response parser regression
+
+fixtureを網羅DBとして増やさない。
+
+## 7. API変更
+
+CHISEのAPIやレスポンス仕様が変化した場合：
+
+1. Adapter integration testで検出
+2. 現行CHISE仕様を再確認
+3. Adapterのみ修正
+4. Core testsを回帰
+5. 必要ならADR/Current State更新
+
+## 8. ライセンス・再配布
+
+CHISEデータをbundleへ大量同梱する場合は、実装前に対象データ・コードのライセンスと再配布条件を個別確認する。
+
+本v0.1は大量同梱を前提としない。
