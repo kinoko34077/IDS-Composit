@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { IdsNode } from '../../src/core/types';
 import { composeLayout, getChildRoles } from '../../src/composition';
+import { LAYOUT_TEMPLATES } from '../../src/data/layout-templates';
 
 describe('composition roles', () => {
   it.each([
@@ -13,6 +14,13 @@ describe('composition roles', () => {
 });
 
 describe('composeLayout', () => {
+  it('keeps structural roles out of geometry templates', () => {
+    expect(LAYOUT_TEMPLATES['⿰']).toEqual([
+      { x: 0, y: 0, width: 0.5, height: 1 },
+      { x: 0.5, y: 0, width: 0.5, height: 1 },
+    ]);
+  });
+
   it('builds the fixed left-right layout in relative coordinates', () => {
     const ast: IdsNode = {
       type: 'composition',

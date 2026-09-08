@@ -19,11 +19,21 @@ function setRelativeBoxStyle(element: HTMLElement, box: Box, parentBox: Box): vo
 function renderNode(node: LayoutNode, document: Document, parentBox: Box): HTMLElement {
   const element = document.createElement('span');
   setRelativeBoxStyle(element, node.box, parentBox);
+  element.style.overflow = 'visible';
 
   if (node.type === 'glyph') {
     element.className = 'ids-part';
     element.dataset.role = node.role;
-    element.textContent = node.value;
+    const content = document.createElement('span');
+    content.className = 'ids-glyph-content';
+    content.style.display = 'inline-block';
+    content.style.width = '1em';
+    content.style.height = '1em';
+    content.style.lineHeight = '1';
+    content.style.transformOrigin = 'top left';
+    content.style.transform = `scale(${node.box.width / (parentBox.width || 1)}, ${node.box.height / (parentBox.height || 1)})`;
+    content.textContent = node.value;
+    element.append(content);
     return element;
   }
 
@@ -68,12 +78,16 @@ function appendSegment(fragment: DocumentFragment, segment: TextSegment, documen
     return;
   }
 
-  const parsed = parseIds(segment.source);
-  if (!parsed.ok) {
+  try {
+    const parsed = parseIds(segment.source);
+    if (!parsed.ok) {
+      fragment.append(document.createTextNode(segment.raw));
+      return;
+    }
+    fragment.append(renderLayout(composeLayout(parsed.ast), document, segment.source));
+  } catch {
     fragment.append(document.createTextNode(segment.raw));
-    return;
   }
-  fragment.append(renderLayout(composeLayout(parsed.ast), document, segment.source));
 }
 
 export function renderIdsInElement(root: HTMLElement): void {

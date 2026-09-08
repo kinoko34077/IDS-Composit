@@ -2,6 +2,7 @@ import type { Box, IdsNode, LayoutNode, StructuralRole } from '../core/types';
 import { LAYOUT_TEMPLATES, type LayoutTemplateChild } from '../data/layout-templates';
 import { VARIANT_MAP, type VariantMap } from '../data/variants';
 import { resolveVariant } from '../variants';
+import { getChildRoles } from './roles';
 
 const ROOT_BOX: Box = { x: 0, y: 0, width: 1, height: 1 };
 
@@ -31,6 +32,7 @@ function composeNode(ast: IdsNode, box: Box, role: StructuralRole | undefined, o
   if (template.length !== ast.children.length) {
     throw new Error(`IDS operator ${ast.operator} requires ${template.length} children`);
   }
+  const roles = getChildRoles(ast.operator);
 
   return {
     type: 'composition',
@@ -41,7 +43,11 @@ function composeNode(ast: IdsNode, box: Box, role: StructuralRole | undefined, o
       if (slot === undefined) {
         throw new Error(`Missing layout slot for IDS operator: ${ast.operator}`);
       }
-      return composeNode(child, placeBox(box, slot), slot.role, options);
+      const role = roles[index];
+      if (role === undefined) {
+        throw new Error(`Missing structural role for IDS operator: ${ast.operator}`);
+      }
+      return composeNode(child, placeBox(box, slot), role, options);
     }),
   };
 }

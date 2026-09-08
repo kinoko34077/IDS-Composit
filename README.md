@@ -30,7 +30,7 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 
 ## 開発状況
 
-仕様再定義完了・実装開始前です。次の作業は [Phase 00 — Foundation](docs/agent/PHASE_00_FOUNDATION.md) から開始します。
+Phase 0〜4 と Phase 4.5 の correctness 修正まで実装済みです。次の作業は [Phase 5 — CHISE](docs/agent/PHASE_05_CHISE.md) です。
 
 ## License
 

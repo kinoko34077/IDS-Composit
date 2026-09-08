@@ -12,7 +12,7 @@
 .ids-composition > .ids-composition,
 .ids-composition > .ids-part {
   position: absolute;
-  overflow: hidden;
+  overflow: visible;
   white-space: nowrap;
 }
 

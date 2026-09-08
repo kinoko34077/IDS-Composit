@@ -1,5 +1,5 @@
 /** @vitest-environment jsdom */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { renderIdsInElement, renderLayout } from '../../src/renderer/dom-renderer';
 import { composeLayout } from '../../src/composition';
 import { parseIds } from '../../src/parser';
@@ -17,6 +17,8 @@ describe('renderLayout', () => {
     expect(rendered.style.width).toBe('1em');
     expect(rendered.style.height).toBe('1em');
     expect(rendered.querySelectorAll('.ids-part')).toHaveLength(2);
+    expect(rendered.querySelector('.ids-part .ids-glyph-content')?.textContent).toBe('木');
+    expect((rendered.querySelector('.ids-part .ids-glyph-content') as HTMLElement | null)?.style.transform).toBe('scale(0.5, 1)');
   });
 
   it('preserves nested composition as nested DOM', () => {
@@ -63,6 +65,28 @@ describe('renderIdsInElement', () => {
     renderIdsInElement(root);
 
     expect(root.textContent).toBe('A⟦⿰木⟧B');
+    expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(0);
+  });
+
+  it('keeps the raw source when one IDS renderer fails', () => {
+    const root = document.createElement('p');
+    root.textContent = 'A⟦⿰木可⟧B';
+    const createElement = document.createElement.bind(document);
+    let spanCount = 0;
+    const createElementSpy = vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
+      if (tagName === 'span' && ++spanCount === 2) {
+        throw new Error('simulated renderer failure');
+      }
+      return createElement(tagName);
+    });
+
+    try {
+      renderIdsInElement(root);
+    } finally {
+      createElementSpy.mockRestore();
+    }
+
+    expect(root.textContent).toBe('A⟦⿰木可⟧B');
     expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(0);
   });
 });

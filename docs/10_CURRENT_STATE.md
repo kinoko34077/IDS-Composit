@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 4 完了 / Phase 5 実装前**
+**Phase 4.5 完了 / Phase 5 preflight 待ち**
 
 ## 最新確定方針
 
@@ -25,10 +25,11 @@ Updated: 2026-09-08
 - Phase 2 Composition Core: structural role、固定Layout Template、相対座標の再帰Layout Model
 - Phase 3 DOM Inline Renderer: 本文Scanner、1em inline box、入れ子DOM、script/style/textarea除外、Viteサンプルページ
 - Phase 4 Position Variants: data-driven Variant Map、seed mappings、base character fallback、Compositionへのvariant適用
+- Phase 4.5 Correctness: glyph本体の相対scale、Role/geometry分離、局所renderer fallback、README/Traceability同期、最小CI
 
 ## 次作業
 
-`agent/PHASE_05_CHISE.md`
+`agent/PHASE_05_CHISE.md` のCHISE preflight（fixture、live smoke、CORS、結果形状確認）
 
 ## 未確定
 
