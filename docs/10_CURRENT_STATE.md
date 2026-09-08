@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 3 完了 / Phase 4 実装中**
+**Phase 4 完了 / Phase 5 実装前**
 
 ## 最新確定方針
 
@@ -24,10 +24,11 @@ Updated: 2026-09-08
 - Phase 1 IDS Parser: `⟦...⟧` scanner、`⿰`/`⿱`/`⿴` の再帰Parser、parse error、本文保持 fallback
 - Phase 2 Composition Core: structural role、固定Layout Template、相対座標の再帰Layout Model
 - Phase 3 DOM Inline Renderer: 本文Scanner、1em inline box、入れ子DOM、script/style/textarea除外、Viteサンプルページ
+- Phase 4 Position Variants: data-driven Variant Map、seed mappings、base character fallback、Compositionへのvariant適用
 
 ## 次作業
 
-`agent/PHASE_04_VARIANTS.md`
+`agent/PHASE_05_CHISE.md`
 
 ## 未確定
 

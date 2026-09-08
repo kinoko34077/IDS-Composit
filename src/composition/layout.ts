@@ -1,5 +1,7 @@
 import type { Box, IdsNode, LayoutNode, StructuralRole } from '../core/types';
 import { LAYOUT_TEMPLATES, type LayoutTemplateChild } from '../data/layout-templates';
+import { VARIANT_MAP, type VariantMap } from '../data/variants';
+import { resolveVariant } from '../variants';
 
 const ROOT_BOX: Box = { x: 0, y: 0, width: 1, height: 1 };
 
@@ -12,9 +14,14 @@ function placeBox(parent: Box, child: LayoutTemplateChild): Box {
   };
 }
 
-function composeNode(ast: IdsNode, box: Box, role?: StructuralRole): LayoutNode {
+export type ComposeOptions = {
+  variantMap?: VariantMap;
+};
+
+function composeNode(ast: IdsNode, box: Box, role: StructuralRole | undefined, options: ComposeOptions): LayoutNode {
   if (ast.type === 'char') {
-    return { type: 'glyph', value: ast.value, ...(role === undefined ? {} : { role }), box };
+    const value = role === undefined ? ast.value : resolveVariant(ast.value, role, options.variantMap ?? VARIANT_MAP);
+    return { type: 'glyph', value, ...(role === undefined ? {} : { role }), box };
   }
 
   const template = LAYOUT_TEMPLATES[ast.operator];
@@ -34,11 +41,11 @@ function composeNode(ast: IdsNode, box: Box, role?: StructuralRole): LayoutNode 
       if (slot === undefined) {
         throw new Error(`Missing layout slot for IDS operator: ${ast.operator}`);
       }
-      return composeNode(child, placeBox(box, slot), slot.role);
+      return composeNode(child, placeBox(box, slot), slot.role, options);
     }),
   };
 }
 
-export function composeLayout(ast: IdsNode): LayoutNode {
-  return composeNode(ast, ROOT_BOX);
+export function composeLayout(ast: IdsNode, options: ComposeOptions = {}): LayoutNode {
+  return composeNode(ast, ROOT_BOX, undefined, options);
 }

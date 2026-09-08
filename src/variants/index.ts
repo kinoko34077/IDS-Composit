@@ -1,1 +1,1 @@
-export {};
+export { resolveVariant } from './resolve-variant';
