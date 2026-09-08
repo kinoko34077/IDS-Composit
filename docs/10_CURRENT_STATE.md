@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 9 hardening 実装済み / 運用観測継続**
+**Phase 9.1 Release Audit 実装済み / v0.1 Release Candidate確認中**
 
 ## 最新確定方針
 
@@ -32,10 +32,11 @@ Updated: 2026-09-09
 - Phase 8 Packaging: `renderIds`公開API、ESM/browser bundle、型宣言、CSS asset、package exports、consumer demo
 - Phase 8.5 Validation: nested absolute scale回帰、Phase 6 browser visual record、CHISE live/CORS preflight、response fixture分類
 - Phase 9 Hardening: `observeIds` MutationObserver、contenteditable default-off/opt-in、TTL/max/clear memory cache、a11y metadata、IDS copy fallback、vertical writing investigation、performance profile tests
+- Phase 9.1 Release Audit: CHISE query-only variant normalization、unique IDSのbounded parallel resolve、normalized query単位のin-flight dedupe、実ブラウザ単一glyph copy確認、Supported IDC/LICENSE/CI gate整備
 
 ## 運用観測 / 次作業
 
-Phase 9完了後は、実利用で追加課題が確認された場合のみ小さく改善する。
+GitHub Actionsの対象commitがgreenであることを確認した後、v0.1 Release Candidateとして実サイトdogfoodingへ進む。追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 

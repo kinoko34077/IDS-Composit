@@ -30,24 +30,37 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 
 独自 Glyph Registry、独自文字 DB、SVG、Canvas、KAGE、OpenType/WebFont 生成、IME、OS font fallback hook、独自文字コードは現行 v0.1 の対象外です。
 
+## Supported IDC
+
+v0.1で対応するIDCは次の5種類です。未対応IDCは元の `⟦IDS⟧` を保持して表示します。
+
+|IDC|arity|構図|
+|---|---:|---|
+|`⿰`|2|左右|
+|`⿱`|2|上下|
+|`⿴`|2|外/内|
+|`⿲`|3|左/中/右|
+|`⿳`|3|上/中/下|
+
 ## 開発状況
 
-Phase 0〜9の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md) と [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md) に記録しています。
+Phase 0〜9.1の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md) と [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md) に記録しています。
 
 ## 利用例
 
 ```html
 <link rel="stylesheet" href="node_modules/chise-ids-inline-renderer/style.css" />
 <script type="module">
-  import { renderIds } from 'chise-ids-inline-renderer';
+  import { observeIds, renderIds } from 'chise-ids-inline-renderer';
   await renderIds(document.body);
+  const observer = observeIds(document.body);
 </script>
 ```
 
 `renderIds`は既定でネットワークを使わずlocal compositionを行います。CHISEのnative解決を有効にする場合は`await renderIds(document.body, { chise: true })`とし、テストや独自backendでは`provider`を注入できます。CHISEのno-match・timeout・障害はlocal compositionへfallbackします。
 
-動的DOMは`const observer = observeIds(document.body);`で監視でき、不要になったら`observer.stop()`します。`contenteditable`は既定で変更せず、必要な場合だけ`{ contentEditable: true }`を指定します。合成glyphのcopyは元の`⟦IDS⟧`を復元します。
+動的DOMは`observeIds(document.body)`で監視でき、不要になったら`observer.stop()`します。`contenteditable`は既定で変更せず、必要な場合だけ`{ contentEditable: true }`を指定します。単一の合成glyph全体を選択してcopyした場合は元の`⟦IDS⟧`を復元します。複数glyphを跨ぐ選択や部分選択の再構成は保証しません。
 
 ## License
 
-ライセンスは未決定です。
+MIT Licenseです。詳細は [LICENSE](LICENSE) を参照してください。

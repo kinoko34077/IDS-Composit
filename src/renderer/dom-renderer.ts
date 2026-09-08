@@ -5,9 +5,12 @@ import { parseIds, scanEmbeddedIds, type TextSegment } from '../parser';
 const ROOT_BOX: Box = { x: 0, y: 0, width: 1, height: 1 };
 const SKIPPED_TAGS = new Set(['SCRIPT', 'STYLE', 'TEXTAREA']);
 const RENDERED_CLASS = 'ids-inline-glyph';
+const DEFAULT_MAX_CONCURRENCY = 4;
+const documentsWithCopyHandler = new WeakSet<Document>();
 
 export type RenderIdsInElementOptions = {
   includeContentEditable?: boolean;
+  maxConcurrency?: number;
 };
 
 function setRelativeBoxStyle(element: HTMLElement, box: Box, parentBox: Box): void {
@@ -54,7 +57,30 @@ function renderNode(node: LayoutNode, document: Document, parentBox: Box): HTMLE
   return element;
 }
 
+function installDocumentCopyHandler(document: Document): void {
+  if (documentsWithCopyHandler.has(document)) return;
+  documentsWithCopyHandler.add(document);
+  document.addEventListener('copy', (event) => {
+    const selection = document.getSelection();
+    if (selection === null || selection.rangeCount === 0 || selection.isCollapsed) return;
+    const selectedText = selection.toString();
+    if (selectedText.length === 0) return;
+
+    const matches = Array.from(document.querySelectorAll<HTMLElement>(`.${RENDERED_CLASS}`)).filter((element) => (
+      element.textContent === selectedText
+      && element.contains(selection.anchorNode)
+      && element.contains(selection.focusNode)
+    ));
+    if (matches.length !== 1) return;
+    const source = matches[0]?.dataset.ids;
+    if (source === undefined || event.clipboardData === null) return;
+    event.clipboardData.setData('text/plain', `⟦${source}⟧`);
+    event.preventDefault();
+  });
+}
+
 export function renderLayout(layout: LayoutNode, document: Document, source: string): HTMLSpanElement {
+  installDocumentCopyHandler(document);
   const root = document.createElement('span');
   root.className = RENDERED_CLASS;
   root.dataset.ids = source;
@@ -130,17 +156,35 @@ function appendResolution(fragment: DocumentFragment, resolution: Resolution, do
 
 export type IdsResolver = (ids: string) => Promise<Resolution>;
 
-async function appendSegmentAsync(fragment: DocumentFragment, segment: TextSegment, document: Document, resolve: IdsResolver): Promise<void> {
-  if (segment.type === 'text' || segment.type === 'invalid') {
-    fragment.append(document.createTextNode(segment.type === 'text' ? segment.value : segment.raw));
-    return;
-  }
+function resolveConcurrency(value: number | undefined): number {
+  if (value === undefined || !Number.isFinite(value)) return DEFAULT_MAX_CONCURRENCY;
+  return Math.max(1, Math.floor(value));
+}
 
-  try {
-    appendResolution(fragment, await resolve(segment.source), document, segment.raw);
-  } catch {
-    fragment.append(document.createTextNode(segment.raw));
-  }
+async function resolveUniqueIds(
+  ids: string[],
+  resolve: IdsResolver,
+  maxConcurrency: number,
+): Promise<Map<string, Resolution | undefined>> {
+  const resolutions = new Map<string, Resolution | undefined>();
+  let nextIndex = 0;
+  const worker = async (): Promise<void> => {
+    while (nextIndex < ids.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      const source = ids[index];
+      if (source === undefined) return;
+      try {
+        resolutions.set(source, await resolve(source));
+      } catch {
+        resolutions.set(source, undefined);
+      }
+    }
+  };
+
+  const workerCount = Math.min(resolveConcurrency(maxConcurrency), ids.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return resolutions;
 }
 
 export function renderIdsInElement(root: HTMLElement, options: RenderIdsInElementOptions = {}): void {
@@ -168,16 +212,30 @@ export async function renderIdsInElementAsync(
 ): Promise<void> {
   const textNodes: Text[] = [];
   collectTextNodes(root, textNodes, options.includeContentEditable === true);
+  const scannedNodes = textNodes
+    .map((textNode) => ({ textNode, segments: scanEmbeddedIds(textNode.data) }))
+    .filter(({ segments }) => !(segments.length === 1 && segments[0]?.type === 'text'));
+  const uniqueIds = Array.from(new Set(
+    scannedNodes.flatMap(({ segments }) => segments.filter((segment): segment is Extract<TextSegment, { type: 'ids' }> => segment.type === 'ids').map((segment) => segment.source)),
+  ));
+  const resolutions = await resolveUniqueIds(uniqueIds, resolve, options.maxConcurrency ?? DEFAULT_MAX_CONCURRENCY);
 
-  for (const textNode of textNodes) {
+  for (const { textNode, segments } of scannedNodes) {
     const parent = textNode.parentNode;
     if (parent === null) continue;
-    const segments = scanEmbeddedIds(textNode.data);
-    if (segments.length === 1 && segments[0]?.type === 'text') continue;
 
     const fragment = textNode.ownerDocument.createDocumentFragment();
     for (const segment of segments) {
-      await appendSegmentAsync(fragment, segment, textNode.ownerDocument, resolve);
+      if (segment.type === 'text' || segment.type === 'invalid') {
+        fragment.append(textNode.ownerDocument.createTextNode(segment.type === 'text' ? segment.value : segment.raw));
+        continue;
+      }
+      const resolution = resolutions.get(segment.source);
+      if (resolution === undefined) {
+        fragment.append(textNode.ownerDocument.createTextNode(segment.raw));
+      } else {
+        appendResolution(fragment, resolution, textNode.ownerDocument, segment.raw);
+      }
     }
     parent.replaceChild(fragment, textNode);
   }

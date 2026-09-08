@@ -107,4 +107,29 @@ describe('renderIds', () => {
     expect(editable.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
     handle.stop();
   });
+
+  it('resolves unique IDS in bounded parallel work while preserving document order', async () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<p>⟦⿰木可⟧ ⟦⿱日月⟧ ⟦⿲彳圭亍⟧ ⟦⿰木可⟧</p>';
+    const calls: string[] = [];
+    let active = 0;
+    let peak = 0;
+    const provider = {
+      matchIds: async (ids: string) => {
+        calls.push(ids);
+        active += 1;
+        peak = Math.max(peak, active);
+        await new Promise<void>((resolve) => setTimeout(resolve, ids === '⿱日月' ? 5 : 0));
+        active -= 1;
+        return { found: false } as const;
+      },
+    };
+
+    await renderIds(root, { provider, maxConcurrency: 2 });
+
+    expect(peak).toBeLessThanOrEqual(2);
+    expect(calls).toHaveLength(3);
+    expect(new Set(calls)).toEqual(new Set(['⿰木可', '⿱日月', '⿲彳圭亍']));
+    expect(root.textContent).toBe('木可 日月 彳圭亍 木可');
+  });
 });

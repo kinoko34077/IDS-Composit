@@ -9,6 +9,7 @@ export type RenderIdsOptions = {
   provider?: CharacterKnowledgeProvider;
   chiseOptions?: ChiseProviderOptions;
   contentEditable?: boolean;
+  maxConcurrency?: number;
 };
 
 function createResolver(options: RenderIdsOptions): IdsResolver {
@@ -19,6 +20,7 @@ function createResolver(options: RenderIdsOptions): IdsResolver {
 export async function renderIds(root: HTMLElement, options: RenderIdsOptions = {}): Promise<void> {
   await renderIdsInElementAsync(root, createResolver(options), {
     includeContentEditable: options.contentEditable === true,
+    maxConcurrency: options.maxConcurrency,
   });
 }
 
@@ -56,7 +58,10 @@ export function observeIds(root: HTMLElement, options: RenderIdsOptions = {}): I
     if (!includeContentEditable && hasEditableAncestor(target, root)) return;
     queue = queue.then(async () => {
       if (!active) return;
-      await renderIdsInElementAsync(target, resolve, { includeContentEditable });
+      await renderIdsInElementAsync(target, resolve, {
+        includeContentEditable,
+        maxConcurrency: options.maxConcurrency,
+      });
     }).catch(() => undefined);
   };
 

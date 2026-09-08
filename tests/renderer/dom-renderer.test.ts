@@ -79,6 +79,32 @@ describe('renderLayout', () => {
     expect(copyEvent.defaultPrevented).toBe(true);
     expect(copied).toBe('⟦⿰木可⟧');
   });
+
+  it('copies the source when a browser selection covers one complete glyph', () => {
+    const parsed = parseIds('⿰木可');
+    if (!parsed.ok) throw new Error(parsed.error.message);
+
+    const rendered = renderLayout(composeLayout(parsed.ast), document, '⿰木可');
+    document.body.append(rendered);
+    const selection = document.getSelection();
+    if (selection === null) throw new Error('Selection is unavailable');
+    const range = document.createRange();
+    range.selectNodeContents(rendered);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    let copied = '';
+    const copyEvent = new Event('copy', { bubbles: true, cancelable: true });
+    Object.defineProperty(copyEvent, 'clipboardData', {
+      value: { setData: (_type: string, value: string) => { copied = value; } },
+    });
+    document.dispatchEvent(copyEvent);
+
+    selection.removeAllRanges();
+    rendered.remove();
+    expect(copyEvent.defaultPrevented).toBe(true);
+    expect(copied).toBe('⟦⿰木可⟧');
+  });
 });
 
 describe('renderIdsInElement', () => {

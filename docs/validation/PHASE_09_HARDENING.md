@@ -9,7 +9,7 @@
 |nested glyph scale|PASS|`tests/renderer/dom-renderer.test.ts` が `⿰木⿱日月` と二段nested `⿳⿰木可⿰日月火` の実scale値を検証|
 |Phase 6 visual validation|PASS|`docs/validation/PHASE_06_VISUAL_VALIDATION.md` に4 font・corpus・分類を記録|
 |CHISE live response|PASS|Unicode配列、`null`、HTTP/timeout/JSON/object fixtureを分類|
-|browser CORS|PASS|`/chise-preflight.html` で3 probeが `200 cors`|
+|browser CORS|PASS|`/chise-preflight.html` で4 probeが `200 cors`|
 |責務境界|PASS|scaleはDOM Adapter、response形はCHISE Adapter、Core変更なし|
 
 監査文にあった `⿱⿰木可日月` は現行の最小arityでは余剰operandを含むため、回帰テストには文法上有効な同等深度の `⿳⿰木可⿰日月火` を使用した。
@@ -32,7 +32,9 @@ memory cacheへTTL、最大entry数、`clear()`、`size`を追加した。既存
 
 ### Accessibility / copy
 
-合成glyph rootへ `role="img"`、元IDSの `aria-label` を付け、内部DOMを `aria-hidden` にした。native解決は通常textのままである。合成rootのcopy eventでは、見た目の部品列ではなく `⟦IDS⟧` をtext/plainへ設定する。完全なselection/caret統合は対象外とする。
+合成glyph rootへ `role="img"`、元IDSの `aria-label` を付け、内部DOMを `aria-hidden` にした。native解決は通常textのままである。単一合成glyph全体を実ブラウザで選択してcopyすると、見た目の部品列ではなく `⟦IDS⟧` をtext/plainへ設定する。複数glyphを跨ぐ範囲・部分選択の完全な再構成とcaret統合は対象外とする。
+
+2026-09-09のbrowser実測では、validation pageの単一 `⿰木可` 選択をCtrl+Cし、clipboardから `⟦⿰木可⟧` を取得した。
 
 ### Vertical writing investigation
 
@@ -49,6 +51,24 @@ validation pageへ `writing-mode: vertical-rl` の試験欄を追加した。固
 測定は correctness と request重複の確認を目的とし、固定時間thresholdは設けない。現時点でindex・worker・複雑なcacheを追加する必要性は確認できなかった。
 
 2026-09-09のWindows Node/jsdom環境での参考値は、local 100 text nodes / 200 IDS が 841.27 ms、CHISE provider 100 IDS / 2 cache misses が 255.46 msだった。これはブラウザ性能の保証値ではなく、将来比較するための基準値である。
+
+## Phase 9.1 Release Audit
+
+### CHISE query normalization
+
+入力正本は変更せず、CHISE Adapterの問い合わせ時だけ構造roleに基づくposition variantを適用する。2026-09-09のlive確認ではraw `⿰水青` は `null`、variant query `⿰氵青` は `200 cors` / `['清']` だった。Adapterは前者を後者へ正規化して照合し、native解決後の `sourceIds` とlocal fallbackはraw入力を保持する。
+
+### Bounded resolution
+
+非同期DOM renderingは、text node全体からunique IDSを先に集約し、既定同時実行数4のbounded workerで解決する。描画順は本文順を維持し、CHISE Adapter内部でも正規化query単位でin-flight requestを重複排除する。resolver失敗時は該当箇所だけraw `⟦IDS⟧`へ戻す。
+
+### Browser copy scope
+
+実ブラウザで単一の合成glyph全体を選択してCtrl+Cした結果、clipboardは `⟦⿰木可⟧` になった。これは単一glyph全体の選択に限定したv0.1保証であり、複数glyphを跨ぐ選択、部分選択、caret統合は対象外である。
+
+### Release metadata and CI
+
+公開packageのlicenseをMITとして `package.json` と `LICENSE` に明記した。CIはtest、typecheckに加えてlibrary buildと`npm pack --dry-run`によるpackage contents checkを実行する。GitHub Actionsの最新push結果は、push後に対象commitのrun statusを確認してからRelease Candidate判定とする。
 
 ## 回帰コマンド
 

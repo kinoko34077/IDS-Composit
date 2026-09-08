@@ -22,5 +22,9 @@
 |REQ-018|`src/chise/cache.ts`|`tests/chise/cache.test.ts`, `tests/performance/profile.test.ts`|
 |REQ-019|`src/renderer/dom-renderer.ts`|`tests/renderer/dom-renderer.test.ts` accessibility/copy assertions|
 |REQ-020|`examples/validation.html`, `examples/chise-preflight.html`, `docs/validation/`|browser visual/CORS preflight record|
+|REQ-021|`src/chise/query-normalizer.ts`, `src/chise/chise-provider.ts`|`tests/chise/query-normalizer.test.ts`, `tests/chise/chise-provider.test.ts` query-only position normalization and normalized in-flight key|
+|REQ-022|`src/renderer/dom-renderer.ts`, `src/chise/chise-provider.ts`|`tests/public-api/public-api.test.ts`, `tests/chise/chise-provider.test.ts` bounded unique resolution and request deduplication|
+|REQ-023|`src/renderer/dom-renderer.ts`|`tests/renderer/dom-renderer.test.ts`, `docs/validation/PHASE_09_HARDENING.md` real browser single-glyph selection copy record|
+|REQ-024|`README.md`, `package.json`, `LICENSE`, `.github/workflows/ci.yml`|Supported IDC disclosure, MIT metadata, build and package contents CI gates|
 
-Phase 0〜9の実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。
+Phase 0〜9.1の実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

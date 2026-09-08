@@ -2,6 +2,7 @@ const endpoint = 'https://api.chise.org/v0/character/ids-match';
 const probes = [
   { label: 'Unicode response', ids: '⿰氵⿱木日' },
   { label: 'Position variant candidate', ids: '⿰水青' },
+  { label: 'Position variant query', ids: '⿰氵青' },
   { label: 'No-match candidate', ids: '⿰龜龜' },
 ];
 
@@ -11,10 +12,17 @@ if (status === null || results === null) throw new Error('Preflight elements are
 
 for (const probe of probes) {
   const row = document.createElement('tr');
-  row.innerHTML = `<td>${probe.label}</td><td><code>${probe.ids}</code></td><td>running</td><td></td>`;
+  const labelCell = document.createElement('td');
+  labelCell.textContent = probe.label;
+  const idsCell = document.createElement('td');
+  const idsCode = document.createElement('code');
+  idsCode.textContent = probe.ids;
+  idsCell.append(idsCode);
+  const resultCell = document.createElement('td');
+  resultCell.textContent = 'running';
+  const bodyCell = document.createElement('td');
+  row.append(labelCell, idsCell, resultCell, bodyCell);
   results.append(row);
-  const resultCell = row.cells[2];
-  const bodyCell = row.cells[3];
 
   try {
     const url = new URL(endpoint);
@@ -23,7 +31,7 @@ for (const probe of probes) {
     const body = await response.text();
     resultCell.textContent = `${response.status} ${response.type}`;
     resultCell.className = response.ok ? 'pass' : 'fail';
-    bodyCell.innerHTML = `<code>${body}</code>`;
+    bodyCell.textContent = body;
   } catch (error) {
     resultCell.textContent = 'CORS/fetch error';
     resultCell.className = 'fail';

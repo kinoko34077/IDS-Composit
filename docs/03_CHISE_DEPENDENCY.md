@@ -21,7 +21,7 @@ GET https://api.chise.org/v0/character/encode?character=<character>&ccs=<CCS>
 
 2026-09-09のlive smokeでは、`ids-match`は一致結果をUnicode文字列のJSON配列（例：`["字"]`）として返した。Adapterはこの実レスポンスを第一候補のnative文字へ正規化し、空配列をno-matchとして扱う。仕様資料・fixtureとの互換のため、単一Unicode文字列も受理する。
 
-同日、ブラウザから `/chise-preflight.html` を実行し、`⿰氵⿱木日`、`⿰水青`、`⿰龜龜` の全てで `200 cors` を確認した。前者はUnicode文字列配列、後二者は `null` だった。これはlive時点の観測であり、response ontologyをCoreへ取り込む根拠にはしない。
+同日、ブラウザから `/chise-preflight.html` を実行し、`⿰氵⿱木日`、`⿰水青`、`⿰氵青`、`⿰龜龜` の全てで `200 cors` を確認した。`⿰氵⿱木日` と `⿰氵青` はUnicode文字列配列、`⿰水青` と `⿰龜龜` は `null` だった。これはlive時点の観測であり、response ontologyをCoreへ取り込む根拠にはしない。
 
 参考：
 - CHISE / Concord Web API 説明書 v0.4
@@ -60,7 +60,13 @@ CHISE ids-match
 
 API障害はCompositionを止めない。
 
-## 5. Cache
+## 5. Query normalization
+
+入力の正本は常に元のIDS文字列とする。CHISE照合時だけAdapter内でParserの構造roleとVariant Mapを参照し、raw queryを位置variant適用済みqueryへ正規化する。例えば `⿰水青` は表示・fallback・`sourceIds`を変更せず、CHISEへの問い合わせでは `⿰氵青` を第一候補とする。
+
+この正規化はCHISE問い合わせ専用であり、Parser/CoreのASTやDOM表示へ逆流させない。cacheとin-flight重複排除のkeyも正規化後のqueryとするため、raw queryと同じ意味のvariant queryを同時に問い合わせない。
+
+## 6. Cache
 
 同じIDSに対する繰返し問い合わせを避けるためcacheを許可する。
 
@@ -74,7 +80,7 @@ cacheはCHISEの代替正本ではない。
 
 TTL、永続化方式は実装時に決める。無期限の独自DB化を避ける。
 
-## 6. Local Fixtures
+## 7. Local Fixtures
 
 テスト安定性のため、CHISE応答fixtureを保存してよい。
 
@@ -86,7 +92,7 @@ fixtureの目的：
 
 fixtureを網羅DBとして増やさない。
 
-## 7. API変更
+## 8. API変更
 
 CHISEのAPIやレスポンス仕様が変化した場合：
 
@@ -96,7 +102,7 @@ CHISEのAPIやレスポンス仕様が変化した場合：
 4. Core testsを回帰
 5. 必要ならADR/Current State更新
 
-## 8. ライセンス・再配布
+## 9. ライセンス・再配布
 
 CHISEデータをbundleへ大量同梱する場合は、実装前に対象データ・コードのライセンスと再配布条件を個別確認する。
 

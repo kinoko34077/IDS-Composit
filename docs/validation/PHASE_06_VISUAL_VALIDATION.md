@@ -68,6 +68,7 @@ Vite validation pageをブラウザで開き、System UI、serif、sans-serif、
 |---|---|---|---|
 |`⿰氵⿱木日`|`200 cors`|Unicode文字列のJSON配列|live hitを取得|
 |`⿰水青`|`200 cors`|`null`|live no-match|
+|`⿰氵青`|`200 cors`|`["清"]`|position variant queryでlive hit|
 |`⿰龜龜`|`200 cors`|`null`|live no-match候補|
 
 HTTP error、timeout、JSON不正、空配列、Unicode文字列、non-UCS character objectはadapterのfixture/unit testsで分類した。今回のlive probeではnon-UCS character objectの返却は観測しなかった。CHISEのresponse形はAdapter内に留め、Coreには漏らさない。

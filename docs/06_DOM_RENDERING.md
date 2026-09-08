@@ -55,7 +55,7 @@ CHISE Resolverがnative textを返した場合はComposition DOMを作らず、�
 data-ids="..."
 ```
 
-合成boxは `role="img"` と元IDSの `aria-label` を持ち、内部部品は `aria-hidden="true"` とする。native解決時は通常textを挿入し、合成DOMの内部部品を読み上げさせない。copy eventでは `⟦IDS⟧` をtext/plainへ優先する。
+合成boxは `role="img"` と元IDSの `aria-label` を持ち、内部部品は `aria-hidden="true"` とする。native解決時は通常textを挿入し、合成DOMの内部部品を読み上げさせない。単一合成glyph全体を選択したcopyでは `⟦IDS⟧` をtext/plainへ優先する。複数glyphを跨ぐ範囲・部分選択の完全な再構成は保証しない。
 
 ## 7. Failure
 
