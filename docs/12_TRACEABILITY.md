@@ -27,5 +27,7 @@
 |REQ-023|`src/renderer/copy-behavior.ts`, `src/renderer/render-layout.ts`|`tests/renderer/dom-renderer.test.ts`, `docs/validation/PHASE_09_HARDENING.md` real browser single-glyph selection copy record|
 |REQ-025|`src/runtime/observe-dom.ts`|`tests/public-api/public-api.test.ts` malformed-only observer loop prevention|
 |REQ-024|`README.md`, `package.json`, `LICENSE`, `.github/workflows/ci.yml`|Supported IDC disclosure, MIT metadata, build and package contents CI gates|
+|REQ-026|`src/public-api.ts`, `src/renderer/render-document.ts`|`tests/public-api/public-api.test.ts` local provider-disabled synchronous fast path|
+|REQ-027|`src/runtime/observe-dom.ts`|`tests/runtime/observe-dom.test.ts`, `tests/performance/profile.test.ts` same-callback parent batching and containment dedup|
 
 Phase 0〜9.1の実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

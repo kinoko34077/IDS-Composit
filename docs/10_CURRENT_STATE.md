@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 9.2 Internal Refactor 実装済み / v0.1 RC2確認済み**
+**Phase 9.2 targeted optimization 実装済み / v0.1 RC2確認済み**
 
 ## 最新確定方針
 
@@ -34,10 +34,11 @@ Updated: 2026-09-09
 - Phase 9 Hardening: `observeIds` MutationObserver、contenteditable default-off/opt-in、TTL/max/clear memory cache、a11y metadata、IDS copy fallback、vertical writing investigation、performance profile tests
 - Phase 9.1 Release Audit: CHISE query-only variant normalization、unique IDSのbounded parallel resolve、normalized query単位のin-flight dedupe、実ブラウザ単一glyph copy確認、Supported IDC/LICENSE/CI gate整備
 - Phase 9.2 Internal Refactor: Layout→DOM、Text Node document rendering、copy/a11y、batch resolve、MutationObserverを責務別moduleへ分離。公開API・既存内部adapterの挙動は維持し、不要な`dom-renderer.ts` compatibility barrelを削除
+- Phase 9.2 Optimization Pass: providerなしの`renderIds`/`observeIds`は同期local composition経路を使用。MutationObserverは同一callback内の追加を親要素へ集約し、containment dedup後にrenderする。公開API・CHISE有効時のasync batch semanticsは維持
 
 ## 運用観測 / 次作業
 
-最終commit `0364af8` のGitHub Actions CI Run #15がgreenであることを確認済み。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
+最終実装commit `6c016ab` のGitHub Actions CI Run #17がgreenであることを確認済み。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 
