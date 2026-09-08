@@ -19,6 +19,8 @@ GET https://api.chise.org/v0/character/encode?character=<character>&ccs=<CCS>
 
 本プロジェクトの最初の主要依存は `ids-match`。
 
+2026-09-09のlive smokeでは、`ids-match`は一致結果をUnicode文字列のJSON配列（例：`["字"]`）として返した。Adapterはこの実レスポンスを第一候補のnative文字へ正規化し、空配列をno-matchとして扱う。仕様資料・fixtureとの互換のため、単一Unicode文字列も受理する。
+
 参考：
 - CHISE / Concord Web API 説明書 v0.4
 - https://www.chise.org/specs/chise-web-api_v0.4_ja.pdf

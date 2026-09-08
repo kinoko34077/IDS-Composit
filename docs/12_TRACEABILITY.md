@@ -16,6 +16,6 @@
 |REQ-012|`src/core/types.ts` and module boundaries|typecheck, architecture review|
 |REQ-013|`src/chise/chise-provider.ts`, `src/resolver/resolve-ids.ts`|HTTP/timeout/unavailable tests, resolver fallback test|
 |REQ-014|`src/renderer/dom-renderer.ts`|invalid IDS and renderer failure fallback tests|
-|REQ-015|Phase 8: Packaging（未実装）|Phase 8 consumer demo（未実装）|
+|REQ-015|`src/public-api.ts`, `package.json`, `vite.lib.config.ts`|`tests/public-api/public-api.test.ts`, `examples/consumer.html`, package build/pack check|
 
-Phase 0〜4の実装済み項目は実ファイルとテストへ対応付けています。未実装項目は対象Phaseを明示しています。
+Phase 0〜8の実装済み項目は実ファイルとテストへ対応付けています。Phase 9以降のhardening項目は実装対象外としてCurrent Stateに残しています。

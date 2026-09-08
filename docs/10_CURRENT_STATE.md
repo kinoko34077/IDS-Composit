@@ -1,10 +1,10 @@
 # Current State
 
-Updated: 2026-09-08
+Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 7 coverage artifact 実装済み / Phase 8 packagingへ**
+**Phase 8 package artifact 実装済み / Phase 9 hardeningへ**
 
 ## 最新確定方針
 
@@ -29,21 +29,21 @@ Updated: 2026-09-08
 - Phase 5 CHISE Adapter / Resolver: `ids-match` response normalization、injected fetch、timeout/HTTP/JSON failure、TTL memory cache、native優先、local composition fallback、unavailable diagnostic
 - Phase 6 Visual Validation: 固定corpus、複数font切替sample、failure classification記録（目視判定はmanual）
 - Phase 7 IDS Coverage: Unicode trinary IDC `⿲` / `⿳` のarity・role・relative geometry、parser/layout/DOM回帰テスト
+- Phase 8 Packaging: `renderIds`公開API、ESM/browser bundle、型宣言、CSS asset、package exports、consumer demo
 
 ## 次作業
 
-`agent/PHASE_08_PACKAGE.md` のpublic API・ESM/browser bundle・consumer demo
+Phase 9 hardening（MutationObserver、contenteditable、cache persistence、accessibility/copy、performance）
 
-## 未確定
+## 残課題 / manual validation
 
-- exact public API
-- build tool
+- 複数fontでの目視判定とスクリーンショット採取
 - CHISE live smokeの実行環境とCORS条件
 - CHISE timeout/cache値の本番調整
 - 初期font-family
 - baseline補正値
-- Phase 0以降に追加するIDC
-- copy/accessibilityの詳細
+- npm registry/CDNへの公開手順
+- Phase 9で扱うcopy/accessibilityの詳細
 
 ## 重要な再検討条件
 

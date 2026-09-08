@@ -1,4 +1,4 @@
-import type { Box, LayoutNode } from '../core/types';
+import type { Box, LayoutNode, Resolution } from '../core/types';
 import { composeLayout } from '../composition';
 import { parseIds, scanEmbeddedIds, type TextSegment } from '../parser';
 
@@ -90,6 +90,33 @@ function appendSegment(fragment: DocumentFragment, segment: TextSegment, documen
   }
 }
 
+function appendResolution(fragment: DocumentFragment, resolution: Resolution, document: Document, raw: string): void {
+  if (resolution.kind === 'native') {
+    fragment.append(document.createTextNode(resolution.text));
+    return;
+  }
+  if (resolution.kind === 'compose') {
+    fragment.append(renderLayout(composeLayout(resolution.ast), document, resolution.sourceIds));
+    return;
+  }
+  fragment.append(document.createTextNode(raw));
+}
+
+export type IdsResolver = (ids: string) => Promise<Resolution>;
+
+async function appendSegmentAsync(fragment: DocumentFragment, segment: TextSegment, document: Document, resolve: IdsResolver): Promise<void> {
+  if (segment.type === 'text' || segment.type === 'invalid') {
+    fragment.append(document.createTextNode(segment.type === 'text' ? segment.value : segment.raw));
+    return;
+  }
+
+  try {
+    appendResolution(fragment, await resolve(segment.source), document, segment.raw);
+  } catch {
+    fragment.append(document.createTextNode(segment.raw));
+  }
+}
+
 export function renderIdsInElement(root: HTMLElement): void {
   const textNodes: Text[] = [];
   collectTextNodes(root, textNodes);
@@ -103,6 +130,24 @@ export function renderIdsInElement(root: HTMLElement): void {
     const fragment = textNode.ownerDocument.createDocumentFragment();
     for (const segment of segments) {
       appendSegment(fragment, segment, textNode.ownerDocument);
+    }
+    parent.replaceChild(fragment, textNode);
+  }
+}
+
+export async function renderIdsInElementAsync(root: HTMLElement, resolve: IdsResolver): Promise<void> {
+  const textNodes: Text[] = [];
+  collectTextNodes(root, textNodes);
+
+  for (const textNode of textNodes) {
+    const parent = textNode.parentNode;
+    if (parent === null) continue;
+    const segments = scanEmbeddedIds(textNode.data);
+    if (segments.length === 1 && segments[0]?.type === 'text') continue;
+
+    const fragment = textNode.ownerDocument.createDocumentFragment();
+    for (const segment of segments) {
+      await appendSegmentAsync(fragment, segment, textNode.ownerDocument, resolve);
     }
     parent.replaceChild(fragment, textNode);
   }

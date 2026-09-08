@@ -1,3 +1,3 @@
-import { renderIdsInElement } from '../src/renderer/dom-renderer';
+import { renderIds } from '../src/public-api';
 
-renderIdsInElement(document.body);
+void renderIds(document.body);

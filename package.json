@@ -1,12 +1,22 @@
 {
   "name": "chise-ids-inline-renderer",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "scripts": {
+    "build": "npm run typecheck && vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",
     "dev": "vite --config vite.config.ts",
+    "pack:check": "npm pack --dry-run",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
+  },
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/types/public-api.d.ts",
+      "import": "./dist/ids-composit.js"
+    },
+    "./style.css": "./dist/ids-composit.css"
   },
   "devDependencies": {
     "@types/jsdom": "latest",
