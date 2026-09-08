@@ -195,7 +195,7 @@ export function renderIdsInElement(root: HTMLElement, options: RenderIdsInElemen
     const parent = textNode.parentNode;
     if (parent === null) continue;
     const segments = scanEmbeddedIds(textNode.data);
-    if (segments.length === 1 && segments[0]?.type === 'text') continue;
+    if (!segments.some((segment) => segment.type === 'ids')) continue;
 
     const fragment = textNode.ownerDocument.createDocumentFragment();
     for (const segment of segments) {
@@ -214,7 +214,7 @@ export async function renderIdsInElementAsync(
   collectTextNodes(root, textNodes, options.includeContentEditable === true);
   const scannedNodes = textNodes
     .map((textNode) => ({ textNode, segments: scanEmbeddedIds(textNode.data) }))
-    .filter(({ segments }) => !(segments.length === 1 && segments[0]?.type === 'text'));
+    .filter(({ segments }) => segments.some((segment) => segment.type === 'ids'));
   const uniqueIds = Array.from(new Set(
     scannedNodes.flatMap(({ segments }) => segments.filter((segment): segment is Extract<TextSegment, { type: 'ids' }> => segment.type === 'ids').map((segment) => segment.source)),
   ));

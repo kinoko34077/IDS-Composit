@@ -108,6 +108,19 @@ describe('renderIds', () => {
     handle.stop();
   });
 
+  it('does not replace malformed-only text nodes in an observer loop', async () => {
+    const root = document.createElement('div');
+    const text = document.createTextNode('⟦⿰木⟧');
+    root.append(text);
+    const handle = observeIds(root);
+
+    await flushObserver();
+
+    expect(root.firstChild).toBe(text);
+    expect(root.textContent).toBe('⟦⿰木⟧');
+    handle.stop();
+  });
+
   it('resolves unique IDS in bounded parallel work while preserving document order', async () => {
     const root = document.createElement('div');
     root.innerHTML = '<p>⟦⿰木可⟧ ⟦⿱日月⟧ ⟦⿲彳圭亍⟧ ⟦⿰木可⟧</p>';

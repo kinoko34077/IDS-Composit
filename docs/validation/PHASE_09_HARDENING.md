@@ -18,7 +18,7 @@
 
 ### MutationObserver
 
-公開APIに `observeIds(root, options)` を追加した。初期rootを一度処理し、動的追加nodeを直列queueで処理する。render済み `.ids-inline-glyph` subtreeはcollectorとobserverの双方で除外し、`stop()` はdisconnectして後続mutationを処理しない。既存の `renderIds()` は変更せず利用できる。
+公開APIに `observeIds(root, options)` を追加した。初期rootを一度処理し、動的追加nodeを直列queueで処理する。render済み `.ids-inline-glyph` subtreeはcollectorとobserverの双方で除外し、不正IDSだけのText Nodeは置換せずMutation loopを起こさない。`stop()` はdisconnectして後続mutationを処理しない。既存の `renderIds()` は変更せず利用できる。
 
 ### contenteditable policy
 
