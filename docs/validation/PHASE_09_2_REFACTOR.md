@@ -118,3 +118,5 @@ bundleはJS 1.28 kB、gzip 0.31 kB増加した。性能改善が明確だった�
 - boundary: PASS（Parser/Layout/Variant/CHISE ontologyの境界を変更せず、runtimeはrender callbackだけを受け取る）
 
 実装commit `6c016ab` のGitHub Actions `CI #17`はcompleted successfullyとなった。
+
+CIのNode 20 deprecation warningを解消するため、workflowのみを`actions/checkout@v5` / `actions/setup-node@v5`へ更新した。CI maintenance commit `f2e8f9b` の`CI #19`はcompleted successfullyで、Annotationsは0件だった。

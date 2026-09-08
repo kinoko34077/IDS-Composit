@@ -38,7 +38,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-最終実装commit `6c016ab` のGitHub Actions CI Run #17がgreenであることを確認済み。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
+実装commit `6c016ab` のGitHub Actions CI Run #17、およびCI maintenance commit `f2e8f9b` のRun #19がgreenであることを確認済み。Run #19ではNode 20 deprecation warningも解消した。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 
