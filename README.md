@@ -22,6 +22,7 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 - [現在の状態](docs/10_CURRENT_STATE.md)
 - [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)
 - [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)
+- [Phase 9.2 refactor記録](docs/validation/PHASE_09_2_REFACTOR.md)
 - [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
 
 旧方針の要件定義書・ロードマップは [docs/archive](docs/archive/) に保存しています。現在の仕様と混同せず、方針変更の履歴・参考資料として扱います。
@@ -44,7 +45,7 @@ v0.1で対応するIDCは次の5種類です。未対応IDCは元の `⟦IDS⟧`
 
 ## 開発状況
 
-Phase 0〜9.1の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md) と [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md) に記録しています。
+Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。
 
 ## 利用例
 

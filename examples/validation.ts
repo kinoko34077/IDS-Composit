@@ -1,4 +1,4 @@
-import { renderIdsInElement } from '../src/renderer/dom-renderer';
+import { renderIdsInElement } from '../src/renderer/render-document';
 
 const corpus = document.querySelector<HTMLElement>('#corpus');
 const verticalInvestigation = document.querySelector<HTMLElement>('.vertical-investigation');

@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it } from 'vitest';
-import { observeIds, renderIds } from '../../src/public-api';
+import { observeIds, renderIds, type IdsObserverHandle } from '../../src/public-api';
 
 async function flushObserver(): Promise<void> {
   await new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -8,6 +8,11 @@ async function flushObserver(): Promise<void> {
 }
 
 describe('renderIds', () => {
+  it('keeps the observer handle type public', () => {
+    const handle: IdsObserverHandle = { stop() {} };
+    expect(handle.stop).toBeTypeOf('function');
+  });
+
   it('renders a native provider result without exposing parser details', async () => {
     const root = document.createElement('p');
     root.textContent = 'A⟦⿰木可⟧B';

@@ -50,4 +50,30 @@ public-api.ts
   └─ runtime/observe-dom.ts
 ```
 
-The existing `src/renderer/dom-renderer.ts` may remain as a compatibility-free internal re-export during the transition, but public behavior must flow through the new focused modules.
+`src/renderer/dom-renderer.ts` は削除し、internal adapter・example・testも新しいfocused moduleを直接参照する。公開APIの入口は `src/public-api.ts` に留める。
+
+## Post-refactor measurement
+
+測定環境とprofile caseはbaselineと同じ。以下は2026-09-09 JSTの最終測定値である。時間は実行ごとの揺らぎが大きいため、baselineとの差を高速化の根拠とは扱わない。
+
+|対象|測定条件|post-refactor|
+|---|---|---:|
+|local rendering|100 text nodes / 200 IDS|1196.25 ms|
+|local rendering|100 IDS|369.72 ms|
+|local rendering|1000 IDS|2966.57 ms|
+|CHISE provider|100 IDS / 2 cache misses|456.48 ms|
+|CHISE resolution|10 unique responses / fixture fetch|13.37 ms|
+|CHISE resolution|100 unique responses / fixture fetch|21.89 ms|
+|MutationObserver|100 dynamic additions|335.48 ms|
+|ESM bundle|`dist/ids-composit.js`|14.73 kB|
+|ESM bundle gzip|`dist/ids-composit.js` gzip|4.95 kB|
+|npm package|tarball / unpacked / files|11.1 kB / 29.2 kB / 35 files|
+
+runtime bundleはbaselineより0.53 kB（gzip 0.09 kB）増加した。これはfocused module間の小さなadapter関数とbuild時の構成差によるもので、これを相殺するための複雑な最適化は追加しない。内部compatibility barrel削除によりpackage filesは36から35へ減少し、不要な宣言を1つ除去できた。
+
+## Refactor gate
+
+- API surface testで `IdsObserverHandle` を含む公開型の欠落がないことを確認
+- existing renderer/public-api/CHISE/observer regressionを実行
+- 既存visual corpusとCHISE preflightは同一実装経路で再確認
+- package size・profile値をbaselineと併記し、改善のないmicro optimizationは不採用

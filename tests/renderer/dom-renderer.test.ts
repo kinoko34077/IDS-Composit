@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it, vi } from 'vitest';
-import { renderIdsInElement, renderLayout } from '../../src/renderer/dom-renderer';
+import { renderIdsInElement } from '../../src/renderer/render-document';
+import { renderLayout } from '../../src/renderer/render-layout';
 import { composeLayout } from '../../src/composition';
 import { parseIds } from '../../src/parser';
 
