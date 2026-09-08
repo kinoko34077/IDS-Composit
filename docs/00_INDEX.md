@@ -24,6 +24,7 @@
 
 - `validation/PHASE_06_VISUAL_VALIDATION.md`: Phase 6 corpusのbrowser目視・CHISE CORS preflight
 - `validation/PHASE_09_HARDENING.md`: Phase 8.5 GateとPhase 9 hardening記録
+- `validation/PHASE_09_2_REFACTOR.md`: Phase 9.2 refactor scope、baseline、受入条件
 
 ## Agent Phase Docs
 
