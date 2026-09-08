@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 4.5 完了 / Phase 5 preflight 待ち**
+**Phase 5 実装済み / Phase 6 visual validationへ**
 
 ## 最新確定方針
 
@@ -26,16 +26,18 @@ Updated: 2026-09-08
 - Phase 3 DOM Inline Renderer: 本文Scanner、1em inline box、入れ子DOM、script/style/textarea除外、Viteサンプルページ
 - Phase 4 Position Variants: data-driven Variant Map、seed mappings、base character fallback、Compositionへのvariant適用
 - Phase 4.5 Correctness: glyph本体の相対scale、Role/geometry分離、局所renderer fallback、README/Traceability同期、最小CI
+- Phase 5 CHISE Adapter / Resolver: `ids-match` response normalization、injected fetch、timeout/HTTP/JSON failure、TTL memory cache、native優先、local composition fallback、unavailable diagnostic
 
 ## 次作業
 
-`agent/PHASE_05_CHISE.md` のCHISE preflight（fixture、live smoke、CORS、結果形状確認）
+`agent/PHASE_06_VALIDATION.md` の固定corpus・複数font・nested IDSのvisual validation
 
 ## 未確定
 
 - exact public API
 - build tool
-- CHISE timeout/cache値
+- CHISE live smokeの実行環境とCORS条件
+- CHISE timeout/cache値の本番調整
 - 初期font-family
 - baseline補正値
 - Phase 0以降に追加するIDC

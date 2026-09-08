@@ -29,7 +29,12 @@ export type LayoutNode =
       children: LayoutNode[];
     };
 
+export type ResolutionDiagnostic = {
+  kind: 'chise-unavailable';
+  message?: string;
+};
+
 export type Resolution =
   | { kind: 'native'; text: string; sourceIds: string }
-  | { kind: 'compose'; ast: IdsNode; sourceIds: string }
-  | { kind: 'unresolved'; sourceIds: string; reason: string };
+  | { kind: 'compose'; ast: IdsNode; sourceIds: string; diagnostic?: ResolutionDiagnostic }
+  | { kind: 'unresolved'; sourceIds: string; reason: string; diagnostic?: ResolutionDiagnostic };
