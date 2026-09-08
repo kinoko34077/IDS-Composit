@@ -20,6 +20,11 @@
 
 `10_CURRENT_STATE.md` は現在進捗・次作業専用。恒久仕様ではない。
 
+## Validation records
+
+- `validation/PHASE_06_VISUAL_VALIDATION.md`: Phase 6 corpusのbrowser目視・CHISE CORS preflight
+- `validation/PHASE_09_HARDENING.md`: Phase 8.5 GateとPhase 9 hardening記録
+
 ## Agent Phase Docs
 
 `agent/PHASE_*.md` はエージェントへその段階だけ渡すための作業指示。上位正本を複製せず、必要な参照先とGateだけを保持する。

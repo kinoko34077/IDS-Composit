@@ -12,6 +12,7 @@ export type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promis
 export interface MatchCache {
   get(key: string): IdsMatchResult | undefined;
   set(key: string, result: IdsMatchResult): void;
+  clear?: () => void;
 }
 
 export type ChiseProviderOptions = {

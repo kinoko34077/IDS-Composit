@@ -20,8 +20,9 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 - [アーキテクチャ](docs/02_ARCHITECTURE.md)
 - [CHISE 依存境界](docs/03_CHISE_DEPENDENCY.md)
 - [現在の状態](docs/10_CURRENT_STATE.md)
-- [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
 - [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)
+- [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)
+- [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
 
 旧方針の要件定義書・ロードマップは [docs/archive](docs/archive/) に保存しています。現在の仕様と混同せず、方針変更の履歴・参考資料として扱います。
 
@@ -31,7 +32,7 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 
 ## 開発状況
 
-Phase 0〜8の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package）まで完了しています。複数fontの目視判定は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md) のmanual項目です。次の作業はPhase 9 hardeningです。
+Phase 0〜9の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md) と [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md) に記録しています。
 
 ## 利用例
 
@@ -44,6 +45,8 @@ Phase 0〜8の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/br
 ```
 
 `renderIds`は既定でネットワークを使わずlocal compositionを行います。CHISEのnative解決を有効にする場合は`await renderIds(document.body, { chise: true })`とし、テストや独自backendでは`provider`を注入できます。CHISEのno-match・timeout・障害はlocal compositionへfallbackします。
+
+動的DOMは`const observer = observeIds(document.body);`で監視でき、不要になったら`observer.stop()`します。`contenteditable`は既定で変更せず、必要な場合だけ`{ contentEditable: true }`を指定します。合成glyphのcopyは元の`⟦IDS⟧`を復元します。
 
 ## License
 

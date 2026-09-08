@@ -12,6 +12,8 @@
       table { width: 100%; border-collapse: collapse; }
       th, td { padding: 0.5rem; border-bottom: 1px solid #8886; text-align: left; }
       .sample { font-size: 2.5rem; }
+      .vertical-investigation { writing-mode: vertical-rl; height: 12rem; padding: 1rem; border: 1px solid #8886; }
+      .vertical-investigation .sample { font-size: 2.5rem; }
       #corpus { font-family: system-ui, sans-serif; }
       #corpus[data-font="serif"] { font-family: serif; }
       #corpus[data-font="sans"] { font-family: sans-serif; }
@@ -46,6 +48,10 @@
             <tr><th scope="row">dense-vertical</th><td class="sample">⟦⿱龜心⟧</td><td>density difference</td></tr>
           </tbody>
         </table>
+      </section>
+      <section aria-labelledby="vertical-heading">
+        <h2 id="vertical-heading">Vertical writing investigation</h2>
+        <p class="vertical-investigation">本文 ⟦⿰木⿱日月⟧ と ⟦⿳士冖豆⟧ の相対配置を確認します。</p>
       </section>
     </main>
     <script type="module" src="./validation.ts"></script>

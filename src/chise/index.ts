@@ -8,3 +8,4 @@ export type {
   IdsMatchResult,
   MatchCache,
 } from './types';
+export type { MemoryMatchCache, MemoryMatchCacheOptions } from './cache';

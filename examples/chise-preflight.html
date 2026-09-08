@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHISE live preflight</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; }
+      table { border-collapse: collapse; }
+      th, td { border: 1px solid #bbb; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+      code { white-space: pre-wrap; word-break: break-word; }
+      .pass { color: #176b2c; }
+      .fail { color: #a51d2d; }
+    </style>
+  </head>
+  <body>
+    <h1>CHISE live preflight</h1>
+    <p id="status">Running browser CORS and response probes…</p>
+    <table>
+      <thead><tr><th>Probe</th><th>IDS</th><th>Result</th><th>Body</th></tr></thead>
+      <tbody id="results"></tbody>
+    </table>
+    <script type="module" src="/chise-preflight.ts"></script>
+  </body>
+</html>

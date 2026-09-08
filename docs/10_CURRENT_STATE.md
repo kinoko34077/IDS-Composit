@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 8 package artifact 実装済み / Phase 9 hardeningへ**
+**Phase 9 hardening 実装済み / 運用観測継続**
 
 ## 最新確定方針
 
@@ -25,25 +25,27 @@ Updated: 2026-09-09
 - Phase 2 Composition Core: structural role、固定Layout Template、相対座標の再帰Layout Model
 - Phase 3 DOM Inline Renderer: 本文Scanner、1em inline box、入れ子DOM、script/style/textarea除外、Viteサンプルページ
 - Phase 4 Position Variants: data-driven Variant Map、seed mappings、base character fallback、Compositionへのvariant適用
-- Phase 4.5 Correctness: glyph本体の相対scale、Role/geometry分離、局所renderer fallback、README/Traceability同期、最小CI
+- Phase 4.5 Correctness: glyph本体のscale、Role/geometry分離、局所renderer fallback、README/Traceability同期、最小CI
 - Phase 5 CHISE Adapter / Resolver: `ids-match` response normalization、injected fetch、timeout/HTTP/JSON failure、TTL memory cache、native優先、local composition fallback、unavailable diagnostic
-- Phase 6 Visual Validation: 固定corpus、複数font切替sample、failure classification記録（目視判定はmanual）
+- Phase 6 Visual Validation: 固定corpus、複数font切替sample、browser目視とfailure classification記録
 - Phase 7 IDS Coverage: Unicode trinary IDC `⿲` / `⿳` のarity・role・relative geometry、parser/layout/DOM回帰テスト
 - Phase 8 Packaging: `renderIds`公開API、ESM/browser bundle、型宣言、CSS asset、package exports、consumer demo
+- Phase 8.5 Validation: nested absolute scale回帰、Phase 6 browser visual record、CHISE live/CORS preflight、response fixture分類
+- Phase 9 Hardening: `observeIds` MutationObserver、contenteditable default-off/opt-in、TTL/max/clear memory cache、a11y metadata、IDS copy fallback、vertical writing investigation、performance profile tests
 
-## 次作業
+## 運用観測 / 次作業
 
-Phase 9 hardening（MutationObserver、contenteditable、cache persistence、accessibility/copy、performance）
+Phase 9完了後は、実利用で追加課題が確認された場合のみ小さく改善する。
 
 ## 残課題 / manual validation
 
-- 複数fontでの目視判定とスクリーンショット採取
-- CHISE live smokeの実行環境とCORS条件
+- 縦書きでの構図保証と、固定比率の適否
+- 複数fontにおける高密度glyphの判読性
 - CHISE timeout/cache値の本番調整
 - 初期font-family
 - baseline補正値
 - npm registry/CDNへの公開手順
-- Phase 9で扱うcopy/accessibilityの詳細
+- optional persistent cacheの必要性と仕様
 
 ## 重要な再検討条件
 

@@ -17,5 +17,10 @@
 |REQ-013|`src/chise/chise-provider.ts`, `src/resolver/resolve-ids.ts`|HTTP/timeout/unavailable tests, resolver fallback test|
 |REQ-014|`src/renderer/dom-renderer.ts`|invalid IDS and renderer failure fallback tests|
 |REQ-015|`src/public-api.ts`, `package.json`, `vite.lib.config.ts`|`tests/public-api/public-api.test.ts`, `examples/consumer.html`, package build/pack check|
+|REQ-016|`src/renderer/dom-renderer.ts`|`tests/renderer/dom-renderer.test.ts` nested absolute scale assertions|
+|REQ-017|`src/public-api.ts`, `src/renderer/dom-renderer.ts`|`tests/public-api/public-api.test.ts`, renderer contenteditable tests|
+|REQ-018|`src/chise/cache.ts`|`tests/chise/cache.test.ts`, `tests/performance/profile.test.ts`|
+|REQ-019|`src/renderer/dom-renderer.ts`|`tests/renderer/dom-renderer.test.ts` accessibility/copy assertions|
+|REQ-020|`examples/validation.html`, `examples/chise-preflight.html`, `docs/validation/`|browser visual/CORS preflight record|
 
-Phase 0〜8の実装済み項目は実ファイルとテストへ対応付けています。Phase 9以降のhardening項目は実装対象外としてCurrent Stateに残しています。
+Phase 0〜9の実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

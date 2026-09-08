@@ -17,6 +17,9 @@ describe('renderLayout', () => {
     expect(rendered.style.width).toBe('1em');
     expect(rendered.style.height).toBe('1em');
     expect(rendered.querySelectorAll('.ids-part')).toHaveLength(2);
+    expect(rendered.getAttribute('role')).toBe('img');
+    expect(rendered.getAttribute('aria-label')).toBe('⿰木可');
+    expect(rendered.querySelector('.ids-composition')?.getAttribute('aria-hidden')).toBe('true');
     expect(rendered.querySelector('.ids-part .ids-glyph-content')?.textContent).toBe('木');
     expect((rendered.querySelector('.ids-part .ids-glyph-content') as HTMLElement | null)?.style.transform).toBe('scale(0.5, 1)');
   });
@@ -29,6 +32,25 @@ describe('renderLayout', () => {
     expect(rendered.querySelectorAll('.ids-composition')).toHaveLength(2);
     expect(rendered.querySelector('.ids-composition .ids-part')?.textContent).toBe('木');
     expect(rendered.querySelectorAll('.ids-composition .ids-part')).toHaveLength(3);
+    expect(Array.from(rendered.querySelectorAll<HTMLElement>('.ids-glyph-content')).map((node) => node.style.transform)).toEqual([
+      'scale(0.5, 1)',
+      'scale(0.5, 0.5)',
+      'scale(0.5, 0.5)',
+    ]);
+  });
+
+  it('preserves absolute root scale through two nested composition levels', () => {
+    const parsed = parseIds('⿳⿰木可⿰日月火');
+    if (!parsed.ok) throw new Error(parsed.error.message);
+
+    const rendered = renderLayout(composeLayout(parsed.ast), document, '⿳⿰木可⿰日月火');
+    expect(Array.from(rendered.querySelectorAll<HTMLElement>('.ids-glyph-content')).map((node) => node.style.transform)).toEqual([
+      'scale(0.5, 0.3333333333333333)',
+      'scale(0.5, 0.3333333333333333)',
+      'scale(0.5, 0.3333333333333333)',
+      'scale(0.5, 0.3333333333333333)',
+      'scale(1, 0.3333333333333333)',
+    ]);
   });
 
   it('renders trinary composition as three glyph parts', () => {
@@ -39,6 +61,23 @@ describe('renderLayout', () => {
 
     expect(rendered.querySelectorAll('.ids-part')).toHaveLength(3);
     expect(rendered.textContent).toBe('彳圭亍');
+  });
+
+  it('copies the original IDS source instead of the composed part sequence', () => {
+    const parsed = parseIds('⿰木可');
+    if (!parsed.ok) throw new Error(parsed.error.message);
+
+    const rendered = renderLayout(composeLayout(parsed.ast), document, '⿰木可');
+    let copied = '';
+    const copyEvent = new Event('copy', { bubbles: true, cancelable: true });
+    Object.defineProperty(copyEvent, 'clipboardData', {
+      value: { setData: (_type: string, value: string) => { copied = value; } },
+    });
+
+    rendered.dispatchEvent(copyEvent);
+
+    expect(copyEvent.defaultPrevented).toBe(true);
+    expect(copied).toBe('⟦⿰木可⟧');
   });
 });
 
@@ -98,5 +137,24 @@ describe('renderIdsInElement', () => {
 
     expect(root.textContent).toBe('A⟦⿰木可⟧B');
     expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(0);
+  });
+
+  it('does not process contenteditable content by default', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<div contenteditable="true">⟦⿰木可⟧</div>';
+
+    renderIdsInElement(root);
+
+    expect(root.textContent).toBe('⟦⿰木可⟧');
+    expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(0);
+  });
+
+  it('can opt into contenteditable processing explicitly', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<div contenteditable="true">⟦⿰木可⟧</div>';
+
+    renderIdsInElement(root, { includeContentEditable: true });
+
+    expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
   });
 });

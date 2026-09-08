@@ -21,6 +21,8 @@ GET https://api.chise.org/v0/character/encode?character=<character>&ccs=<CCS>
 
 2026-09-09のlive smokeでは、`ids-match`は一致結果をUnicode文字列のJSON配列（例：`["字"]`）として返した。Adapterはこの実レスポンスを第一候補のnative文字へ正規化し、空配列をno-matchとして扱う。仕様資料・fixtureとの互換のため、単一Unicode文字列も受理する。
 
+同日、ブラウザから `/chise-preflight.html` を実行し、`⿰氵⿱木日`、`⿰水青`、`⿰龜龜` の全てで `200 cors` を確認した。前者はUnicode文字列配列、後二者は `null` だった。これはlive時点の観測であり、response ontologyをCoreへ取り込む根拠にはしない。
+
 参考：
 - CHISE / Concord Web API 説明書 v0.4
 - https://www.chise.org/specs/chise-web-api_v0.4_ja.pdf

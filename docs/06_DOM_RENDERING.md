@@ -41,6 +41,8 @@ Layout Modelから、
 
 既存font glyphをその場で使う。
 
+Layout Modelのboxはroot基準の0〜1絶対座標であるため、DOM Adapterのglyph contentは親boxとの比率ではなく、glyph boxの絶対 `width` / `height` をscaleへ使う。これによりnested compositionでも親の縮小分を失わない。
+
 ## 5. Native解決
 
 CHISE Resolverがnative textを返した場合はComposition DOMを作らず、通常Unicode文字を挿入する。
@@ -53,7 +55,7 @@ CHISE Resolverがnative textを返した場合はComposition DOMを作らず、�
 data-ids="..."
 ```
 
-将来的なcopy/accessibility補助に利用可能。
+合成boxは `role="img"` と元IDSの `aria-label` を持ち、内部部品は `aria-hidden="true"` とする。native解決時は通常textを挿入し、合成DOMの内部部品を読み上げさせない。copy eventでは `⟦IDS⟧` をtext/plainへ優先する。
 
 ## 7. Failure
 

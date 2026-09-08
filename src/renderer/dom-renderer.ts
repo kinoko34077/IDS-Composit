@@ -4,6 +4,11 @@ import { parseIds, scanEmbeddedIds, type TextSegment } from '../parser';
 
 const ROOT_BOX: Box = { x: 0, y: 0, width: 1, height: 1 };
 const SKIPPED_TAGS = new Set(['SCRIPT', 'STYLE', 'TEXTAREA']);
+const RENDERED_CLASS = 'ids-inline-glyph';
+
+export type RenderIdsInElementOptions = {
+  includeContentEditable?: boolean;
+};
 
 function setRelativeBoxStyle(element: HTMLElement, box: Box, parentBox: Box): void {
   const parentWidth = parentBox.width || 1;
@@ -18,6 +23,7 @@ function setRelativeBoxStyle(element: HTMLElement, box: Box, parentBox: Box): vo
 
 function renderNode(node: LayoutNode, document: Document, parentBox: Box): HTMLElement {
   const element = document.createElement('span');
+  element.setAttribute('aria-hidden', 'true');
   setRelativeBoxStyle(element, node.box, parentBox);
   element.style.overflow = 'visible';
 
@@ -31,7 +37,10 @@ function renderNode(node: LayoutNode, document: Document, parentBox: Box): HTMLE
     content.style.height = '1em';
     content.style.lineHeight = '1';
     content.style.transformOrigin = 'top left';
-    content.style.transform = `scale(${node.box.width / (parentBox.width || 1)}, ${node.box.height / (parentBox.height || 1)})`;
+    // Layout boxes are absolute in the root 0..1 coordinate space. The glyph
+    // content starts at a root-sized 1em, so its scale must use the absolute
+    // box dimensions rather than the immediate parent's relative dimensions.
+    content.style.transform = `scale(${node.box.width}, ${node.box.height})`;
     content.textContent = node.value;
     element.append(content);
     return element;
@@ -47,28 +56,45 @@ function renderNode(node: LayoutNode, document: Document, parentBox: Box): HTMLE
 
 export function renderLayout(layout: LayoutNode, document: Document, source: string): HTMLSpanElement {
   const root = document.createElement('span');
-  root.className = 'ids-inline-glyph';
+  root.className = RENDERED_CLASS;
   root.dataset.ids = source;
   root.style.display = 'inline-block';
   root.style.position = 'relative';
   root.style.width = '1em';
   root.style.height = '1em';
   root.style.overflow = 'hidden';
+  root.setAttribute('role', 'img');
   root.setAttribute('aria-label', source);
+  root.addEventListener('copy', (event) => {
+    const clipboardData = event.clipboardData;
+    if (clipboardData === null) return;
+    clipboardData.setData('text/plain', `⟦${source}⟧`);
+    event.preventDefault();
+  });
   root.append(renderNode(layout, document, ROOT_BOX));
   return root;
 }
 
-function collectTextNodes(node: Node, textNodes: Text[]): void {
-  if (node.nodeType === Node.ELEMENT_NODE && SKIPPED_TAGS.has((node as Element).tagName)) {
-    return;
+function isContentEditable(element: Element): boolean {
+  return element.hasAttribute('contenteditable') && element.getAttribute('contenteditable')?.toLowerCase() !== 'false';
+}
+
+function collectTextNodes(node: Node, textNodes: Text[], includeContentEditable: boolean): void {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const element = node as Element;
+    if (SKIPPED_TAGS.has(element.tagName) || element.classList.contains(RENDERED_CLASS)) {
+      return;
+    }
+    if (!includeContentEditable && isContentEditable(element)) {
+      return;
+    }
   }
   if (node.nodeType === Node.TEXT_NODE) {
     textNodes.push(node as Text);
     return;
   }
   for (const child of Array.from(node.childNodes)) {
-    collectTextNodes(child, textNodes);
+    collectTextNodes(child, textNodes, includeContentEditable);
   }
 }
 
@@ -117,9 +143,9 @@ async function appendSegmentAsync(fragment: DocumentFragment, segment: TextSegme
   }
 }
 
-export function renderIdsInElement(root: HTMLElement): void {
+export function renderIdsInElement(root: HTMLElement, options: RenderIdsInElementOptions = {}): void {
   const textNodes: Text[] = [];
-  collectTextNodes(root, textNodes);
+  collectTextNodes(root, textNodes, options.includeContentEditable === true);
 
   for (const textNode of textNodes) {
     const parent = textNode.parentNode;
@@ -135,9 +161,13 @@ export function renderIdsInElement(root: HTMLElement): void {
   }
 }
 
-export async function renderIdsInElementAsync(root: HTMLElement, resolve: IdsResolver): Promise<void> {
+export async function renderIdsInElementAsync(
+  root: HTMLElement,
+  resolve: IdsResolver,
+  options: RenderIdsInElementOptions = {},
+): Promise<void> {
   const textNodes: Text[] = [];
-  collectTextNodes(root, textNodes);
+  collectTextNodes(root, textNodes, options.includeContentEditable === true);
 
   for (const textNode of textNodes) {
     const parent = textNode.parentNode;
