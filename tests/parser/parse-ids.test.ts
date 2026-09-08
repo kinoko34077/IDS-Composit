@@ -37,6 +37,21 @@ describe('parseIds', () => {
     });
   });
 
+  it('parses a three-child left-middle-right IDS', () => {
+    expect(parseIds('⿲彳圭亍')).toEqual({
+      ok: true,
+      ast: {
+        type: 'composition',
+        operator: '⿲',
+        children: [
+          { type: 'char', value: '彳' },
+          { type: 'char', value: '圭' },
+          { type: 'char', value: '亍' },
+        ],
+      },
+    });
+  });
+
   it.each([
     ['empty', '', 'empty'],
     ['missing child', '⿰木', 'missing-child'],

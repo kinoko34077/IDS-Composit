@@ -11,7 +11,7 @@
 |REQ-007|`src/parser/parse-ids.ts`, `src/composition/layout.ts`|Parser nested test, Composition nested layout test|
 |REQ-008|`src/variants/resolve-variant.ts`, `src/data/variants.ts`|`tests/variants/resolve-variant.test.ts`|
 |REQ-009|`src/variants/resolve-variant.ts`|unknown role/base fallback test|
-|REQ-010|`src/data/layout-templates.ts`|`tests/composition/layout.test.ts`|
+|REQ-010|`src/data/layout-templates.ts`（`⿰`/`⿱`/`⿴`/`⿲`/`⿳`）|`tests/composition/layout.test.ts`|
 |REQ-011|`src/data/idc.ts`, `src/data/layout-templates.ts`, `src/data/variants.ts`|data boundary assertions in unit tests|
 |REQ-012|`src/core/types.ts` and module boundaries|typecheck, architecture review|
 |REQ-013|`src/chise/chise-provider.ts`, `src/resolver/resolve-ids.ts`|HTTP/timeout/unavailable tests, resolver fallback test|

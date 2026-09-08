@@ -30,6 +30,16 @@ describe('renderLayout', () => {
     expect(rendered.querySelector('.ids-composition .ids-part')?.textContent).toBe('木');
     expect(rendered.querySelectorAll('.ids-composition .ids-part')).toHaveLength(3);
   });
+
+  it('renders trinary composition as three glyph parts', () => {
+    const parsed = parseIds('⿲彳圭亍');
+    if (!parsed.ok) throw new Error(parsed.error.message);
+
+    const rendered = renderLayout(composeLayout(parsed.ast), document, '⿲彳圭亍');
+
+    expect(rendered.querySelectorAll('.ids-part')).toHaveLength(3);
+    expect(rendered.textContent).toBe('彳圭亍');
+  });
 });
 
 describe('renderIdsInElement', () => {

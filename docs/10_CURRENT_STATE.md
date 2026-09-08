@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 5 実装済み / Phase 6 visual validationへ**
+**Phase 7 coverage artifact 実装済み / Phase 8 packagingへ**
 
 ## 最新確定方針
 
@@ -27,10 +27,12 @@ Updated: 2026-09-08
 - Phase 4 Position Variants: data-driven Variant Map、seed mappings、base character fallback、Compositionへのvariant適用
 - Phase 4.5 Correctness: glyph本体の相対scale、Role/geometry分離、局所renderer fallback、README/Traceability同期、最小CI
 - Phase 5 CHISE Adapter / Resolver: `ids-match` response normalization、injected fetch、timeout/HTTP/JSON failure、TTL memory cache、native優先、local composition fallback、unavailable diagnostic
+- Phase 6 Visual Validation: 固定corpus、複数font切替sample、failure classification記録（目視判定はmanual）
+- Phase 7 IDS Coverage: Unicode trinary IDC `⿲` / `⿳` のarity・role・relative geometry、parser/layout/DOM回帰テスト
 
 ## 次作業
 
-`agent/PHASE_06_VALIDATION.md` の固定corpus・複数font・nested IDSのvisual validation
+`agent/PHASE_08_PACKAGE.md` のpublic API・ESM/browser bundle・consumer demo
 
 ## 未確定
 
