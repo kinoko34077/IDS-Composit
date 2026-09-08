@@ -2,7 +2,7 @@ import './renderer/styles.css';
 import type { CharacterKnowledgeProvider, ChiseProviderOptions } from './chise';
 import { createChiseProvider } from './chise';
 import { resolveIds } from './resolver';
-import { renderIdsInElementAsync } from './renderer/render-document';
+import { renderIdsInElement, renderIdsInElementAsync } from './renderer/render-document';
 import { observeIdsInElement, type IdsObserverHandle } from './runtime/observe-dom';
 import type { IdsResolver } from './runtime/resolve-batch';
 
@@ -16,23 +16,38 @@ export type RenderIdsOptions = {
   maxConcurrency?: number;
 };
 
-function createResolver(options: RenderIdsOptions): IdsResolver {
-  const provider = options.provider ?? (options.chise === true ? createChiseProvider(options.chiseOptions) : undefined);
+function createProvider(options: RenderIdsOptions): CharacterKnowledgeProvider | undefined {
+  return options.provider ?? (options.chise === true ? createChiseProvider(options.chiseOptions) : undefined);
+}
+
+function createResolver(provider: CharacterKnowledgeProvider | undefined): IdsResolver {
   return (ids) => resolveIds(ids, provider);
 }
 
-export async function renderIds(root: HTMLElement, options: RenderIdsOptions = {}): Promise<void> {
-  await renderIdsInElementAsync(root, createResolver(options), {
-    includeContentEditable: options.contentEditable === true,
+function createRenderTarget(options: RenderIdsOptions): (target: HTMLElement) => Promise<void> {
+  const includeContentEditable = options.contentEditable === true;
+  const provider = createProvider(options);
+  if (provider === undefined) {
+    return async (target) => {
+      renderIdsInElement(target, { includeContentEditable });
+    };
+  }
+
+  const resolve = createResolver(provider);
+  return (target) => renderIdsInElementAsync(target, resolve, {
+    includeContentEditable,
     maxConcurrency: options.maxConcurrency,
   });
 }
 
+export async function renderIds(root: HTMLElement, options: RenderIdsOptions = {}): Promise<void> {
+  await createRenderTarget(options)(root);
+}
+
 export function observeIds(root: HTMLElement, options: RenderIdsOptions = {}): IdsObserverHandle {
   return observeIdsInElement(root, {
-    resolve: createResolver(options),
+    render: createRenderTarget(options),
     includeContentEditable: options.contentEditable === true,
-    maxConcurrency: options.maxConcurrency,
   });
 }
 

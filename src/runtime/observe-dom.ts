@@ -1,7 +1,6 @@
-import { renderIdsInElementAsync, type IdsResolver, type RenderIdsInElementOptions } from '../renderer/render-document';
-
-export type ObserveIdsOptions = RenderIdsInElementOptions & {
-  resolve: IdsResolver;
+export type ObserveIdsOptions = {
+  includeContentEditable?: boolean;
+  render: (target: HTMLElement) => Promise<void>;
 };
 
 export type IdsObserverHandle = {
@@ -18,9 +17,43 @@ function hasEditableAncestor(element: Element, root: HTMLElement): boolean {
   return false;
 }
 
-function mutationTarget(node: Node): HTMLElement | null {
-  if (node.nodeType === Node.ELEMENT_NODE) return node as HTMLElement;
+function elementForNode(node: Node): Element | null {
+  if (node.nodeType === Node.ELEMENT_NODE) return node as Element;
   return node.parentElement;
+}
+
+function mutationTarget(mutation: MutationRecord): HTMLElement | null {
+  if (mutation.target.nodeType === Node.ELEMENT_NODE) return mutation.target as HTMLElement;
+  return mutation.addedNodes[0]?.parentElement ?? null;
+}
+
+function hasNonGlyphAddition(mutation: MutationRecord): boolean {
+  return Array.from(mutation.addedNodes).some((node) => {
+    const element = elementForNode(node);
+    return element?.closest('.ids-inline-glyph') === null;
+  });
+}
+
+function collectMutationTargets(
+  mutations: MutationRecord[],
+  root: HTMLElement,
+  includeContentEditable: boolean,
+): HTMLElement[] {
+  const targets: HTMLElement[] = [];
+  for (const mutation of mutations) {
+    if (!hasNonGlyphAddition(mutation)) continue;
+    const target = mutationTarget(mutation);
+    if (target === null || target.classList.contains('ids-inline-glyph')) continue;
+    if (target !== root && !root.contains(target)) continue;
+    if (!includeContentEditable && hasEditableAncestor(target, root)) continue;
+    if (targets.some((existing) => existing.contains(target))) continue;
+    for (let index = targets.length - 1; index >= 0; index -= 1) {
+      const existing = targets[index];
+      if (existing !== undefined && target.contains(existing)) targets.splice(index, 1);
+    }
+    targets.push(target);
+  }
+  return targets;
 }
 
 export function observeIdsInElement(root: HTMLElement, options: ObserveIdsOptions): IdsObserverHandle {
@@ -37,21 +70,12 @@ export function observeIdsInElement(root: HTMLElement, options: ObserveIdsOption
     if (!includeContentEditable && hasEditableAncestor(target, root)) return;
     queue = queue.then(async () => {
       if (!active) return;
-      await renderIdsInElementAsync(target, options.resolve, {
-        includeContentEditable,
-        maxConcurrency: options.maxConcurrency,
-      });
+      await options.render(target);
     }).catch(() => undefined);
   };
 
   const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of Array.from(mutation.addedNodes)) {
-        const target = mutationTarget(node);
-        if (target?.closest('.ids-inline-glyph') !== null) continue;
-        enqueue(target);
-      }
-    }
+    for (const target of collectMutationTargets(mutations, root, includeContentEditable)) enqueue(target);
   });
   observer.observe(root, { childList: true, subtree: true });
   enqueue(root);

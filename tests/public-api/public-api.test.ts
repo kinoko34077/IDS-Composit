@@ -44,6 +44,16 @@ describe('renderIds', () => {
     expect(root.querySelectorAll('.ids-part')).toHaveLength(3);
   });
 
+  it('renders the local path before the public async call yields', async () => {
+    const root = document.createElement('p');
+    root.textContent = '⟦⿰木可⟧';
+
+    const pending = renderIds(root);
+
+    expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
+    await pending;
+  });
+
   it('skips contenteditable by default and supports explicit opt-in', async () => {
     const root = document.createElement('div');
     root.innerHTML = '<div contenteditable="true">⟦⿰木可⟧</div>';
