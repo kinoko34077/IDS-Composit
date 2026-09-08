@@ -72,6 +72,8 @@ validation pageへ `writing-mode: vertical-rl` の試験欄を追加した。固
 
 2026-09-09 JST、対象commit `3b36e3e7279ed865a9a806c581822ca41491b5cb` のGitHub Actions `CI #9` はcompleted successfullyとなった。したがって本commit時点のv0.1 Release Candidate gateをPASSと判定する。
 
+その後の最新hardening commit `2c1ca00f5346e99adb243bb67859df2a232601b4` についても、GitHub Actions `CI #11` がcompleted successfullyとなった。最新HEADのRelease Candidate gateもPASSである。
+
 ## 回帰コマンド
 
 ```text

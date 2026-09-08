@@ -36,7 +36,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-対象commit `3b36e3e` のGitHub Actions CI Run #9がgreenであることを確認済み。v0.1 Release Candidateとして実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
+最新HEAD `2c1ca00` のGitHub Actions CI Run #11がgreenであることを確認済み。v0.1 Release Candidateとして実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 
