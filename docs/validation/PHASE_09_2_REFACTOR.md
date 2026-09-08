@@ -77,3 +77,5 @@ runtime bundleはbaselineより0.53 kB（gzip 0.09 kB）増加した。これは
 - existing renderer/public-api/CHISE/observer regressionを実行
 - 既存visual corpusとCHISE preflightは同一実装経路で再確認
 - package size・profile値をbaselineと併記し、改善のないmicro optimizationは不採用
+
+2026-09-09 JST、refactor commit `0364af8b1b09cf761c3da394b03ccd96b24ce0de` のGitHub Actions `CI #15` はcompleted successfullyとなった。全15 test files / 88 tests、typecheck、build、pack checkを含むRC2 gateをPASSと判定する。

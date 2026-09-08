@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**Phase 9.2 Internal Refactor 実装済み / v0.1 RC2確認中**
+**Phase 9.2 Internal Refactor 実装済み / v0.1 RC2確認済み**
 
 ## 最新確定方針
 
@@ -37,7 +37,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-Phase 9.2の最終commitに対するGitHub Actionsがgreenであることを確認後、v0.1 RC2として実サイトdogfoodingへ進む。追加課題は実利用で再現した箇所だけ小さく改善する。
+最終commit `0364af8` のGitHub Actions CI Run #15がgreenであることを確認済み。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 
