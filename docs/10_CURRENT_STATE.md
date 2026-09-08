@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 0 完了 / Phase 1 実装中**
+**Phase 1 完了 / Phase 2 実装中**
 
 ## 最新確定方針
 
@@ -21,10 +21,11 @@ Updated: 2026-09-08
 ## 実装済み
 
 - Phase 0 Foundation: TypeScript/Vitest 基盤、Core型、IDC/Layout/Variantデータ境界、サンプルページ
+- Phase 1 IDS Parser: `⟦...⟧` scanner、`⿰`/`⿱`/`⿴` の再帰Parser、parse error、本文保持 fallback
 
 ## 次作業
 
-`agent/PHASE_01_PARSER.md`
+`agent/PHASE_02_COMPOSITION.md`
 
 ## 未確定
 
