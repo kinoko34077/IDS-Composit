@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## 現在段階
 
-**Phase 1 完了 / Phase 2 実装中**
+**Phase 2 完了 / Phase 3 実装中**
 
 ## 最新確定方針
 
@@ -22,10 +22,11 @@ Updated: 2026-09-08
 
 - Phase 0 Foundation: TypeScript/Vitest 基盤、Core型、IDC/Layout/Variantデータ境界、サンプルページ
 - Phase 1 IDS Parser: `⟦...⟧` scanner、`⿰`/`⿱`/`⿴` の再帰Parser、parse error、本文保持 fallback
+- Phase 2 Composition Core: structural role、固定Layout Template、相対座標の再帰Layout Model
 
 ## 次作業
 
-`agent/PHASE_02_COMPOSITION.md`
+`agent/PHASE_03_DOM_RENDERER.md`
 
 ## 未確定
 
