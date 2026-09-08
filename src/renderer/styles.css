@@ -1,0 +1,22 @@
+.ids-inline-glyph {
+  display: inline-block;
+  position: relative;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: -0.1em;
+}
+
+.ids-inline-glyph > .ids-composition,
+.ids-inline-glyph > .ids-part,
+.ids-composition > .ids-composition,
+.ids-composition > .ids-part {
+  position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ids-part {
+  display: block;
+  line-height: 1;
+}

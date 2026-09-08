@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vite --config vite.config.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
@@ -12,6 +13,7 @@
     "@types/node": "latest",
     "jsdom": "latest",
     "typescript": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "vite": "latest"
   }
 }
