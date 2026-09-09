@@ -4,7 +4,7 @@
 
 - 14 spatial IDCのparse、arity、roles、layout、DOM、invalid arityを確認する。
 - Known Indexにprovenance、verified/candidate、many-to-many、ambiguity handlingがある。
-- 外部provenance付きverified entryを注入したIndexで`⿲彳圭亍 → 街`をnativeへ解決できる。defaultの手動seedはcandidateとしてnative/Calibrationから除外する。
+- 外部provenance付きverified entryを注入したIndexでnative解決できる（CHISE IDS初回sourceでは`⿴行圭 → 街`）。defaultの手動seed`⿲彳圭亍 → 街`はcandidateとしてnative/Calibrationから除外する。
 - `⟦⿵門日⟧`をlocal compositionできる。
 - Calibrationは同条件native/composition比較、文字単位optimization、profile生成、holdout評価を分離する。
 - v0.1 compatibility、Pages/browser、typecheck、build、packを通す。

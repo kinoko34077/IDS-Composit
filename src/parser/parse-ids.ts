@@ -1,5 +1,5 @@
 import type { IdsNode } from '../core/types';
-import { IDC_ARITY } from '../data/idc';
+import { IDC_ARITY } from '../data/idc.ts';
 import type { ParseError } from './errors';
 
 export type ParseResult =

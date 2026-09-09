@@ -1,7 +1,7 @@
-import { IDC_DEFINITIONS } from '../../src/data/idc';
-import type { IdsNode } from '../../src/core/types';
-import type { KnownCharacterEntry } from '../../src/known';
-import { parseIds } from '../../src/parser';
+import { IDC_DEFINITIONS } from '../../src/data/idc.ts';
+import type { IdsNode } from '../../src/core/types.ts';
+import type { KnownCharacterEntry } from '../../src/known/types.ts';
+import { parseIds } from '../../src/parser/parse-ids.ts';
 
 export type CalibrationCorpusEntry = {
   ids: string;
@@ -10,6 +10,8 @@ export type CalibrationCorpusEntry = {
   components: string[];
   source: string;
   sourceVersion?: string;
+  retrievalMethod?: string;
+  sourceHash?: string;
 };
 
 export type CalibrationCorpus = {
@@ -58,6 +60,8 @@ export function buildCalibrationCorpus(
       components,
       source: entry.source,
       ...(entry.sourceVersion === undefined ? {} : { sourceVersion: entry.sourceVersion }),
+      ...(entry.retrievalMethod === undefined ? {} : { retrievalMethod: entry.retrievalMethod }),
+      ...(entry.sourceHash === undefined ? {} : { sourceHash: entry.sourceHash }),
     };
     if (split(corpusEntry, eligibleIndex) === 'holdout') holdout.push(corpusEntry);
     else train.push(corpusEntry);

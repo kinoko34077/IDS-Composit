@@ -10,7 +10,12 @@ const entries: KnownCharacterEntry[] = [
 ];
 
 describe('calibration corpus', () => {
-  it('filters verified supported entries and keeps train/holdout separate', () => {
+  it('filters verified supported entries, keeps provenance, and keeps train/holdout separate', () => {
+    const entriesWithProvenance = entries.map((entry) => ({
+      ...entry,
+      retrievalMethod: 'fixture',
+      sourceHash: 'sha256:test',
+    }));
     const corpus = buildCalibrationCorpus(entries, {
       targetAvailable: () => true,
       componentAvailable: () => true,
@@ -21,5 +26,14 @@ describe('calibration corpus', () => {
     expect(corpus.train.map((entry) => entry.character)).toEqual(['街']);
     expect(corpus.holdout.map((entry) => entry.character)).toEqual(['柯']);
     expect(corpus.train[0]?.components).toEqual(['彳', '圭', '亍']);
+
+    const corpusWithProvenance = buildCalibrationCorpus(entriesWithProvenance, {
+      targetAvailable: () => true,
+      componentAvailable: () => true,
+    });
+    expect(corpusWithProvenance.train[0]).toMatchObject({
+      retrievalMethod: 'fixture',
+      sourceHash: 'sha256:test',
+    });
   });
 });

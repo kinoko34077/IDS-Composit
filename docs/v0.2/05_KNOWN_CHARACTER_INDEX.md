@@ -28,4 +28,8 @@ verified候補が一つだけならnative characterを返す。verified候補が
 
 現在の初期seed `⿲彳圭亍 → 街`はIDS-Composit内の手動seedに過ぎないため`candidate`であり、default native解決・Calibration教師データには使わない。外部資料を取得して生成するbulk indexは`data/known/generated/`へ分離し、core runtimeへ直接importしない。
 
-外部資料の取り込みは`tools/known/generate-index.ts`の決定的generatorを入口とする。generatorは取得処理やCHISE問い合わせを行わず、source metadataを付けたoptional JSON artifactを生成する。runtimeへbulk artifactを自動importする処理は持たない。
+外部資料の取り込みは`tools/known/import-chise-ids.ts`のsource-specific importerと`tools/known/generate-index.ts`の決定的generatorを入口とする。初期sourceはCHISE IDSの抽象文字ファイル16本で、機能IDSだけをverified recordとして取り込む。`@apparent=`はCHISEが機能構造ではないと定義しているためKnown mappingへ昇格しない。機能IDS欠損でapparent値だけがある行はwarningとしてreportへ残す。
+
+bulk artifactは`ids-composit-known-records/v0.2`のcompact形式（source metadata一回＋records）で`data/known/generated/`へ置く。`entriesFromKnownRecordsArtifact()`によるhydrateと`createKnownCharacterIndex()`への投入は利用側の明示操作に限り、runtimeは生成ディレクトリを自動importしない。CHISE IDS由来データのライセンスはartifact内noticeで管理し、MITのnpm runtime packageへ含めない。
+
+初回固定sourceはCHISE IDS revision `352e13378e411c322cfa16bfd7a6d21d670d7eca`（snapshot `2026-07-29`）。取り込みreportでは101,995 records、unique IDS 101,833、ambiguity 160、重複0、一意解決率99.842880%を記録している。`街`はsource原文の`⿴行圭`としてverifiedになり、手動seedの`⿲彳圭亍`とは意味的canonicalizationを行わず別mappingとして扱う。

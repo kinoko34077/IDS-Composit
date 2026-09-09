@@ -58,6 +58,8 @@ v0.2の構造処理で対応する空間IDCは次の14種類です。`⿾`（反
 
 `v0.1.0`の公開APIとfallback挙動を維持しながら、v0.2では出典付きKnown Character Index（初期手動seedは未検証candidate）、native-first resolver chain、Generic Layout Profileの校正基盤を追加しています。詳細は[v0.2仕様章別索引](docs/v0.2/00_INDEX.md)を参照してください。
 
+v0.2のoptional Known bulk dataは、固定revisionのCHISE IDS抽象文字ファイルから`npm run known:import:chise`で再生成できます。artifactはruntimeへ自動importせず、由来・hash・licenseは[data notice](data/known/generated/CHISE-IDS-DATA-NOTICE.md)とartifactの`source`で確認します。
+
 ## 開発状況
 
 v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在の開発版は`0.2.0-dev.0`で、v0.2のKnown Index、14 spatial IDC、native-first resolver chain、calibration foundationを実装中です。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。

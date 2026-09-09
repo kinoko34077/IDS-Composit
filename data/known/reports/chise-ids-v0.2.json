@@ -1,0 +1,347 @@
+{
+  "schemaVersion": "ids-composit-known-import-report/v0.2",
+  "stats": {
+    "files": 16,
+    "lines": 102028,
+    "comments": 32,
+    "records": 101995,
+    "issues": 0,
+    "warnings": 1,
+    "apparent": 403,
+    "uniquePairs": 101995,
+    "duplicatePairs": 0,
+    "uniqueIds": 101833,
+    "ambiguousIds": 160,
+    "uniquelyResolvableIds": 101673,
+    "uniquelyResolvableRate": 0.998428800094272
+  },
+  "files": [
+    {
+      "file": "IDS-UCS-Basic.txt",
+      "lines": 20994,
+      "comments": 2,
+      "records": 20992,
+      "apparent": 100,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-A.txt",
+      "lines": 6606,
+      "comments": 2,
+      "records": 6604,
+      "apparent": 13,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-B-1.txt",
+      "lines": 8194,
+      "comments": 2,
+      "records": 8191,
+      "apparent": 73,
+      "issues": 0,
+      "warnings": 1
+    },
+    {
+      "file": "IDS-UCS-Ext-B-2.txt",
+      "lines": 8194,
+      "comments": 2,
+      "records": 8192,
+      "apparent": 36,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-B-3.txt",
+      "lines": 8194,
+      "comments": 2,
+      "records": 8192,
+      "apparent": 38,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-B-4.txt",
+      "lines": 8194,
+      "comments": 2,
+      "records": 8192,
+      "apparent": 51,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-B-5.txt",
+      "lines": 8194,
+      "comments": 2,
+      "records": 8192,
+      "apparent": 18,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-B-6.txt",
+      "lines": 1762,
+      "comments": 2,
+      "records": 1760,
+      "apparent": 4,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-C.txt",
+      "lines": 4162,
+      "comments": 2,
+      "records": 4160,
+      "apparent": 5,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-D.txt",
+      "lines": 224,
+      "comments": 2,
+      "records": 222,
+      "apparent": 2,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-E.txt",
+      "lines": 5776,
+      "comments": 2,
+      "records": 5774,
+      "apparent": 12,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-F.txt",
+      "lines": 7475,
+      "comments": 2,
+      "records": 7473,
+      "apparent": 32,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-G.txt",
+      "lines": 4941,
+      "comments": 2,
+      "records": 4939,
+      "apparent": 2,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-H.txt",
+      "lines": 4194,
+      "comments": 2,
+      "records": 4192,
+      "apparent": 8,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-I.txt",
+      "lines": 624,
+      "comments": 2,
+      "records": 622,
+      "apparent": 0,
+      "issues": 0,
+      "warnings": 0
+    },
+    {
+      "file": "IDS-UCS-Ext-J.txt",
+      "lines": 4300,
+      "comments": 2,
+      "records": 4298,
+      "apparent": 9,
+      "issues": 0,
+      "warnings": 0
+    }
+  ],
+  "examples": {
+    "street": [
+      "⿴行圭"
+    ]
+  },
+  "resolutionSamples": [
+    {
+      "ids": "&U-i001+2FF1;&U-i001+2FF1;&CDP-8C44;八⿰心巳",
+      "characters": [
+        "䏋"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;&U-i001+2FF1;⿱䒑丨⿰屮又⿰𰀪二",
+      "characters": [
+        "𠭳"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱㇇丨臼",
+      "characters": [
+        "𦥖"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱亠丫⿱⿰刀𱍸&CDP-89C6;",
+      "characters": [
+        "齊"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱亠丫⿱⿰尸𱍸日",
+      "characters": [
+        "𮮼"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱亠亻⿱⿰尸𱍸𠔼",
+      "characters": [
+        "𮮺"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱亠弓⿱⿰刀𱍸&CDP-89C6;",
+      "characters": [
+        "𮮻"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿱厶丨⿰⿱厶丨⿱厶丨",
+      "characters": [
+        "𠫸"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;⿻十彡⿰⺼勿",
+      "characters": [
+        "𦝸"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;丁𰸙",
+      "characters": [
+        "𲃻"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;丅𠈌",
+      "characters": [
+        "𲐬"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;丰𠬞",
+      "characters": [
+        "𠬻"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;亣八",
+      "characters": [
+        "亦"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;亻𠈌",
+      "characters": [
+        "𠂹"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;十⿱⿰夕𱍸&CDP-89C6;",
+      "characters": [
+        "𪗄"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;十卄",
+      "characters": [
+        "𠦃"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;十畂",
+      "characters": [
+        "畞"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;十𠘬",
+      "characters": [
+        "𠦐"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;千北",
+      "characters": [
+        "乖"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "&U-i001+2FF1;千皕",
+      "characters": [
+        "𠃇"
+      ],
+      "kind": "match"
+    }
+  ],
+  "issues": [],
+  "warnings": [
+    {
+      "file": "IDS-UCS-Ext-B-1.txt",
+      "line": 2320,
+      "kind": "missing-functional-ids",
+      "message": "functional IDS is empty; apparent IDS is retained only as source metadata"
+    }
+  ],
+  "source": {
+    "name": "CHISE IDS database",
+    "version": "snapshot-2026-07-29",
+    "retrievalMethod": "HTTPS raw download from a pinned repository revision",
+    "fileHash": "sha256:aacadbce664f55c9ab4513e9b20d8966722b494c5bfe5c5257b007f056da79a9",
+    "repository": "https://github.com/chise/ids",
+    "revision": "352e13378e411c322cfa16bfd7a6d21d670d7eca",
+    "license": "GPL-2.0-or-later",
+    "files": [
+      "IDS-UCS-Basic.txt",
+      "IDS-UCS-Ext-A.txt",
+      "IDS-UCS-Ext-B-1.txt",
+      "IDS-UCS-Ext-B-2.txt",
+      "IDS-UCS-Ext-B-3.txt",
+      "IDS-UCS-Ext-B-4.txt",
+      "IDS-UCS-Ext-B-5.txt",
+      "IDS-UCS-Ext-B-6.txt",
+      "IDS-UCS-Ext-C.txt",
+      "IDS-UCS-Ext-D.txt",
+      "IDS-UCS-Ext-E.txt",
+      "IDS-UCS-Ext-F.txt",
+      "IDS-UCS-Ext-G.txt",
+      "IDS-UCS-Ext-H.txt",
+      "IDS-UCS-Ext-I.txt",
+      "IDS-UCS-Ext-J.txt"
+    ]
+  }
+}

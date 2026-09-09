@@ -10,6 +10,27 @@ export type KnownCharacterEntry = {
   status: KnownCharacterStatus;
 };
 
+export type KnownCharacterArtifactSource = {
+  name: string;
+  version: string;
+  retrievalMethod: string;
+  fileHash?: string;
+  repository?: string;
+  revision?: string;
+  license?: string;
+  files?: readonly string[];
+};
+
+export type KnownCharacterRecordsArtifact = {
+  schemaVersion: 'ids-composit-known-records/v0.2';
+  source: KnownCharacterArtifactSource;
+  records: readonly {
+    ids: string;
+    character: string;
+    status: KnownCharacterStatus;
+  }[];
+};
+
 export type KnownCharacterLookup =
   | { kind: 'match'; character: string }
   | { kind: 'ambiguous' }

@@ -13,9 +13,9 @@ native-first Resolver chain
 ↓
 Spatial IDC coverage
 ↓
-Known external-source generator / optional bulk artifact
+Known external-source importer / deterministic compact bulk artifact
 ↓
-Known mapping expansion and hit-rate report
+Known mapping expansion, provenance, and hit-rate report
 ↓
 Calibration corpus / measurement / optimizer
 ↓

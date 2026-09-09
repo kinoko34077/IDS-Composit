@@ -5,6 +5,10 @@ export type ExternalKnownSource = {
   version: string;
   retrievalMethod: string;
   fileHash?: string;
+  repository?: string;
+  revision?: string;
+  license?: string;
+  files?: readonly string[];
 };
 
 export type ExternalKnownRecord = {
@@ -17,6 +21,12 @@ export type GeneratedKnownIndexArtifact = {
   schemaVersion: 'ids-composit-known-index/v0.2';
   source: ExternalKnownSource;
   entries: readonly KnownCharacterEntry[];
+};
+
+export type GeneratedKnownRecordsArtifact = {
+  schemaVersion: 'ids-composit-known-records/v0.2';
+  source: ExternalKnownSource;
+  records: readonly ExternalKnownRecord[];
 };
 
 function requiredMetadata(value: string, field: string): string {
@@ -39,6 +49,19 @@ function compareEntries(left: KnownCharacterEntry, right: KnownCharacterEntry): 
   return compareText(`${left.ids}\u0000${left.character}\u0000${left.status}`, `${right.ids}\u0000${right.character}\u0000${right.status}`);
 }
 
+function normalizeSource(source: ExternalKnownSource): ExternalKnownSource {
+  return {
+    name: requiredMetadata(source.name, 'name'),
+    version: requiredMetadata(source.version, 'version'),
+    retrievalMethod: requiredMetadata(source.retrievalMethod, 'retrievalMethod'),
+    ...(source.fileHash === undefined ? {} : { fileHash: requiredMetadata(source.fileHash, 'fileHash') }),
+    ...(source.repository === undefined ? {} : { repository: requiredMetadata(source.repository, 'repository') }),
+    ...(source.revision === undefined ? {} : { revision: requiredMetadata(source.revision, 'revision') }),
+    ...(source.license === undefined ? {} : { license: requiredMetadata(source.license, 'license') }),
+    ...(source.files === undefined ? {} : { files: source.files.map((file) => requiredMetadata(file, 'files')) }),
+  };
+}
+
 /**
  * Convert externally obtained records into a deterministic, optional data
  * artifact. This tool does not fetch CHISE or import the artifact into runtime.
@@ -47,12 +70,7 @@ export function generateKnownIndexArtifact(
   records: readonly ExternalKnownRecord[],
   source: ExternalKnownSource,
 ): GeneratedKnownIndexArtifact {
-  const normalizedSource: ExternalKnownSource = {
-    name: requiredMetadata(source.name, 'name'),
-    version: requiredMetadata(source.version, 'version'),
-    retrievalMethod: requiredMetadata(source.retrievalMethod, 'retrievalMethod'),
-    ...(source.fileHash === undefined ? {} : { fileHash: requiredMetadata(source.fileHash, 'fileHash') }),
-  };
+  const normalizedSource = normalizeSource(source);
 
   const entries = records.map((record): KnownCharacterEntry => ({
     ids: requiredSourceValue(record.ids, 'ids'),
@@ -68,5 +86,30 @@ export function generateKnownIndexArtifact(
     schemaVersion: 'ids-composit-known-index/v0.2',
     source: normalizedSource,
     entries,
+  };
+}
+
+/**
+ * Create a compact bulk artifact. Source provenance is stored once at the
+ * artifact level; consumers can hydrate records into KnownCharacterEntry
+ * values only when they explicitly opt into this optional dataset.
+ */
+export function generateKnownRecordsArtifact(
+  records: readonly ExternalKnownRecord[],
+  source: ExternalKnownSource,
+): GeneratedKnownRecordsArtifact {
+  const normalizedSource = normalizeSource(source);
+  const normalizedRecords = records
+    .map((record): ExternalKnownRecord => ({
+      ids: requiredSourceValue(record.ids, 'ids'),
+      character: requiredSourceValue(record.character, 'character'),
+      status: record.status,
+    }))
+    .sort((left, right) => compareText(`${left.ids}\u0000${left.character}\u0000${left.status}`, `${right.ids}\u0000${right.character}\u0000${right.status}`));
+
+  return {
+    schemaVersion: 'ids-composit-known-records/v0.2',
+    source: normalizedSource,
+    records: normalizedRecords,
   };
 }

@@ -39,16 +39,17 @@ Updated: 2026-09-09
 - Mobile GitHub Pages: `examples/index.html`のスマホ確認入口、IDS入力・候補select・local/CHISE切替・パターン一覧、Pages専用multi-page build、main push deploy workflowを追加。入口URLは`https://kinoko34077.github.io/IDS-Composit/`
 - v0.2 Documentation: 新要件を`docs/v0.2/`の章別文書へ分割し、`docs/v0.2/00_INDEX.md`を参照入口とした。原資料は`docs/v0.2/source/`に保存。
 - v0.2 Compatibility: `tests/compat/v0-1-runtime.test.ts`で公開API、fallback、contenteditable、provider障害、observer停止、copy/a11y metadataの基準を固定。
-- v0.2 Known Character Index: NFC lookup key、出典付きverified/candidate、many-to-many lookup、ambiguity handlingを実装。初期手動seed `⿲彳圭亍 → 街`は外部確認待ちのcandidateとして保持し、native/Calibrationから除外。external source artifactの決定的generatorも追加。
+- v0.2 Known Character Index: NFC lookup key、出典付きverified/candidate、many-to-many lookup、ambiguity handlingを実装。初期手動seed `⿲彳圭亍 → 街`は外部確認待ちのcandidateとして保持し、native/Calibrationから除外。external source artifactの決定的generator、compact bulk artifactの明示hydrate境界も追加。
+- v0.2 CHISE IDS importer: CHISE IDS公式GitHubミラーの抽象文字ファイル16本を固定revisionからbounded parallel downloadし、機能IDSだけをverified recordへ変換。`@apparent`は機能mappingへ入れず、機能IDS欠損1件はwarningとして保持。初回artifact `data/known/generated/chise-ids-v0.2.json` は101,995 records（6,130,537 bytes）、report `data/known/reports/chise-ids-v0.2.json` は重複0、ambiguity 160、unique IDS 101,833、一意解決率99.842880%、issues 0、warnings 1を記録する。artifactはruntime/npm packageへ自動importしない。
 - v0.2 Resolver Chain: explicit provider → verified Known Index → CHISE → structural Parser/Coverage → local composition → source fallbackの順序を実装。local未対応IDCでもnative問い合わせへ到達し、既存`resolveIds(ids, provider?)`を維持しながら任意のKnown Index引数を追加。
 - v0.2 Resolver/Index hardening: scannerは閉じたunsupported IDCをnative問い合わせ可能なIDS segmentとして保持。explicit provider miss後のCHISE fallback、Known IndexのNFC lookup、原文provenance保持、external source generator、manual candidate policyを回帰テスト付きで固定。
 - v0.2 Structural Coverage: 14 spatial IDCのarity/role/layout/DOM処理をデータ駆動で追加。`⿾`/`⿿`は未対応のまま。
-- v0.2 Calibration Foundation: ink metrics、corpus split、loss report、純粋slot optimizer、IDC/role別Generic Layout Profile集約、profile適用の型・テスト・空データartifactを追加。production runtimeへCanvas/SVGは導入していない。
+- v0.2 Calibration Foundation: ink metrics、corpus split、loss report、純粋slot optimizer、IDC/role別Generic Layout Profile集約、profile適用の型・テストを追加。CHISE固定Known artifactからUnicode-onlyの97,482件（train 77,985 / holdout 19,497）をcompact corpusへ生成し、source hash/provenanceを保持。実font raster測定・profile採用は未実施で、production runtimeへCanvas/SVGは導入していない。
 - Mobile Pages v0.2 surface: 14 spatial IDC、Known candidate/nativeの区別、local composition、未対応IDCのsource-preserving fallbackを入力・候補・一覧で試せる状態へ更新。
 
 ## 運用観測 / 次作業
 
-v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。hardening commit `bb5e5a6` はpush済みで、GitHub Actions CI Run #27とPages Run #5もcompleted successfully、公開入口のcandidate表記を含む現行Pagesを確認済み。今回のhardening差分は、全31 test files / 179 tests、runtime/tools typecheck、library/Pages build、package dry-runを通過している。次は外部provenance付きKnown mappingを投入できるsource取得・生成運用を整え、実データが揃ってからcalibration用raster測定へ進む。
+v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。hardening commit `bb5e5a6` はpush済みで、GitHub Actions CI Run #27とPages Run #5もcompleted successfully、公開入口のcandidate表記を含む現行Pagesを確認済み。hardening時点では全31 test files / 179 tests、runtime/tools typecheck、library/Pages build、package dry-runを通過し、Importer・Calibration corpus追加後の現行gateは全33 test files / 188 tests、本体・tools typecheck、library/Pages build、package dry-runを通過している。CHISE IDS importerは固定revisionの実データ、source hash、license notice、重複・ambiguity・hit率reportまで生成済み、同sourceからCalibration corpus 97,482件（train 77,985 / holdout 19,497）も生成済み。次はcorpusを対象にfont/em/baselineを固定したtools限定raster測定へ進む。runtimeへのCanvas/SVG導入、profile採用、既知字の個別配置DB化はまだ行わない。
 
 ## 残課題 / manual validation
 
@@ -59,7 +60,7 @@ v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3が
 - baseline補正値
 - npm registry/CDNへの公開手順
 - optional persistent cacheの必要性と仕様
-- v0.2 calibration corpusの取得、Canvas/SVGによるtools限定raster測定、文字単位optimization、profile生成、holdout gate
+- v0.2 calibration corpusからのCanvas/SVGによるtools限定raster測定、文字単位optimization、profile生成、holdout gate
 - v0.2 resolver pathの実測表示とCHISE live環境での再確認
 
 ## 重要な再検討条件

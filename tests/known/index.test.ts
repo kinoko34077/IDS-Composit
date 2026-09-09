@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createKnownCharacterIndex } from '../../src/known';
-import type { KnownCharacterEntry } from '../../src/known';
+import { createKnownCharacterIndex, entriesFromKnownRecordsArtifact } from '../../src/known';
+import type { KnownCharacterEntry, KnownCharacterRecordsArtifact } from '../../src/known';
 
 const entries: KnownCharacterEntry[] = [
   {
@@ -81,5 +81,32 @@ describe('Known Character Index', () => {
     };
     const characterIndex = createKnownCharacterIndex([characterEntry]);
     expect(characterIndex.lookupCharacter('が')).toEqual([characterEntry]);
+  });
+
+  it('hydrates a compact optional artifact only when explicitly requested', () => {
+    const artifact: KnownCharacterRecordsArtifact = {
+      schemaVersion: 'ids-composit-known-records/v0.2',
+      source: {
+        name: 'CHISE IDS database',
+        version: 'snapshot-test',
+        retrievalMethod: 'fixture',
+        fileHash: 'sha256:test',
+      },
+      records: [
+        { ids: '⿴行圭', character: '街', status: 'verified' },
+      ],
+    };
+
+    const entries = entriesFromKnownRecordsArtifact(artifact);
+    expect(entries).toEqual([{
+      ids: '⿴行圭',
+      character: '街',
+      source: 'CHISE IDS database',
+      sourceVersion: 'snapshot-test',
+      retrievalMethod: 'fixture',
+      sourceHash: 'sha256:test',
+      status: 'verified',
+    }]);
+    expect(createKnownCharacterIndex(entries).resolve('⿴行圭')).toEqual({ kind: 'match', character: '街' });
   });
 });

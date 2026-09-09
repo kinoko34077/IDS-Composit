@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "ids-composit-calibration-corpus-report/v0.2",
+  "source": {
+    "name": "CHISE IDS database",
+    "version": "snapshot-2026-07-29",
+    "retrievalMethod": "HTTPS raw download from a pinned repository revision",
+    "fileHash": "sha256:aacadbce664f55c9ab4513e9b20d8966722b494c5bfe5c5257b007f056da79a9",
+    "repository": "https://github.com/chise/ids",
+    "revision": "352e13378e411c322cfa16bfd7a6d21d670d7eca",
+    "license": "GPL-2.0-or-later",
+    "files": [
+      "IDS-UCS-Basic.txt",
+      "IDS-UCS-Ext-A.txt",
+      "IDS-UCS-Ext-B-1.txt",
+      "IDS-UCS-Ext-B-2.txt",
+      "IDS-UCS-Ext-B-3.txt",
+      "IDS-UCS-Ext-B-4.txt",
+      "IDS-UCS-Ext-B-5.txt",
+      "IDS-UCS-Ext-B-6.txt",
+      "IDS-UCS-Ext-C.txt",
+      "IDS-UCS-Ext-D.txt",
+      "IDS-UCS-Ext-E.txt",
+      "IDS-UCS-Ext-F.txt",
+      "IDS-UCS-Ext-G.txt",
+      "IDS-UCS-Ext-H.txt",
+      "IDS-UCS-Ext-I.txt",
+      "IDS-UCS-Ext-J.txt"
+    ]
+  },
+  "stats": {
+    "inputRecords": 101995,
+    "eligibleRecords": 97482,
+    "train": 77985,
+    "holdout": 19497,
+    "excluded": 4513,
+    "byOperator": {
+      "⿰": 64757,
+      "⿱": 21633,
+      "⿲": 330,
+      "⿳": 928,
+      "⿴": 831,
+      "⿵": 1025,
+      "⿶": 125,
+      "⿷": 197,
+      "⿸": 3369,
+      "⿹": 556,
+      "⿺": 3530,
+      "⿻": 137,
+      "⿼": 2,
+      "⿽": 62
+    }
+  }
+}

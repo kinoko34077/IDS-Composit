@@ -43,7 +43,10 @@
 |BEH-225|`src/known/index.ts`, `src/resolver/resolve-chain.ts`|`tests/known/index.test.ts`, `tests/resolver/resolve-chain.test.ts` ambiguity assertions|
 |BEH-226|`src/parser/scan-source.ts`, `src/resolver/resolve-chain.ts`, `src/renderer/render-document.ts`|`tests/parser/scan-source.test.ts`, `tests/resolver/resolve-chain.test.ts`, `tests/public-api/public-api.test.ts` native-before-coverage assertions|
 |DATA-227|`src/known/normalize-lookup-key.ts`, `src/known/index.ts`, `tools/known/generate-index.ts`|`tests/known/index.test.ts`, `tests/known/generate-index.test.ts` NFC/provenance/generator assertions|
-|CALIBRATION|`src/calibration/`, `tools/calibration/`, `data/calibration/`, `data/layout-profiles/`|`tests/calibration/metrics.test.ts`, `tests/calibration/corpus.test.ts`, `tests/calibration/report.test.ts`, `tests/calibration/optimizer.test.ts`, `tests/calibration/profile.test.ts`|
+|DATA-228|`tools/known/import-chise-ids.ts`, `tools/known/generate-index.ts`, `data/known/generated/`, `data/known/reports/`|`tests/known/import-chise-ids.test.ts`, `tests/known/generate-index.test.ts`, `npm run typecheck:tools`, fixed-source import report|
+|DATA-229|`src/known/types.ts`, `src/known/index.ts`|`tests/known/index.test.ts` compact optional artifact hydrate and native resolve|
+|CALIBRATION|`src/calibration/`, `tools/calibration/`, `data/calibration/`, `data/layout-profiles/`|`tests/calibration/metrics.test.ts`, `tests/calibration/corpus.test.ts`, `tests/calibration/generate-corpus.test.ts`, `tests/calibration/report.test.ts`, `tests/calibration/optimizer.test.ts`, `tests/calibration/profile.test.ts`|
+|DATA-230|`tools/calibration/generate-corpus.ts`, `data/calibration/`|`tests/calibration/generate-corpus.test.ts`, `npm run calibration:build:corpus`, source-hash-preserving corpus report|
 |PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`|`tests/examples/v0-2-surface.test.ts`, `npm run build:pages`|
 
 Phase 0〜9.2およびv0.2 first sliceの実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

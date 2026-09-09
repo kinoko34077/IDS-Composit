@@ -1,5 +1,10 @@
-import type { KnownCharacterEntry, KnownCharacterIndex, KnownCharacterLookup } from './types';
-import { normalizeKnownLookupKey } from './normalize-lookup-key';
+import type {
+  KnownCharacterEntry,
+  KnownCharacterIndex,
+  KnownCharacterLookup,
+  KnownCharacterRecordsArtifact,
+} from './types';
+import { normalizeKnownLookupKey } from './normalize-lookup-key.ts';
 
 function entriesFor(map: ReadonlyMap<string, readonly KnownCharacterEntry[]>, key: string): readonly KnownCharacterEntry[] {
   return map.get(key) ?? [];
@@ -48,5 +53,30 @@ export function createKnownCharacterIndex(entries: readonly KnownCharacterEntry[
   };
 }
 
-export { normalizeKnownLookupKey } from './normalize-lookup-key';
-export type { KnownCharacterEntry, KnownCharacterIndex, KnownCharacterLookup, KnownCharacterStatus } from './types';
+/**
+ * Explicitly hydrate an optional compact artifact into runtime entries. The
+ * runtime never discovers or imports bulk data by itself.
+ */
+export function entriesFromKnownRecordsArtifact(
+  artifact: KnownCharacterRecordsArtifact,
+): KnownCharacterEntry[] {
+  return artifact.records.map((record) => ({
+    ids: record.ids,
+    character: record.character,
+    source: artifact.source.name,
+    sourceVersion: artifact.source.version,
+    retrievalMethod: artifact.source.retrievalMethod,
+    ...(artifact.source.fileHash === undefined ? {} : { sourceHash: artifact.source.fileHash }),
+    status: record.status,
+  }));
+}
+
+export { normalizeKnownLookupKey } from './normalize-lookup-key.ts';
+export type {
+  KnownCharacterArtifactSource,
+  KnownCharacterEntry,
+  KnownCharacterIndex,
+  KnownCharacterLookup,
+  KnownCharacterRecordsArtifact,
+  KnownCharacterStatus,
+} from './types';

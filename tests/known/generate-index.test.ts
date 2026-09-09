@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateKnownIndexArtifact } from '../../tools/known/generate-index';
+import { generateKnownIndexArtifact, generateKnownRecordsArtifact } from '../../tools/known/generate-index';
 
 describe('generateKnownIndexArtifact', () => {
   it('creates a deterministic external artifact with provenance on every entry', () => {
@@ -63,5 +63,27 @@ describe('generateKnownIndexArtifact', () => {
 
     expect(artifact.entries[0]?.ids).toBe('⿰が木');
     expect(artifact.entries[0]?.character).toBe(' 字 ');
+  });
+
+  it('supports a compact bulk artifact with source provenance stored once', () => {
+    const artifact = generateKnownRecordsArtifact([
+      { ids: '⿱日月', character: '明', status: 'verified' },
+      { ids: '⿰木可', character: '柯', status: 'verified' },
+    ], {
+      name: 'external IDS fixture',
+      version: '2026-09',
+      retrievalMethod: 'downloaded source file',
+    });
+
+    expect(artifact.schemaVersion).toBe('ids-composit-known-records/v0.2');
+    expect(artifact.records).toEqual([
+      { ids: '⿰木可', character: '柯', status: 'verified' },
+      { ids: '⿱日月', character: '明', status: 'verified' },
+    ]);
+    expect(artifact.source).toEqual({
+      name: 'external IDS fixture',
+      version: '2026-09',
+      retrievalMethod: 'downloaded source file',
+    });
   });
 });

@@ -24,6 +24,8 @@ jobs:
         run: npm test -- --run
       - name: Typecheck
         run: npm run typecheck
+      - name: Typecheck tools
+        run: npm run typecheck:tools
       - name: Build package
         run: npm run build
       - name: Check package contents
