@@ -24,7 +24,7 @@ export type RenderIdsOptions = {
 function createResolver(options: RenderIdsOptions): IdsResolver {
   const knownIndex = options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX;
   const explicitProvider = options.provider;
-  const chiseProvider = explicitProvider === undefined && options.chise === true
+  const chiseProvider = options.chise === true
     ? createChiseProvider(options.chiseOptions)
     : undefined;
   return (ids) => resolveIdsWithChain(ids, { explicitProvider, knownIndex, chiseProvider });
@@ -32,11 +32,11 @@ function createResolver(options: RenderIdsOptions): IdsResolver {
 
 function createRenderTarget(options: RenderIdsOptions): (target: HTMLElement) => Promise<void> {
   const includeContentEditable = options.contentEditable === true;
-  if (options.provider === undefined && options.knownIndex === undefined && options.chise !== true) {
+  if (options.provider === undefined && options.chise !== true) {
     return async (target) => {
       renderIdsInElement(target, {
         includeContentEditable,
-        knownIndex: DEFAULT_KNOWN_CHARACTER_INDEX,
+        knownIndex: options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX,
         layoutProfiles: options.layoutProfiles,
       });
     };
@@ -64,6 +64,7 @@ export function observeIds(root: HTMLElement, options: RenderIdsOptions = {}): I
 
 export { createMemoryMatchCache } from './chise';
 export { createKnownCharacterIndex } from './known';
+export { normalizeKnownLookupKey } from './known';
 export type {
   KnownCharacterEntry,
   KnownCharacterIndex,

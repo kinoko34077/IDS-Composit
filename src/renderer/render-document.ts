@@ -49,14 +49,14 @@ function appendSegment(
   }
 
   try {
-    const parsed = parseIds(segment.source);
-    if (!parsed.ok) {
-      fragment.append(document.createTextNode(segment.raw));
-      return;
-    }
     const known = options.knownIndex?.resolve(segment.source);
     if (known?.kind === 'match') {
       fragment.append(document.createTextNode(known.character));
+      return;
+    }
+    const parsed = parseIds(segment.source);
+    if (!parsed.ok) {
+      fragment.append(document.createTextNode(segment.raw));
       return;
     }
     fragment.append(renderLayout(composeLayout(parsed.ast, { layoutProfiles: options.layoutProfiles }), document, segment.source));

@@ -17,7 +17,7 @@ v0.2では既存ACに加え、14 spatial IDC、Known Indexのprovenance/many-to-
 
 ### Integration
 
-- Scanner → Parser → Resolver → Composition
+- Scanner → native-first Resolver → Parser/Coverage → Composition
 - CHISE Adapter fixture test
 - DOM Adapter browser test
 

@@ -25,26 +25,24 @@ Text Scanner
 ↓
 IDS Source
 ↓
-IDS Parser
+Native Resolution
+├─ Explicit Provider
+├─ Verified Known Index
+└─ CHISE
+↓ miss
+Structural Parser / Coverage
 ↓
-AST
+Role Resolver → Variant Resolver → Layout Engine / Profile
 ↓
-CHISE Resolver ───────────────┐
-├─ resolved → Native Text     │
-└─ unresolved                 │
-        ↓                     │
-Role Resolver                 │
-        ↓                     │
-Variant Resolver              │
-        ↓                     │
-Layout Engine                 │
-        ↓                     │
-Layout Model                  │
-        ↓                     │
-DOM Inline Adapter            │
-        ↓                     │
-Rendered DOM ←────────────────┘
+Layout Model → DOM Inline Adapter
+↓ failure
+Source-preserving fallback
 ```
+
+Native resolution is intentionally independent from local structural coverage. A
+closed IDS source may be resolved by a provider even when the local parser does
+not support its IDC; only after all native sources miss do parsing and local
+composition run.
 
 ## 2. 変更理由による責務分離
 

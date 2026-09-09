@@ -21,7 +21,7 @@ export const PATTERN_CASES: readonly PatternCase[] = [
   { id: 'surround-corner', label: '角包み', source: '⿼句口', description: 'corner surround layout', resolution: 'Known miss → local composition' },
   { id: 'surround-corner-reverse', label: '逆角包み', source: '⿽乙丶', description: 'reverse corner surround layout', resolution: 'Known miss → local composition' },
   { id: 'nested', label: 'nested', source: '⿰木⿱日月', description: 'nested composition', resolution: 'Known miss → nested local composition' },
-  { id: 'trinary-horizontal', label: '三項左右', source: '⿲彳圭亍', description: 'trinary horizontal', resolution: 'Known Index hit → native 街' },
+  { id: 'trinary-horizontal', label: '三項左右', source: '⿲彳圭亍', description: 'trinary horizontal', resolution: 'Known candidate（未検証）→ local composition' },
   { id: 'trinary-vertical', label: '三項上下', source: '⿳士冖豆', description: 'trinary vertical', resolution: 'Known miss → local composition' },
   { id: 'dense-horizontal', label: '高密度左右', source: '⿰鬱青', description: 'density difference', resolution: 'Known miss → local composition' },
   { id: 'dense-vertical', label: '高密度上下', source: '⿱龜心', description: 'density difference', resolution: 'Known miss → local composition' },

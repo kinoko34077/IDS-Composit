@@ -3,6 +3,27 @@ import { createKnownCharacterIndex } from '../../src/known';
 import { resolveIdsWithChain } from '../../src/resolver/resolve-chain';
 
 describe('resolveIdsWithChain', () => {
+  it('tries native providers before rejecting an unsupported structural operator', async () => {
+    const provider = { matchIds: vi.fn().mockResolvedValue({ found: true, text: '異' }) };
+
+    await expect(resolveIdsWithChain('⿾木可', { explicitProvider: provider }))
+      .resolves.toEqual({ kind: 'native', text: '異', sourceIds: '⿾木可' });
+    expect(provider.matchIds).toHaveBeenCalledWith('⿾木可');
+  });
+
+  it('allows the Known Index to resolve an unsupported structural operator', async () => {
+    const knownIndex = createKnownCharacterIndex([{
+      ids: '⿾木可',
+      character: '異',
+      source: 'external fixture',
+      sourceVersion: 'test',
+      status: 'verified',
+    }]);
+
+    await expect(resolveIdsWithChain('⿾木可', { knownIndex }))
+      .resolves.toEqual({ kind: 'native', text: '異', sourceIds: '⿾木可' });
+  });
+
   it('uses the verified Known Index before the CHISE provider', async () => {
     const chise = { matchIds: vi.fn().mockResolvedValue({ found: false }) };
     const knownIndex = createKnownCharacterIndex([{

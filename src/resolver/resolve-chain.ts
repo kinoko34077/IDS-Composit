@@ -43,11 +43,6 @@ async function resolveFromProvider(
 }
 
 export async function resolveIdsWithChain(ids: string, options: ResolveChainOptions = {}): Promise<Resolution> {
-  const parsed = parseIds(ids);
-  if (!parsed.ok) {
-    return { kind: 'unresolved', sourceIds: ids, reason: parsed.error.message };
-  }
-
   let diagnostic: ReturnType<typeof diagnosticFrom> | undefined;
   if (options.explicitProvider !== undefined) {
     const result = await resolveFromProvider(options.explicitProvider, ids);
@@ -64,6 +59,15 @@ export async function resolveIdsWithChain(ids: string, options: ResolveChainOpti
     const result = await resolveFromProvider(options.chiseProvider, ids);
     if (result.text !== undefined) return { kind: 'native', text: result.text, sourceIds: ids };
     diagnostic = result.diagnostic ?? diagnostic;
+  }
+
+  // Native identity is independent of local structural coverage. A provider
+  // or Known Index may know an IDS whose operator this renderer cannot compose.
+  const parsed = parseIds(ids);
+  if (!parsed.ok) {
+    return diagnostic === undefined
+      ? { kind: 'unresolved', sourceIds: ids, reason: parsed.error.message }
+      : { kind: 'unresolved', sourceIds: ids, reason: parsed.error.message, diagnostic };
   }
 
   return composeResolution(parsed.ast, ids, diagnostic);

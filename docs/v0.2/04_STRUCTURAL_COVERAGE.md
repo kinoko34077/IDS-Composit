@@ -32,6 +32,8 @@ type IdcDefinition = {
 
 `⿾` reflection and `⿿` rotation remain unsupported v0.2.x candidates. Subtraction系も対象外とする。
 
+ただし、閉じた`⟦IDS⟧` sourceをscannerが`ids` segmentとして保持することと、localでそのIDCを合成できることは別である。local coverage外でも、Native ResolutionのExplicit Provider・verified Known Index・CHISEが先に照合し、全てmissした後だけParser/Coverageのunsupported fallbackへ進む。
+
 ## Unknown character composition
 
 解決できないIDSでも、supported IDCかつ全childをParserが扱える場合はlocal compositionへ進む。`⟦⿵門日⟧`はsource-only fallbackではなくcomposition対象とする。

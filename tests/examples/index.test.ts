@@ -23,7 +23,7 @@ describe('mobile playground UI', () => {
     expect(candidate?.options).toHaveLength(PATTERN_CASES.length);
     expect(tableRows).toHaveLength(PATTERN_CASES.length);
     expect(root.querySelector<HTMLTableCellElement>('#pattern-table-body tr td code')?.textContent).toBe('⿰木可');
-    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known Index hit → native 街');
+    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known candidate（未検証）→ local composition');
     expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Unsupported IDC → source preserved');
     expect(root.querySelector('thead')?.textContent).toContain('解決経路（目安）');
     expect(render).toHaveBeenCalledTimes(1);

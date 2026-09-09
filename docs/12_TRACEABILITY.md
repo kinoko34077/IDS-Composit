@@ -35,12 +35,14 @@
 |REQ-210|`src/core/types.ts`, `src/data/idc.ts`, `src/data/layout-templates.ts`, `src/composition/layout.ts`|`tests/composition/spatial-coverage.test.ts`, `tests/renderer/spatial-coverage.test.ts`|
 |DATA-211|`src/data/idc.ts`, `src/data/layout-templates.ts`|`tests/composition/spatial-coverage.test.ts`|
 |BEH-212|`src/composition/layout.ts`, `src/renderer/render-document.ts`|`tests/composition/spatial-coverage.test.ts`, `tests/renderer/spatial-coverage.test.ts`|
-|DATA-220|`src/known/`, `data/known/manual/seed.json`|`tests/known/index.test.ts`, `tests/compat/v0-1-runtime.test.ts`|
+|DATA-220|`src/known/`, `data/known/manual/seed.json`, `tools/known/generate-index.ts`|`tests/known/index.test.ts`, `tests/known/generate-index.test.ts`, `tests/compat/v0-1-runtime.test.ts`|
 |DATA-221|`src/known/index.ts`|`tests/known/index.test.ts` many-to-many lookup assertions|
 |DATA-222|`data/known/generated/`, `data/known/manual/`|data layout review; generated/manual paths remain separate|
-|DATA-223|`src/known/types.ts`, `data/known/manual/seed.json`|`tests/known/index.test.ts` provenance assertions|
+|DATA-223|`src/known/types.ts`, `data/known/manual/seed.json`, `tools/known/generate-index.ts`|`tests/known/index.test.ts`, `tests/known/generate-index.test.ts` provenance assertions|
 |BEH-224|`src/resolver/resolve-chain.ts`, `src/resolver/resolve-ids.ts`, `src/public-api.ts`|`tests/resolver/resolve-chain.test.ts`, `tests/public-api/public-api.test.ts`|
 |BEH-225|`src/known/index.ts`, `src/resolver/resolve-chain.ts`|`tests/known/index.test.ts`, `tests/resolver/resolve-chain.test.ts` ambiguity assertions|
+|BEH-226|`src/parser/scan-source.ts`, `src/resolver/resolve-chain.ts`, `src/renderer/render-document.ts`|`tests/parser/scan-source.test.ts`, `tests/resolver/resolve-chain.test.ts`, `tests/public-api/public-api.test.ts` native-before-coverage assertions|
+|DATA-227|`src/known/normalize-lookup-key.ts`, `src/known/index.ts`, `tools/known/generate-index.ts`|`tests/known/index.test.ts`, `tests/known/generate-index.test.ts` NFC/provenance/generator assertions|
 |CALIBRATION|`src/calibration/`, `tools/calibration/`, `data/calibration/`, `data/layout-profiles/`|`tests/calibration/metrics.test.ts`, `tests/calibration/corpus.test.ts`, `tests/calibration/report.test.ts`, `tests/calibration/optimizer.test.ts`, `tests/calibration/profile.test.ts`|
 |PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`|`tests/examples/v0-2-surface.test.ts`, `npm run build:pages`|
 

@@ -6,8 +6,9 @@ const entries: KnownCharacterEntry[] = [
   {
     ids: '⿲彳圭亍',
     character: '街',
-    source: 'IDS-Composit v0.2 specification seed',
-    sourceVersion: '2026-09-09',
+    source: 'external fixture',
+    sourceVersion: 'test',
+    retrievalMethod: 'fixture',
     status: 'verified',
   },
   {
@@ -53,5 +54,32 @@ describe('Known Character Index', () => {
     const index = createKnownCharacterIndex(entries);
 
     expect(index.resolve('⿰木可')).toEqual({ kind: 'ambiguous' });
+  });
+
+  it('uses NFC lookup keys without changing stored provenance', () => {
+    const sourceIds = '⿰が木';
+    const normalizedIds = '⿰が木';
+    const entry: KnownCharacterEntry = {
+      ids: sourceIds,
+      character: '字',
+      source: 'external fixture',
+      sourceVersion: 'test',
+      status: 'verified',
+    };
+    const index = createKnownCharacterIndex([entry]);
+
+    expect(index.lookupIds(normalizedIds)).toEqual([entry]);
+    expect(index.resolve(normalizedIds)).toEqual({ kind: 'match', character: '字' });
+    expect(index.lookupIds(normalizedIds)[0]?.ids).toBe(sourceIds);
+
+    const characterEntry: KnownCharacterEntry = {
+      ids: '⿰木可',
+      character: 'が',
+      source: 'external fixture',
+      sourceVersion: 'test',
+      status: 'candidate',
+    };
+    const characterIndex = createKnownCharacterIndex([characterEntry]);
+    expect(characterIndex.lookupCharacter('が')).toEqual([characterEntry]);
   });
 });

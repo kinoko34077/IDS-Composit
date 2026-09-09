@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**v0.1.0 released / v0.2 first slice 実装中**
+**v0.1.0 released / v0.2.0-dev.0 hardening中**
 
 ## 最新確定方針
 
@@ -15,8 +15,8 @@ Updated: 2026-09-09
 - CHISEで既存文字へ解決できればnative Unicode優先。
 - 未解決なら既存Unicode部品をDOM/CSSで強引に配置する。
 - `水→氵`等の位置variantを表示時に適用する。
-- 構図ごとの比率は当面一律。
-- SVG/KAGE/Canvas/font生成は対象外。
+- v0.1 fixed templateの構図比率は互換fallbackとして維持し、v0.2 profileは実データとholdout gate後に未知字へ限定適用する。
+- SVG/KAGE/Canvas/font生成はruntime対象外。Canvas/SVGは`tools/calibration/`の測定用途だけ許可する。
 - v0.1.0はcommit `25e0449`を正本としてtag・GitHub Release済み。v0.2作業では公開APIとv0.1挙動を互換基準として保持する。
 
 ## 実装済み
@@ -39,15 +39,16 @@ Updated: 2026-09-09
 - Mobile GitHub Pages: `examples/index.html`のスマホ確認入口、IDS入力・候補select・local/CHISE切替・パターン一覧、Pages専用multi-page build、main push deploy workflowを追加。入口URLは`https://kinoko34077.github.io/IDS-Composit/`
 - v0.2 Documentation: 新要件を`docs/v0.2/`の章別文書へ分割し、`docs/v0.2/00_INDEX.md`を参照入口とした。原資料は`docs/v0.2/source/`に保存。
 - v0.2 Compatibility: `tests/compat/v0-1-runtime.test.ts`で公開API、fallback、contenteditable、provider障害、observer停止、copy/a11y metadataの基準を固定。
-- v0.2 Known Character Index: 出典付きverified/candidate、many-to-many lookup、ambiguity handling、初期seed `⿲彳圭亍 → 街`を実装。
-- v0.2 Resolver Chain: explicit provider → verified Known Index → CHISE → local composition → source fallbackの順序を実装し、既存`resolveIds(ids, provider?)`を維持しながら任意のKnown Index引数を追加。
+- v0.2 Known Character Index: NFC lookup key、出典付きverified/candidate、many-to-many lookup、ambiguity handlingを実装。初期手動seed `⿲彳圭亍 → 街`は外部確認待ちのcandidateとして保持し、native/Calibrationから除外。external source artifactの決定的generatorも追加。
+- v0.2 Resolver Chain: explicit provider → verified Known Index → CHISE → structural Parser/Coverage → local composition → source fallbackの順序を実装。local未対応IDCでもnative問い合わせへ到達し、既存`resolveIds(ids, provider?)`を維持しながら任意のKnown Index引数を追加。
+- v0.2 Resolver/Index hardening: scannerは閉じたunsupported IDCをnative問い合わせ可能なIDS segmentとして保持。explicit provider miss後のCHISE fallback、Known IndexのNFC lookup、原文provenance保持、external source generator、manual candidate policyを回帰テスト付きで固定。
 - v0.2 Structural Coverage: 14 spatial IDCのarity/role/layout/DOM処理をデータ駆動で追加。`⿾`/`⿿`は未対応のまま。
 - v0.2 Calibration Foundation: ink metrics、corpus split、loss report、純粋slot optimizer、IDC/role別Generic Layout Profile集約、profile適用の型・テスト・空データartifactを追加。production runtimeへCanvas/SVGは導入していない。
-- Mobile Pages v0.2 surface: 14 spatial IDC、Known Index hit、local composition、未対応IDCのsource-preserving fallbackを入力・候補・一覧で試せる状態へ更新。
+- Mobile Pages v0.2 surface: 14 spatial IDC、Known candidate/nativeの区別、local composition、未対応IDCのsource-preserving fallbackを入力・候補・一覧で試せる状態へ更新。
 
 ## 運用観測 / 次作業
 
-v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。実ブラウザ確認を含む詳細は[v0.2 first slice validation record](validation/V0.2_FIRST_SLICE.md)に記録した。次はcalibration用raster測定・profile生成・holdout評価を実データで行い、Pagesのresolver表示を実測telemetryへ拡張するかを判断する。
+v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。今回のhardening差分は、全31 test files / 179 tests、runtime/tools typecheck、library/Pages build、package dry-runを通過している。次は外部provenance付きKnown mappingを投入できるsource取得・生成運用を整え、実データが揃ってからcalibration用raster測定へ進む。
 
 ## 残課題 / manual validation
 

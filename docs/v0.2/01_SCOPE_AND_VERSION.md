@@ -4,6 +4,8 @@
 
 `v0.1.0`はcommit `25e0449`を正本とする。公開API、fallback、DOM integration、Observer、copy/accessibilityをv0.2の互換基準として保持する。
 
+現行mainの開発版package versionは`0.2.0-dev.0`。v0.1.0 tag/releaseは変更せず、v0.2はRC gate完了までpre-releaseとして扱う。
+
 ## v0.2の追加能力
 
 1. 空間配置IDCの対応範囲を広げる。

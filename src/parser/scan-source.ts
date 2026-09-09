@@ -10,7 +10,12 @@ export type TextSegment =
 
 function parseSegment(source: string, raw: string): TextSegment {
   const result: ParseResult = parseIds(source);
-  return result.ok ? { type: 'ids', source, raw } : { type: 'invalid', raw, error: result.error };
+  if (result.ok || result.error.kind === 'unknown-operator') {
+    // A closed IDS source may still be outside local structural coverage.
+    // Keep it resolvable by native providers/Known Index before fallback.
+    return { type: 'ids', source, raw };
+  }
+  return { type: 'invalid', raw, error: result.error };
 }
 
 export function scanEmbeddedIds(text: string): TextSegment[] {

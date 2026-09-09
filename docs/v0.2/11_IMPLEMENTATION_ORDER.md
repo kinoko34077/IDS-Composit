@@ -7,11 +7,15 @@ compatibility gate
 ↓
 docs / AGENTS / ADR
 ↓
-Known Character Index
+Known Character Index engine + provenance policy
 ↓
-Resolver chain
+native-first Resolver chain
 ↓
 Spatial IDC coverage
+↓
+Known external-source generator / optional bulk artifact
+↓
+Known mapping expansion and hit-rate report
 ↓
 Calibration corpus / measurement / optimizer
 ↓
@@ -19,7 +23,7 @@ Generic Layout Profile
 ↓
 runtime integration
 ↓
-Pages comparison UI
+Pages comparison UI / resolver telemetry
 ↓
 holdout validation
 ↓

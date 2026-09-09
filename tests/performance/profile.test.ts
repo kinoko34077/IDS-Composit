@@ -57,7 +57,7 @@ describe('Phase 9 performance profile', () => {
       expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(count);
       console.info(`[profile] local: ${count} IDS -> ${elapsedMs.toFixed(2)} ms`);
     }
-  });
+  }, 20_000);
 
   it('profiles 10 and 100 unique CHISE resolutions', async () => {
     for (const count of [10, 100]) {

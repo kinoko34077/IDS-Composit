@@ -1,6 +1,6 @@
 {
   "name": "CHISE IDS Inline Renderer specification bundle",
-  "version": "0.1",
+  "version": "0.2.0-dev.0",
   "created": "2026-09-08",
   "files": [
     "AGENTS.md",
@@ -18,6 +18,18 @@
     "docs/10_CURRENT_STATE.md",
     "docs/11_ADR.md",
     "docs/12_TRACEABILITY.md",
+    "docs/v0.2/00_INDEX.md",
+    "docs/v0.2/01_SCOPE_AND_VERSION.md",
+    "docs/v0.2/02_RESPONSIBILITIES.md",
+    "docs/v0.2/03_RUNTIME_COMPATIBILITY.md",
+    "docs/v0.2/04_STRUCTURAL_COVERAGE.md",
+    "docs/v0.2/05_KNOWN_CHARACTER_INDEX.md",
+    "docs/v0.2/06_RESOLUTION_CHAIN.md",
+    "docs/v0.2/07_CALIBRATION.md",
+    "docs/v0.2/08_RUNTIME_PROFILES.md",
+    "docs/v0.2/09_PAGES_AND_VALIDATION.md",
+    "docs/v0.2/10_GATES_AND_NON_GOALS.md",
+    "docs/v0.2/11_IMPLEMENTATION_ORDER.md",
     "docs/agent/PHASE_00_FOUNDATION.md",
     "docs/agent/PHASE_01_PARSER.md",
     "docs/agent/PHASE_02_COMPOSITION.md",
@@ -28,5 +40,5 @@
     "docs/agent/PHASE_07_COVERAGE.md",
     "docs/agent/PHASE_08_PACKAGE.md"
   ],
-  "scope": "CHISE-backed IDS recognition + native-Unicode preference + DOM/CSS composition fallback"
+  "scope": "v0.1-compatible CHISE-backed IDS recognition + native-first resolution + DOM/CSS composition fallback with v0.2 Known/Calibration extensions"
 }

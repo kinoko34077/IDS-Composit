@@ -17,14 +17,15 @@ v0.2の作業では、要件の入口を`docs/v0.2/00_INDEX.md`とし、対象�
 参照優先順位：
 
 1. 現在のユーザー指示
-2. `docs/01_REQUIREMENTS.md`
-3. 関連する個別仕様
-4. `docs/02_ARCHITECTURE.md`
-5. `docs/03_CHISE_DEPENDENCY.md`
-6. `docs/09_ROADMAP.md`
-7. `docs/10_CURRENT_STATE.md`
-8. 実装コード
-9. 一般的な慣習
+2. v0.2作業対象の章（`docs/v0.2/00_INDEX.md`）
+3. v0.1互換基準（`docs/01_REQUIREMENTS.md`）
+4. 関連する個別仕様
+5. `docs/02_ARCHITECTURE.md`
+6. `docs/03_CHISE_DEPENDENCY.md`
+7. `docs/09_ROADMAP.md`
+8. `docs/10_CURRENT_STATE.md`
+9. 実装コード
+10. 一般的な慣習
 
 コードと仕様が衝突した場合、勝手にコードを正本化しない。
 
@@ -107,26 +108,21 @@ Scanner
 ↓
 IDS Source
 ↓
-Parser
+Native Resolution
+├─ Explicit Provider
+├─ Verified Known Index
+└─ CHISE
+↓ miss
+Structural Parser / Coverage
 ↓
-AST
-↓
-CHISE Resolver
-├─ resolved native character
-│   ↓
-│ Native Adapter
-│
-└─ unresolved
-    ↓
-Role Resolver
-    ↓
-Variant Resolver
-    ↓
-Layout Engine
-    ↓
-Layout Model
-    ↓
-DOM Adapter
+Composition
+├─ Role Resolver
+├─ Variant Resolver
+├─ Layout Engine / Layout Profile
+├─ Layout Model
+└─ DOM Adapter
+↓ failure
+Source-preserving fallback
 ```
 
 依存方向を逆転させない。

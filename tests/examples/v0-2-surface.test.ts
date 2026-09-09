@@ -14,7 +14,7 @@ describe('v0.2 mobile validation surface', () => {
       '⿵門日', '⿶一凵', '⿷匚口', '⿸广木', '⿹戸口', '⿺廴日',
       '⿻木口', '⿼句口', '⿽乙丶', '⿾木可',
     ]));
-    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known Index hit → native 街');
+    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known candidate（未検証）→ local composition');
     expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Unsupported IDC → source preserved');
     expect(root.textContent).toContain('profile miss時のv0.1 fixed templateへfallback');
   });

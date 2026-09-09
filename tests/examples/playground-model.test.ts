@@ -32,6 +32,6 @@ describe('mobile playground model', () => {
       '⿽乙丶',
       '⿾木可',
     ]));
-    expect(PATTERN_CASES.find((pattern) => pattern.source === '⿲彳圭亍')?.resolution).toContain('Known Index hit');
+    expect(PATTERN_CASES.find((pattern) => pattern.source === '⿲彳圭亍')?.resolution).toContain('Known candidate');
   });
 });

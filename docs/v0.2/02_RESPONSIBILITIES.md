@@ -5,8 +5,14 @@ Text
  ↓
 A Runtime Scanner
  ↓
-Thin Orchestrator
+IDS Source
+ ↓
+Native Resolution
+ ├─ Explicit Provider
  ├─ C Known Character Resolver → native Unicode
+ └─ CHISE Adapter
+ ↓ miss
+Thin Orchestrator
  ├─ B Structural Coverage      → AST / roles
  └─ D Layout Profile            → Layout Model
  ↓

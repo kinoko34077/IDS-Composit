@@ -1,4 +1,5 @@
 import type { KnownCharacterEntry, KnownCharacterIndex, KnownCharacterLookup } from './types';
+import { normalizeKnownLookupKey } from './normalize-lookup-key';
 
 function entriesFor(map: ReadonlyMap<string, readonly KnownCharacterEntry[]>, key: string): readonly KnownCharacterEntry[] {
   return map.get(key) ?? [];
@@ -16,16 +17,18 @@ export function createKnownCharacterIndex(entries: readonly KnownCharacterEntry[
 
   for (const entry of entries) {
     if (entry.ids.length === 0 || entry.character.length === 0 || entry.source.length === 0) continue;
-    const idsEntries = byIds.get(entry.ids) ?? [];
+    const idsKey = normalizeKnownLookupKey(entry.ids);
+    const characterKey = normalizeKnownLookupKey(entry.character);
+    const idsEntries = byIds.get(idsKey) ?? [];
     idsEntries.push(entry);
-    byIds.set(entry.ids, idsEntries);
-    const characterEntries = byCharacter.get(entry.character) ?? [];
+    byIds.set(idsKey, idsEntries);
+    const characterEntries = byCharacter.get(characterKey) ?? [];
     characterEntries.push(entry);
-    byCharacter.set(entry.character, characterEntries);
+    byCharacter.set(characterKey, characterEntries);
   }
 
   const resolve = (ids: string): KnownCharacterLookup => {
-    const characters = verifiedCharacters(entriesFor(byIds, ids));
+    const characters = verifiedCharacters(entriesFor(byIds, normalizeKnownLookupKey(ids)));
     if (characters.length === 1) {
       const character = characters[0];
       if (character !== undefined) return { kind: 'match', character };
@@ -36,13 +39,14 @@ export function createKnownCharacterIndex(entries: readonly KnownCharacterEntry[
 
   return {
     lookupIds(ids) {
-      return entriesFor(byIds, ids);
+      return entriesFor(byIds, normalizeKnownLookupKey(ids));
     },
     lookupCharacter(character) {
-      return entriesFor(byCharacter, character);
+      return entriesFor(byCharacter, normalizeKnownLookupKey(character));
     },
     resolve,
   };
 }
 
+export { normalizeKnownLookupKey } from './normalize-lookup-key';
 export type { KnownCharacterEntry, KnownCharacterIndex, KnownCharacterLookup, KnownCharacterStatus } from './types';

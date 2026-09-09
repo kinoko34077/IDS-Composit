@@ -19,6 +19,14 @@ describe('scanEmbeddedIds', () => {
     expect(segments[2]).toEqual({ type: 'text', value: 'B' });
   });
 
+  it('keeps a closed unsupported IDC source resolvable as an IDS segment', () => {
+    expect(scanEmbeddedIds('A⟦⿾木可⟧B')).toEqual([
+      { type: 'text', value: 'A' },
+      { type: 'ids', source: '⿾木可', raw: '⟦⿾木可⟧' },
+      { type: 'text', value: 'B' },
+    ]);
+  });
+
   it('does not invent a closing delimiter for an unterminated source', () => {
     expect(scanEmbeddedIds('A⟦⿰木B')).toEqual([
       { type: 'text', value: 'A' },

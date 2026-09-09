@@ -1,5 +1,6 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it } from 'vitest';
+import { createKnownCharacterIndex } from '../../src/known';
 import { observeIds, renderIds, type IdsObserverHandle } from '../../src/public-api';
 
 async function flushObserver(): Promise<void> {
@@ -23,6 +24,39 @@ describe('renderIds', () => {
     expect(root.querySelector('.ids-inline-glyph')).toBeNull();
   });
 
+  it('uses a Known Index native result before local parsing', async () => {
+    const root = document.createElement('p');
+    root.textContent = '⟦⿾木可⟧';
+    const knownIndex = createKnownCharacterIndex([{
+      ids: '⿾木可',
+      character: '異',
+      source: 'external fixture',
+      sourceVersion: 'test',
+      status: 'verified',
+    }]);
+
+    await renderIds(root, { knownIndex });
+
+    expect(root.textContent).toBe('異');
+    expect(root.querySelector('.ids-inline-glyph')).toBeNull();
+  });
+
+  it('falls through from an explicit provider miss to CHISE when enabled', async () => {
+    const root = document.createElement('p');
+    root.textContent = '⟦⿾木可⟧';
+    const explicitProvider = { matchIds: async () => ({ found: false } as const) };
+    const fetcher = async () => new Response(JSON.stringify('異'), { status: 200 });
+
+    await renderIds(root, {
+      provider: explicitProvider,
+      chise: true,
+      chiseOptions: { fetch: fetcher, endpoint: 'https://example.test/ids-match' },
+    });
+
+    expect(root.textContent).toBe('異');
+    expect(root.querySelector('.ids-inline-glyph')).toBeNull();
+  });
+
   it('composes when provider is unavailable and preserves malformed source', async () => {
     const root = document.createElement('p');
     root.textContent = 'A⟦⿰木可⟧ C⟦⿰木⟧';
@@ -34,14 +68,14 @@ describe('renderIds', () => {
     expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
   });
 
-  it('uses the default Known Index when no provider is configured', async () => {
+  it('does not use the unverified default candidate as a native result', async () => {
     const root = document.createElement('p');
     root.textContent = '⟦⿲彳圭亍⟧';
 
     await renderIds(root);
 
-    expect(root.textContent).toBe('街');
-    expect(root.querySelectorAll('.ids-part')).toHaveLength(0);
+    expect(root.textContent).toBe('彳圭亍');
+    expect(root.querySelectorAll('.ids-part')).toHaveLength(3);
   });
 
   it('renders the local path before the public async call yields', async () => {
@@ -158,6 +192,6 @@ describe('renderIds', () => {
     expect(peak).toBeLessThanOrEqual(2);
     expect(calls).toHaveLength(3);
     expect(new Set(calls)).toEqual(new Set(['⿰木可', '⿱日月', '⿲彳圭亍']));
-    expect(root.textContent).toBe('木可 日月 街 木可');
+    expect(root.textContent).toBe('木可 日月 彳圭亍 木可');
   });
 });

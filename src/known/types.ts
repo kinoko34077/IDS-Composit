@@ -5,6 +5,8 @@ export type KnownCharacterEntry = {
   character: string;
   source: string;
   sourceVersion?: string;
+  retrievalMethod?: string;
+  sourceHash?: string;
   status: KnownCharacterStatus;
 };
 
