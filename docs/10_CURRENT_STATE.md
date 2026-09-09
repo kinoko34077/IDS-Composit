@@ -48,7 +48,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。今回のhardening差分は、全31 test files / 179 tests、runtime/tools typecheck、library/Pages build、package dry-runを通過している。次は外部provenance付きKnown mappingを投入できるsource取得・生成運用を整え、実データが揃ってからcalibration用raster測定へ進む。
+v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。hardening commit `bb5e5a6` はpush済みで、GitHub Actions CI Run #27とPages Run #5もcompleted successfully、公開入口のcandidate表記を含む現行Pagesを確認済み。今回のhardening差分は、全31 test files / 179 tests、runtime/tools typecheck、library/Pages build、package dry-runを通過している。次は外部provenance付きKnown mappingを投入できるsource取得・生成運用を整え、実データが揃ってからcalibration用raster測定へ進む。
 
 ## 残課題 / manual validation
 
