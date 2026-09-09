@@ -1,5 +1,5 @@
-import type { StructuralRole } from '../core/types';
-import { VARIANT_MAP, type VariantMap } from '../data/variants';
+import type { StructuralRole } from '../core/types.ts';
+import { VARIANT_MAP, type VariantMap } from '../data/variants.ts';
 
 export function resolveVariant(
   baseCharacter: string,

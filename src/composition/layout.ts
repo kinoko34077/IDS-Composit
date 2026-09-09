@@ -1,9 +1,9 @@
-import type { Box, IdsNode, LayoutNode, StructuralRole } from '../core/types';
-import type { LayoutProfile } from '../calibration';
-import { LAYOUT_TEMPLATES, type LayoutTemplateChild } from '../data/layout-templates';
-import { VARIANT_MAP, type VariantMap } from '../data/variants';
-import { resolveVariant } from '../variants';
-import { getChildRoles } from './roles';
+import type { Box, IdsNode, LayoutNode, StructuralRole } from '../core/types.ts';
+import type { LayoutProfile } from '../calibration/index.ts';
+import { LAYOUT_TEMPLATES, type LayoutTemplateChild } from '../data/layout-templates.ts';
+import { VARIANT_MAP, type VariantMap } from '../data/variants.ts';
+import { resolveVariant } from '../variants/index.ts';
+import { getChildRoles } from './roles.ts';
 
 const ROOT_BOX: Box = { x: 0, y: 0, width: 1, height: 1 };
 

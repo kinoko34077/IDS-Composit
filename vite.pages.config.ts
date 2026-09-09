@@ -15,10 +15,20 @@ function fullKnownIndexAsset(): Plugin {
   };
 }
 
+function calibrationReportAsset(): Plugin {
+  return {
+    name: 'ids-composit-calibration-report',
+    async generateBundle() {
+      const source = await readFile(resolve(process.cwd(), 'data/calibration/operator-u2ff0-v0.2.json'), 'utf8');
+      this.emitFile({ type: 'asset', fileName: 'data/calibration/operator-u2ff0-v0.2.json', source });
+    },
+  };
+}
+
 export default defineConfig({
   root: 'examples',
   base: '/IDS-Composit/',
-  plugins: [fullKnownIndexAsset()],
+  plugins: [fullKnownIndexAsset(), calibrationReportAsset()],
   build: {
     outDir: '../pages-dist',
     emptyOutDir: true,

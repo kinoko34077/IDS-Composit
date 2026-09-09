@@ -32,28 +32,36 @@ describe('calibration sample measurement', () => {
     const result = measureCalibrationSample({
       ids: '⿰木可',
       character: '柯',
-      font: 'serif',
+      font: 'Source Han Sans JP',
     }, fakeCanvas);
 
     expect(result.calibration).toEqual({
       ids: '⿰木可',
       character: '柯',
-      font: 'serif',
+      font: 'Source Han Sans JP',
       slots: [
         { x: 0, y: 0, width: 0.5, height: 1 },
         { x: 0.5, y: 0, width: 0.5, height: 1 },
       ],
       loss: 0,
     });
-    expect(result.native.width).toBe(64);
-    expect(result.composed.height).toBe(64);
+    expect(result.native.width).toBe(160);
+    expect(result.composed.height).toBe(160);
+    expect(result.lossBreakdown).toEqual({
+      axisOccupancy: 0,
+      inkBounds: 0,
+      centroid: 0,
+      occupiedArea: 0,
+      alphaMask: 0,
+      total: 0,
+    });
   });
 
   it('rejects evidence whose declared font differs from the fixed measurement font', () => {
     expect(() => measureCalibrationSample({
       ids: '⿰木可',
       character: '柯',
-      font: 'sans-serif',
+      font: 'Source Han Serif JP',
     }, fakeCanvas)).toThrow(/font/i);
   });
 });

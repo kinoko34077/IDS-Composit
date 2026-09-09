@@ -9,6 +9,10 @@
     "build:pages": "vite build --config vite.pages.config.ts",
     "calibration:build:corpus": "node --experimental-strip-types tools/calibration/generate-corpus.ts",
     "calibration:build:multisource": "node --experimental-strip-types tools/calibration/generate-multisource-corpus.ts",
+    "calibration:build:source": "node --experimental-strip-types tools/calibration/generate-source-corpus.ts",
+    "calibration:verify-fonts": "node --experimental-strip-types tools/calibration/fonts/fetch-fonts.ts",
+    "calibration:measure:sample": "node --experimental-strip-types tools/calibration/measure-calibration-sample.ts",
+    "calibration:measure:operator": "node --experimental-strip-types tools/calibration/measure-operator.ts",
     "dev": "vite --config vite.config.ts",
     "known:import:chise": "node --experimental-strip-types tools/known/import-chise-ids.ts",
     "known:import:babelstone": "node --experimental-strip-types tools/known/import-babelstone-ids.ts",
@@ -19,7 +23,10 @@
     "typecheck": "tsc --noEmit",
     "typecheck:tools": "tsc -p tsconfig.tools.json"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/types/public-api.d.ts",
@@ -28,11 +35,13 @@
     "./style.css": "./dist/ids-composit.css"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "1.0.8",
     "@types/jsdom": "latest",
     "@types/node": "latest",
+    "fontkit": "2.0.4",
     "jsdom": "latest",
     "typescript": "latest",
-    "vitest": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "vitest": "latest"
   }
 }

@@ -4,7 +4,10 @@ import {
   rasterizeNativeGlyph,
   type CalibrationCanvas,
 } from '../../tools/calibration/rasterize';
-import { DEFAULT_CALIBRATION_MEASUREMENT_CONFIG } from '../../tools/calibration/measurement-config';
+import {
+  DEFAULT_CALIBRATION_FONT_METRICS,
+  DEFAULT_CALIBRATION_MEASUREMENT_CONFIG,
+} from '../../tools/calibration/measurement-config';
 
 function createFakeCanvas(): {
   canvas: CalibrationCanvas;
@@ -51,14 +54,14 @@ describe('calibration rasterizer', () => {
     const { canvas, context } = createFakeCanvas();
     const mask = rasterizeNativeGlyph(canvas, '街');
 
-    expect(canvas.width).toBe(64);
-    expect(canvas.height).toBe(64);
-    expect(context.font).toBe('64px serif');
+    expect(canvas.width).toBe(160);
+    expect(canvas.height).toBe(160);
+    expect(context.font).toBe('128px Source Han Sans JP');
     expect(context.textBaseline).toBe('alphabetic');
-    expect(context.fillText).toHaveBeenCalledWith('街', 0, 52);
+    expect(context.fillText).toHaveBeenCalledWith('街', 16, 16 + 128 * DEFAULT_CALIBRATION_FONT_METRICS.ascent / DEFAULT_CALIBRATION_FONT_METRICS.unitsPerEm);
     expect(mask).toEqual({
-      width: 64,
-      height: 64,
+      width: 160,
+      height: 160,
       data: expect.any(Array),
     });
   });
@@ -72,17 +75,38 @@ describe('calibration rasterizer', () => {
     const { canvas, context } = createFakeCanvas();
     const mask = rasterizeComposedIds(canvas, '⿰木⿱日月');
 
-    expect(mask.width).toBe(64);
+    expect(mask.width).toBe(160);
     expect(context.fillText.mock.calls.map(([value]) => value)).toEqual(['木', '日', '月']);
     expect(context.translate.mock.calls).toEqual([
-      [0, 0],
-      [32, 0],
-      [32, 32],
+      [16, 16],
+      [80, 16],
+      [80, 80],
     ]);
     expect(context.scale.mock.calls).toEqual([
       [0.5, 1],
       [0.5, 0.5],
       [0.5, 0.5],
+    ]);
+  });
+
+  it('applies optimized root slots while preserving nested child geometry', () => {
+    const { canvas, context } = createFakeCanvas();
+    rasterizeComposedIds(canvas, '⿰木⿱日月', undefined, {}, {
+      rootSlots: [
+        { x: 0, y: 0, width: 0.4, height: 1 },
+        { x: 0.4, y: 0, width: 0.6, height: 1 },
+      ],
+    });
+
+    expect(context.translate.mock.calls).toEqual([
+      [16, 16],
+      [67.2, 16],
+      [67.2, 80],
+    ]);
+    expect(context.scale.mock.calls).toEqual([
+      [0.4, 1],
+      [0.6, 0.5],
+      [0.6, 0.5],
     ]);
   });
 

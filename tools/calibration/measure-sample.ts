@@ -7,12 +7,14 @@ import {
   rasterizeComposedIds,
   rasterizeNativeGlyph,
   type CalibrationCanvas,
+  type CalibrationRasterOptions,
   type RasterizeCompositionOptions,
 } from './rasterize.ts';
 import {
   DEFAULT_CALIBRATION_MEASUREMENT_CONFIG,
   type CalibrationMeasurementConfig,
 } from './measurement-config.ts';
+import { calculateCalibrationLoss, type CalibrationLossBreakdown } from './loss-v1.ts';
 
 export type CalibrationCanvasFactory = () => CalibrationCanvas;
 
@@ -26,6 +28,7 @@ export type CalibrationSampleMeasurement = {
   calibration: CharacterCalibration;
   native: AlphaMask;
   composed: AlphaMask;
+  lossBreakdown: CalibrationLossBreakdown;
 };
 
 function topLevelSlots(
@@ -44,14 +47,23 @@ export function measureCalibrationSample(
   createCanvas: CalibrationCanvasFactory,
   config: CalibrationMeasurementConfig = DEFAULT_CALIBRATION_MEASUREMENT_CONFIG,
   options: RasterizeCompositionOptions = {},
+  rasterOptions: CalibrationRasterOptions = {},
 ): CalibrationSampleMeasurement {
   if (sample.font.trim() !== config.fontFamily.trim()) {
     throw new RangeError('Calibration sample font must match measurement config fontFamily');
   }
-  const native = rasterizeNativeGlyph(createCanvas(), sample.character, config);
-  const composed = rasterizeComposedIds(createCanvas(), sample.ids, config, options);
-  const loss = 1 - alphaMaskSimilarity(native, composed);
-  if (!Number.isFinite(loss)) throw new RangeError('Calibration sample loss must be finite');
+  const native = rasterizeNativeGlyph(createCanvas(), sample.character, config, rasterOptions);
+  const composed = rasterizeComposedIds(createCanvas(), sample.ids, config, options, rasterOptions);
+  const lossBreakdown = calculateCalibrationLoss(native, composed, {
+    x: config.rootX,
+    y: config.rootY,
+    width: config.rootWidth,
+    height: config.rootHeight,
+  });
+  const loss = lossBreakdown.total;
+  if (!Number.isFinite(loss) || !Number.isFinite(1 - alphaMaskSimilarity(native, composed))) {
+    throw new RangeError('Calibration sample loss must be finite');
+  }
   return {
     calibration: {
       ids: sample.ids,
@@ -62,5 +74,6 @@ export function measureCalibrationSample(
     },
     native,
     composed,
+    lossBreakdown,
   };
 }

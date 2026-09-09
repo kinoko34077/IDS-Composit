@@ -114,6 +114,38 @@ button {
   white-space: nowrap;
 }
 
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.comparison-item {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.comparison-item h3 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.comparison-sample {
+  min-height: 3.5rem;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+@media (max-width: 36rem) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

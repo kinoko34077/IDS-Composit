@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "ids-composit-operator-calibration-report/v0.2",
+  "sourceCorpusSha256": "sha256:8cb3e01ed79e017a3656ba1f21d80edcbf807419d06a06879c9a3b09c5e1f6ea",
+  "operator": "⿰",
+  "training": {
+    "corpusSamples": 2000,
+    "selectedSamples": 1000,
+    "measuredSamples": 109,
+    "optimizedSamples": 109,
+    "evaluations": 20773
+  },
+  "holdout": {
+    "corpusSamples": 13171,
+    "commonRasterEligibleSamples": 1619,
+    "measuredSamples": 1619
+  },
+  "fonts": {
+    "sans": {
+      "id": "source-han-sans-jp-regular",
+      "family": "Source Han Sans JP",
+      "version": "2.005R",
+      "sha256": "sha256:40d1b760d1135539f6b6e0ee2b9f415de6d97576f7676840b06306c7c190c074",
+      "metrics": {
+        "unitsPerEm": 1000,
+        "ascent": 1160,
+        "descent": -288
+      },
+      "coverage": {
+        "train": {
+          "knownEligible": 1000,
+          "fontSupported": 109,
+          "rasterEligible": 109,
+          "missing": 891
+        },
+        "holdout": {
+          "knownEligible": 13171,
+          "fontSupported": 1619,
+          "rasterEligible": 1619,
+          "missing": 11552
+        }
+      }
+    },
+    "serif": {
+      "id": "source-han-serif-jp-regular",
+      "family": "Source Han Serif JP",
+      "version": "2.003R",
+      "sha256": "sha256:e5f502bb193c28829895b098498f0f9dd8f658c760b0f83656ad41c1137a8785",
+      "metrics": {
+        "unitsPerEm": 1000,
+        "ascent": 1151,
+        "descent": -286
+      },
+      "coverage": {
+        "train": {
+          "knownEligible": 1000,
+          "fontSupported": 109,
+          "rasterEligible": 109,
+          "missing": 891
+        },
+        "holdout": {
+          "knownEligible": 13171,
+          "fontSupported": 1619,
+          "rasterEligible": 1619,
+          "missing": 11552
+        }
+      }
+    }
+  },
+  "geometry": {
+    "canvasWidthPx": 160,
+    "canvasHeightPx": 160,
+    "rootX": 16,
+    "rootY": 16,
+    "rootWidth": 128,
+    "rootHeight": 128,
+    "fontSizePx": 128,
+    "sansBaselineY": 164.48,
+    "serifBaselineY": 163.328
+  },
+  "gate": {
+    "trainCount": 109,
+    "holdoutCount": 1619,
+    "sans": {
+      "baseline": {
+        "count": 1619,
+        "median": 0.14087753638665146,
+        "p75": 0.15653761324268428
+      },
+      "candidate": {
+        "count": 1619,
+        "median": 0.11150787138128912,
+        "p75": 0.1282301628717626
+      },
+      "medianImproved": true,
+      "p75NotWorse": true
+    },
+    "serif": {
+      "baseline": {
+        "count": 1619,
+        "median": 0.1571509339047878,
+        "p75": 0.1752517098034031
+      },
+      "candidate": {
+        "count": 1619,
+        "median": 0.13619011125021457,
+        "p75": 0.15264171298803797
+      },
+      "medianImproved": true,
+      "p75NotWorse": true
+    },
+    "status": "accept",
+    "reason": "passed"
+  },
+  "profile": {
+    "operator": "⿰",
+    "sampleCount": 109,
+    "corpusVersion": "v0.2-calibration-sans-jp",
+    "slots": [
+      {
+        "role": "left",
+        "x": 0,
+        "y": 0,
+        "width": 0.54,
+        "height": 1
+      },
+      {
+        "role": "right",
+        "x": 0.39999999999999997,
+        "y": 0,
+        "width": 0.5900000000000001,
+        "height": 1
+      }
+    ]
+  }
+}

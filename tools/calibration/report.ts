@@ -13,6 +13,10 @@ export type CalibrationComparison = {
 function percentile(values: readonly number[], position: number): number {
   if (values.length === 0) return Number.NaN;
   const sorted = [...values].sort((a, b) => a - b);
+  if (position === 0.5 && sorted.length % 2 === 0) {
+    const upper = sorted.length / 2;
+    return ((sorted[upper - 1] ?? Number.NaN) + (sorted[upper] ?? Number.NaN)) / 2;
+  }
   const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(position * sorted.length) - 1));
   return sorted[index] ?? Number.NaN;
 }

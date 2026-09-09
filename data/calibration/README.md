@@ -1,25 +1,24 @@
 # Calibration data
 
-`corpus-v0.2.json`は、`data/known/generated/chise-ids-v0.2.json`のverified recordsから、現在のStructural Coverageで解析でき、target/componentが単一Unicode scalarであるものだけを抽出したcompact train/holdout corpusです。
+CalibrationはResolver用Known Indexと別pipelineです。`known-index-v0.2.json`を教師データへ直接流用せず、BabelStone direct-J/X、CHISE `@apparent`/functional、Yi Bai lv0をsource-specific adapterへ通します。
 
-- input: 101,995 Known records
-- eligible: 97,482
-- train: 77,985
-- holdout: 19,497
-- excluded: 4,513（構造解析不可、未対応構造、またはUnicode-only条件外）
+## 生成物の境界
 
-source revision・hash・licenseはcorpusの`source` objectと[CHISE-IDS-CORPUS-NOTICE.md](CHISE-IDS-CORPUS-NOTICE.md)で確認します。raster画像、Canvas、SVG、文字別runtime配置はまだ生成していません。
+- 既存の`corpus-v0.2.json`と`corpus-multisource-v0.2.json`はv0.1/v0.2初期のResolver・比較用baselineとして保持します。
+- 新しいsource corpusは`npm run calibration:build:source`で`.artifacts/calibration/`へ生成します。CHISEの固定revision、hash、licenseはreportに記録します。
+- `.artifacts/calibration/`にはsource corpus、mask、per-character evidenceを置き、Gitへcommitしません。
+- Gitへ入れるのはsource adapter/generator、font manifest、small summary report、accepted profileだけです。
 
-再生成:
+## 固定実測条件
 
-```text
-npm run calibration:build:corpus
-```
+trainingはSource Han Sans JP 2.005R、cross-font validationはSource Han Serif JP 2.003Rです。font binaryは`.cache/calibration-fonts/`へ取得し、manifestのSHA-256一致を確認します。canvasは160×160、root emは(16,16,128,128)、baselineはfontkit metricsから算出します。fontkit coverageでtargetと全leafを確認し、missing glyphを教師へ入れません。
 
-複数Source用の`corpus-multisource-v0.2.json`は、Unified Known artifactを明示入力して生成します。characterごとに決定的に1件を`primary`へ選び、残りのIDS表現を`alternate`へ分離するため、同じ完成字がtrain分布を不自然に重くしません。初期Source優先順位はCHISE、BabelStone、Yi Bai lv0/lv1/lv2です。各レコードは`sourceIndexes`でcorpus-level `sources`を参照するcompact形式とし、出典metadataを繰り返しません。これは測定前のsampling policyであり、配置精度やconfidenceを意味しません。
+再生成・実測:
 
 ```text
-npm run calibration:build:multisource
+npm run calibration:verify-fonts
+npm run calibration:build:source
+npm run calibration:measure:operator -- --operator ⿰ --max-train 1000
 ```
 
-CHISE由来の`corpus-v0.2.json`はbaselineとして保持し、複数Source corpusで上書きしません。測定条件の固定は`tools/calibration/measurement-config.ts`、tools限定Canvas rasterizationは`tools/calibration/rasterize.ts`にあります。実fontの存在確認、native/compositionのraster evidence、optimizer・profile採用は別Gateです。
+Loss、optimizer、median profile、operator Gateの定義と2026-09-10の⿰実測結果は[Calibration Gate記録](../../docs/v0.2/14_CALIBRATION_GATES.md)を参照してください。accepted profile以外はv0.1 fixed templateへfallbackし、Canvas/fontkitはruntime/npm packageへ漏らしません。

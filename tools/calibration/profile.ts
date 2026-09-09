@@ -9,6 +9,29 @@ export type LayoutProfileEvidence = {
   loss: number;
 };
 
+export type LayoutProfileNumericDistribution = {
+  mean: number;
+  p10: number;
+  p25: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  sampleCount: number;
+};
+
+export type LayoutProfileSlotDistribution = {
+  role: LayoutProfileSlot['role'];
+  x: LayoutProfileNumericDistribution;
+  y: LayoutProfileNumericDistribution;
+  width: LayoutProfileNumericDistribution;
+  height: LayoutProfileNumericDistribution;
+};
+
+export type LayoutProfileBuildResult = {
+  profiles: Readonly<Record<string, LayoutProfile>>;
+  distributions: Readonly<Record<string, readonly LayoutProfileSlotDistribution[]>>;
+};
+
 function isValidSlot(slot: LayoutProfileSlot): boolean {
   return typeof slot.role === 'string'
     && slot.role.length > 0
@@ -17,25 +40,13 @@ function isValidSlot(slot: LayoutProfileSlot): boolean {
     && slot.x + slot.width <= 1 && slot.y + slot.height <= 1;
 }
 
-function average(slots: readonly LayoutProfileSlot[]): LayoutProfileSlot {
-  const count = slots.length;
-  const first = slots[0];
-  if (first === undefined) throw new Error('Cannot average empty profile slots');
-  return {
-    role: first.role,
-    x: slots.reduce((sum, slot) => sum + slot.x, 0) / count,
-    y: slots.reduce((sum, slot) => sum + slot.y, 0) / count,
-    width: slots.reduce((sum, slot) => sum + slot.width, 0) / count,
-    height: slots.reduce((sum, slot) => sum + slot.height, 0) / count,
-  };
+function compareText(left: string, right: string): number {
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
 }
 
-export function buildLayoutProfiles(
-  evidence: readonly LayoutProfileEvidence[],
-  corpusVersion: string,
-): Readonly<Record<string, LayoutProfile>> {
+function groupEvidence(evidence: readonly LayoutProfileEvidence[]): Map<string, LayoutProfileEvidence[]> {
   const groups = new Map<string, LayoutProfileEvidence[]>();
-
   for (const sample of evidence) {
     if (sample.operator.length === 0 || !Number.isFinite(sample.loss) || sample.slots.length === 0) continue;
     if (!sample.slots.every(isValidSlot)) continue;
@@ -44,7 +55,33 @@ export function buildLayoutProfiles(
     group.push(sample);
     groups.set(signature, group);
   }
+  return groups;
+}
 
+function percentile(values: readonly number[], position: number): number {
+  const sorted = [...values].sort((left, right) => left - right);
+  if (sorted.length === 0) return Number.NaN;
+  if (position === 0.5 && sorted.length % 2 === 0) {
+    const upper = sorted.length / 2;
+    return ((sorted[upper - 1] ?? Number.NaN) + (sorted[upper] ?? Number.NaN)) / 2;
+  }
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(position * sorted.length) - 1));
+  return sorted[index] ?? Number.NaN;
+}
+
+function summarize(values: readonly number[]): LayoutProfileNumericDistribution {
+  return {
+    mean: values.reduce((sum, value) => sum + value, 0) / values.length,
+    p10: percentile(values, 0.10),
+    p25: percentile(values, 0.25),
+    p50: percentile(values, 0.50),
+    p75: percentile(values, 0.75),
+    p90: percentile(values, 0.90),
+    sampleCount: values.length,
+  };
+}
+
+function selectGroups(groups: Map<string, LayoutProfileEvidence[]>): Map<string, LayoutProfileEvidence[]> {
   const byOperator = new Map<string, Array<{ signature: string; samples: LayoutProfileEvidence[] }>>();
   for (const [signature, samples] of groups) {
     const operator = samples[0]?.operator;
@@ -53,34 +90,62 @@ export function buildLayoutProfiles(
     operatorGroups.push({ signature, samples });
     byOperator.set(operator, operatorGroups);
   }
-
-  const profiles: Record<string, LayoutProfile> = {};
-  for (const operator of [...byOperator.keys()].sort()) {
+  const selected = new Map<string, LayoutProfileEvidence[]>();
+  for (const operator of [...byOperator.keys()].sort(compareText)) {
     const operatorGroups = byOperator.get(operator) ?? [];
-    operatorGroups.sort((left, right) => right.samples.length - left.samples.length || left.signature.localeCompare(right.signature));
-    const selected = operatorGroups[0];
-    if (selected === undefined) continue;
-    const slotCount = selected.samples[0]?.slots.length ?? 0;
-    const slots: LayoutProfileSlot[] = [];
-    for (let slotIndex = 0; slotIndex < slotCount; slotIndex += 1) {
-      const roleSlots = selected.samples
-        .map((sample) => sample.slots[slotIndex])
-        .filter((slot): slot is LayoutProfileSlot => slot !== undefined);
-      if (roleSlots.length !== selected.samples.length) {
-        slots.length = 0;
-        break;
-      }
-      slots.push(average(roleSlots));
-    }
-    if (slots.length === slotCount) {
-      profiles[operator] = {
-        operator,
-        slots,
-        sampleCount: selected.samples.length,
-        corpusVersion,
-      };
-    }
+    operatorGroups.sort((left, right) => right.samples.length - left.samples.length || compareText(left.signature, right.signature));
+    const group = operatorGroups[0];
+    if (group !== undefined) selected.set(operator, group.samples);
+  }
+  return selected;
+}
+
+function slotDistribution(samples: readonly LayoutProfileEvidence[], slotIndex: number): LayoutProfileSlotDistribution | undefined {
+  const slots = samples.map((sample) => sample.slots[slotIndex]).filter((slot): slot is LayoutProfileSlot => slot !== undefined);
+  if (slots.length !== samples.length || slots[0] === undefined) return undefined;
+  return {
+    role: slots[0].role,
+    x: summarize(slots.map((slot) => slot.x)),
+    y: summarize(slots.map((slot) => slot.y)),
+    width: summarize(slots.map((slot) => slot.width)),
+    height: summarize(slots.map((slot) => slot.height)),
+  };
+}
+
+export function buildLayoutProfileReport(
+  evidence: readonly LayoutProfileEvidence[],
+  corpusVersion: string,
+): LayoutProfileBuildResult {
+  const selectedByOperator = selectGroups(groupEvidence(evidence));
+  const profiles: Record<string, LayoutProfile> = {};
+  const distributions: Record<string, LayoutProfileSlotDistribution[]> = {};
+
+  for (const operator of [...selectedByOperator.keys()].sort(compareText)) {
+    const samples = selectedByOperator.get(operator) ?? [];
+    const slotReports = samples[0]?.slots.map((_, slotIndex) => slotDistribution(samples, slotIndex)) ?? [];
+    if (slotReports.some((slot) => slot === undefined)) continue;
+    const validReports = slotReports as LayoutProfileSlotDistribution[];
+    distributions[operator] = validReports;
+    profiles[operator] = {
+      operator,
+      sampleCount: samples.length,
+      corpusVersion,
+      slots: validReports.map((report) => ({
+        role: report.role,
+        x: report.x.p50,
+        y: report.y.p50,
+        width: report.width.p50,
+        height: report.height.p50,
+      })),
+    };
   }
 
-  return profiles;
+  return { profiles, distributions };
+}
+
+export function buildLayoutProfiles(
+  evidence: readonly LayoutProfileEvidence[],
+  corpusVersion: string,
+): Readonly<Record<string, LayoutProfile>> {
+  return buildLayoutProfileReport(evidence, corpusVersion).profiles;
 }

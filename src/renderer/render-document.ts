@@ -1,5 +1,6 @@
 import type { Resolution } from '../core/types';
 import type { LayoutProfile } from '../calibration';
+import { DEFAULT_LAYOUT_PROFILES } from '../data/layout-profiles';
 import type { KnownCharacterIndex } from '../known';
 import { composeLayout } from '../composition';
 import { parseIds, scanEmbeddedIds, type TextSegment } from '../parser';
@@ -59,7 +60,7 @@ function appendSegment(
       fragment.append(document.createTextNode(segment.raw));
       return;
     }
-    fragment.append(renderLayout(composeLayout(parsed.ast, { layoutProfiles: options.layoutProfiles }), document, segment.source));
+    fragment.append(renderLayout(composeLayout(parsed.ast, { layoutProfiles: options.layoutProfiles ?? DEFAULT_LAYOUT_PROFILES }), document, segment.source));
   } catch {
     fragment.append(document.createTextNode(segment.raw));
   }
@@ -77,7 +78,7 @@ function appendResolution(
     return;
   }
   if (resolution.kind === 'compose') {
-    fragment.append(renderLayout(composeLayout(resolution.ast, { layoutProfiles }), document, resolution.sourceIds));
+    fragment.append(renderLayout(composeLayout(resolution.ast, { layoutProfiles: layoutProfiles ?? DEFAULT_LAYOUT_PROFILES }), document, resolution.sourceIds));
     return;
   }
   fragment.append(document.createTextNode(raw));

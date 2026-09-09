@@ -34,12 +34,12 @@ slot overlapを許可する。比較metricは交換可能なpure functionとし�
 
 既存の`tools/calibration/corpus.ts`、`generate-corpus.ts`、`generate-multisource-corpus.ts`と生成済みcorpusは履歴・比較用に保持する。新しいCalibration経路は`tools/calibration/sources/`、`select.ts`、`split.ts`、`generate-source-corpus.ts`に置き、Unified Known artifactを直接参照しない。
 
-次段の測定条件は`tools/calibration/measurement-config.ts`で固定する。初期条件は`serif`、font/em 64px、透明64×64px canvas、alphabetic baseline 52px、alpha threshold 0.01であり、font・em・canvas・baselineをnative/composition間で共有する。値は推測でprofileへ採用するためではなく、同条件の測定を再現するためのconfigである。
+測定条件は`tools/calibration/measurement-config.ts`で固定する。trainingはSource Han Sans JP 2.005R Regular、cross-font validationはSource Han Serif JP 2.003R Regular、canvasは160×160px、root emは(16,16,128,128)、font sizeは128px、baselineはfontkit metricsから算出する。font・em・canvas・baselineをnative/composition間で共有し、OS font fallbackへ依存しない。
 
-`tools/calibration/rasterize.ts`にはtools専用のCanvas rasterizerを置く。`rasterizeNativeGlyph()`は完成字を、`rasterizeComposedIds()`は既存のParser/Layout Modelから各leafをroot-absolute boxへ描画し、どちらもalpha maskを返す。nested compositionも各leafの絶対boxを使う。Canvasはruntime packageへimportせず、実fontの存在・tofu判定・native/composition loss・文字単位optimizationはこの次の測定Gateで実行する。
+`tools/calibration/rasterize.ts`にはtools専用のCanvas rasterizerを置く。`rasterizeNativeGlyph()`は完成字を、`rasterizeComposedIds()`は既存のParser/Layout Modelから各leafをroot-absolute boxへ描画し、どちらもalpha maskを返す。nested compositionも各leafの絶対boxを使う。実backendはfontkitでcoverageを検査した上で`@napi-rs/canvas`へfontを明示registerし、Canvasはruntime packageへimportしない。
 
-`tools/calibration/measure-sample.ts`の現行入口はprototype段階であり、実font evidence・geometry loss・profile採用は未完了である。結果はメモリ上の測定結果であり、これだけでprofile採用やruntime個別配置を行わない。
+`tools/calibration/measure-calibration-sample.ts`は固定fontの単一sample確認、`tools/calibration/measure-operator.ts`はstable corpusからのoperator測定・root slot最適化・holdout Gateを担当する。Lossはaxis occupancy、ink bounds、centroid、occupied area、raw alphaの5 sub-lossを保持し、個別raster/optimization結果は`.artifacts/calibration/`へ出力してGit/runtimeへ入れない。
 
 ## Boundary
 
-Canvas/SVG、rasterize、optimizer、reportは`tools/calibration/`だけに置く。個別結果は`data/calibration/`のevidenceであり、runtimeの文字別配置正本ではない。C0〜C4では専用source contract、policy、ambiguity、character-hash splitまで固定した。実font結果が未取得の間は、Generic Profileの改善やruntime統合を完了扱いにしない。
+Canvas/SVG、rasterize、optimizer、reportは`tools/calibration/`だけに置く。個別結果は`data/calibration/`のcompact summaryまたは`.artifacts/calibration/`のraw evidenceであり、runtimeの文字別配置正本ではない。C0〜C17でsource contract、policy、ambiguity、character-hash split、固定font、coverage、実raster、Loss v1、optimizer、median profile、Sans/Serif holdout Gateまで確定し、現在はGateを通過した⿰だけをGeneric Profileとしてruntimeへ統合している。

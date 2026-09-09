@@ -133,7 +133,7 @@ export async function initializePlayground(
 
   const calibrationNotice = document.createElement('p');
   calibrationNotice.className = 'metadata';
-  calibrationNotice.textContent = 'v0.2 Generic Layout Profile: 現在は校正データ未収録のため、profile miss時のv0.1 fixed templateへfallbackします。';
+  calibrationNotice.textContent = 'v0.2 Generic Layout Profile: Source Han Sans JP実測でGateを通過した⿰のみ適用し、その他の構図はv0.1 fixed templateへfallbackします。';
   root.append(calibrationNotice);
 
   const form = document.createElement('form');

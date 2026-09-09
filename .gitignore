@@ -17,3 +17,7 @@ coverage/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Calibration downloads and raw evidence (never commit font binaries/masks)
+.artifacts/calibration/
+.cache/calibration-fonts/

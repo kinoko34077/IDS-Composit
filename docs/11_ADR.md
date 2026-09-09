@@ -130,3 +130,57 @@ Status: Accepted
 ### 境界
 
 Calibration固有のrole・sampling・raster evidenceをResolver runtime型へ持ち込まない。既存Known/corpus artifactは履歴・比較用に保持する。
+
+## ADR-013 v0.2 Calibration地域をJPへ固定
+
+Status: Accepted
+
+v0.2.0の教師・ProfileはJPだけを対象とする。CN/TW/HK/KRの地域差はmetadataを失わず保持するが、別Profileを先回りして生成しない。
+
+## ADR-014 Source Han Sans JPをtraining referenceにする
+
+Status: Accepted
+
+配置最適化はSource Han Sans JP 2.005R Regular static OTFで行う。OSのsystem fontやfont fallbackを教師にしない。
+
+## ADR-015 Source Han Serif JPはcross-font validation専用
+
+Status: Accepted
+
+Source Han Serif JP 2.003R Regular static OTFへSans由来Profileをそのまま適用し、学習へ混ぜず、汎用性のcross-font Gateだけを確認する。
+
+## ADR-016 Known verifiedとCalibration eligibilityを分離
+
+Status: Accepted
+
+Knownの`verified/candidate`は文字同定の状態であり、glyph形状教師の適格性を意味しない。Calibrationはsource role、Unicode leaf、ambiguity、font coverageを独自に判定する。
+
+## ADR-017 character hashでtrain/holdoutを分割
+
+Status: Accepted
+
+NFC(character)のSHA-256先頭32bit mod 100を使い、0〜19をholdout、20〜99をtrainとする。同一characterのalternateは同じpartitionに固定する。
+
+## ADR-018 ambiguityはtrainingから除外
+
+Status: Accepted
+
+同一normalized IDSが複数characterへ対応する場合、primary/alternateのどちらにも入れずdiagnosticへ残す。多数決やconfidence scoreで解決しない。
+
+## ADR-019 Generic Profileはmedianで集約
+
+Status: Accepted
+
+operator/role/slotごとのx/y/width/heightはcoordinate-wise medianをruntime値とする。meanや分位点はreportへ残すが、先に本番方式へ固定しない。
+
+## ADR-020 Profile採用はoperator単位Gate
+
+Status: Accepted
+
+train>=80、holdout>=20を満たすoperatorだけを候補とし、Sans median改善・p75非悪化、Serif median/p75非悪化を個別に確認する。未達operatorはv0.1 fixed templateへfallbackする。
+
+## ADR-021 raw evidenceをruntimeへ持ち込まない
+
+Status: Accepted
+
+per-character raster、optimizer結果、mask、巨大corpusは`.artifacts/calibration/`へ置き、Git/runtime/npm packageへ入れない。runtimeへ統合するのはGateを通った小さなGeneric Profileだけとする。

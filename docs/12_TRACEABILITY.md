@@ -61,4 +61,14 @@
 |CAL-240|`tools/calibration/split.ts`|`tests/calibration/split.test.ts`|NFC character SHA-256 first-32-bit 80/20 split|
 |PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`, `vite.config.ts`, `vite.pages.config.ts`|`tests/examples/v0-2-surface.test.ts`, `tests/examples/index.test.ts`, `npm run build:pages`（Full Known asset出力）、dev server実ブラウザ確認|
 
+|CAL-241|`tools/calibration/generate-source-corpus.ts`, `tools/calibration/sources/`|`tests/calibration/source-corpus.test.ts`, `npm run calibration:build:source`|Known Indexと分離したBabelStone/CHISE apparent/Yi Bai lv0 source corpus、license/hash/provenance|
+|CAL-242|`tools/calibration/fonts/manifest.json`, `tools/calibration/fonts/fetch-fonts.ts`|`tests/calibration/font-manifest.test.ts`, `npm run calibration:verify-fonts`|Source Han Sans/Serif固定version・SHA-256・cache境界|
+|CAL-243|`tools/calibration/fonts/coverage.ts`|`tests/calibration/font-coverage.test.ts`|targetと全IDS leafのfontkit coverage、known/font/raster eligibility|
+|CAL-244|`tools/calibration/measurement-config.ts`, `tools/calibration/rasterize.ts`, `tools/calibration/loss-v1.ts`|`tests/calibration/rasterize.test.ts`, `tests/calibration/loss-v1.test.ts`|160/128/16 geometry、metrics baseline、root absolute slot、5 sub-loss|
+|CAL-245|`tools/calibration/optimizer.ts`, `tools/calibration/profile.ts`|`tests/calibration/optimizer.test.ts`, `tests/calibration/profile.test.ts`|multi-resolution root optimizer、median profile、分布report|
+|CAL-246|`tools/calibration/gate.ts`, `tools/calibration/measure-operator.ts`, `data/calibration/operator-u2ff0-v0.2.json`|`tests/calibration/gate.test.ts`, `tests/calibration/measure-operator.test.ts`, `docs/v0.2/14_CALIBRATION_GATES.md`|operator単位Sans/Serif holdout Gateと⿰の実測accept|
+|CAL-247|`src/data/layout-profiles.ts`, `data/layout-profiles/v0.2.json`, `src/public-api.ts`|`tests/composition/layout-profile.test.ts`, `tests/compat/v0-1-runtime.test.ts`|accepted profileだけをruntimeへ統合、profile missはfixed fallback|
+|CAL-248|`examples/validation.html`, `examples/validation.ts`, `vite.pages.config.ts`|`tests/examples/validation.test.ts`, `npm run build:pages`|Native/Fixed/Calibrated三者比較とGate telemetry|
+|CAL-249|`package.json`, `tsconfig.json`, `docs/v0.2/14_CALIBRATION_GATES.md`|全tests、typecheck、tools typecheck、library/Pages build、pack|C17総合回帰とartifact/package境界|
+
 Phase 0〜9.2およびv0.2 first sliceの実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

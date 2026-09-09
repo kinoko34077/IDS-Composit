@@ -3,7 +3,7 @@ import { compareCalibrationLosses, summarizeLosses } from '../../tools/calibrati
 
 describe('calibration report', () => {
   it('summarizes median and p75 deterministically', () => {
-    expect(summarizeLosses([0.4, 0.1, 0.3, 0.2])).toEqual({ count: 4, median: 0.2, p75: 0.3 });
+    expect(summarizeLosses([0.4, 0.1, 0.3, 0.2])).toEqual({ count: 4, median: 0.25, p75: 0.3 });
   });
 
   it('accepts a profile only when median improves and p75 does not regress', () => {

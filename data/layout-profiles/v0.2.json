@@ -1,4 +1,14 @@
 {
   "version": "v0.2",
-  "profiles": {}
+  "profiles": {
+    "⿰": {
+      "operator": "⿰",
+      "sampleCount": 109,
+      "corpusVersion": "v0.2-calibration-sans-jp",
+      "slots": [
+        { "role": "left", "x": 0, "y": 0, "width": 0.54, "height": 1 },
+        { "role": "right", "x": 0.39999999999999997, "y": 0, "width": 0.5900000000000001, "height": 1 }
+      ]
+    }
+  }
 }

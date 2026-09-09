@@ -1,5 +1,5 @@
-import type { StructuralRole } from '../core/types';
-import { IDC_ROLES } from '../data/idc';
+import type { StructuralRole } from '../core/types.ts';
+import { IDC_ROLES } from '../data/idc.ts';
 
 export function getChildRoles(operator: string): StructuralRole[] {
   const roles = IDC_ROLES[operator];

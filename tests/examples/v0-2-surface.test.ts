@@ -16,6 +16,6 @@ describe('v0.2 mobile validation surface', () => {
     ]));
     expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known candidate（未検証）→ local composition');
     expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Unsupported IDC → source preserved');
-    expect(root.textContent).toContain('profile miss時のv0.1 fixed templateへfallback');
+    expect(root.textContent).toContain('Gateを通過した⿰のみ適用');
   });
 });

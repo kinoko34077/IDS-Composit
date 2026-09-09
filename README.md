@@ -25,6 +25,7 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 - [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)
 - [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)
 - [Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md)
+- [Calibration実測・Gate記録](docs/v0.2/14_CALIBRATION_GATES.md)
 - [スマホ用Pages設計](docs/superpowers/specs/2026-09-09-mobile-pages-design.md)
 - [スマホ用Pages実装計画](docs/superpowers/plans/2026-09-09-mobile-pages.md)
 - [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
@@ -64,7 +65,7 @@ v0.2のoptional Known bulk dataは、固定revisionのCHISE IDS抽象文字フ�
 
 ## 開発状況
 
-v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在の開発版は`0.2.0-dev.0`で、v0.2のKnown Index、14 spatial IDC、native-first resolver chain、calibration foundation、Known Character Multi-Source importer/mergeを実装中です。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md)、[v0.2章別索引](docs/v0.2/00_INDEX.md) に記録しています。
+v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在の開発版は`0.2.0-dev.0`で、v0.2のKnown Index、14 spatial IDC、native-first resolver chain、Calibration専用source pipeline、実font測定、⿰のaccepted Generic Layout Profileを実装済みです。全operatorのprofile採用は仮定せず、Gate未通過の構図はv0.1 fixed templateへfallbackします。観測結果は[Calibration実測・Gate記録](docs/v0.2/14_CALIBRATION_GATES.md)と[v0.2章別索引](docs/v0.2/00_INDEX.md)に記録しています。
 
 ## スマートフォンからの確認
 

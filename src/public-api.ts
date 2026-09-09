@@ -4,6 +4,7 @@ import { createChiseProvider } from './chise';
 import { DEFAULT_KNOWN_CHARACTER_INDEX } from './known/default';
 import type { KnownCharacterIndex } from './known';
 import type { LayoutProfile } from './calibration';
+import { DEFAULT_LAYOUT_PROFILES } from './data/layout-profiles';
 import { resolveIdsWithChain } from './resolver';
 import { renderIdsInElement, renderIdsInElementAsync } from './renderer/render-document';
 import { observeIdsInElement, type IdsObserverHandle } from './runtime/observe-dom';
@@ -32,12 +33,13 @@ function createResolver(options: RenderIdsOptions): IdsResolver {
 
 function createRenderTarget(options: RenderIdsOptions): (target: HTMLElement) => Promise<void> {
   const includeContentEditable = options.contentEditable === true;
+  const layoutProfiles = options.layoutProfiles ?? DEFAULT_LAYOUT_PROFILES;
   if (options.provider === undefined && options.chise !== true) {
     return async (target) => {
       renderIdsInElement(target, {
         includeContentEditable,
         knownIndex: options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX,
-        layoutProfiles: options.layoutProfiles,
+        layoutProfiles,
       });
     };
   }
@@ -47,7 +49,7 @@ function createRenderTarget(options: RenderIdsOptions): (target: HTMLElement) =>
     includeContentEditable,
     maxConcurrency: options.maxConcurrency,
     knownIndex: options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX,
-    layoutProfiles: options.layoutProfiles,
+    layoutProfiles,
   });
 }
 

@@ -52,4 +52,4 @@ lossはaxis occupancy、ink bounds、centroid、occupied area、raw alpha mask�
 
 Sans JPでmedian改善/p75非悪化、Serif JPでmedian/p75非悪化を満たしたoperatorだけ`data/layout-profiles/v0.2.json`へ出力する。個別characterのraster/optimization evidenceはGitへ入れず、runtimeへも入れない。
 
-現在の実装段階はC0〜C4（source contract、3 adapter、ambiguity、stable split）であり、font manifest以降の実測Gateは未完了である。
+実装済み範囲はC0〜C17である。C5〜C8で固定font manifest/hash、fontkit coverage、Skia raster、root em geometry、Loss v1を追加し、C9〜C12で実font sample、multi-resolution optimizer、stable cap、median profileを実装した。C13/C14では⿰のSans/Serif holdout Gateを実測し、C15でaccepted profileだけをruntimeへ統合、C16でPages三者比較を追加した。C17で全回帰・型検査・library/Pages build・pack境界を再確認した。数値と再現コマンドは[14_CALIBRATION_GATES.md](14_CALIBRATION_GATES.md)に記録する。

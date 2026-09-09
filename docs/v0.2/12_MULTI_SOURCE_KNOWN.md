@@ -64,4 +64,4 @@ BabelStone  ⿲彳圭亍 → 街
 
 Resolver用corpusとCalibration用corpusは分離する。複数Sourceから同じcharacterに複数IDSがある場合、Calibrationは初期方針としてcharacterごとにprimary sampleを一件選び、alternate IDSを別検証群へ保持する。lv0はstroke/glyph差を失わない教師候補として扱い、Known resolution用lv2と同じ重みで混ぜない。
 
-Multi-Source mergeとsampling policyのGate後に、C1〜C3の測定基盤を追加した。`tools/calibration/measurement-config.ts`でfont/em/canvas/baselineを固定し、`tools/calibration/rasterize.ts`で同じCanvas条件のnative/composition alpha mask、`tools/calibration/measure-sample.ts`で暫定lossとslot evidenceを得る。現在はfake Canvas回帰までで、実font evidence、文字単位optimization、Generic Profile採用、holdout gateは未実施である。runtimeへCanvas/SVGを導入しない。
+Multi-Source mergeとsampling policyの後段として、Calibration専用source corpusをKnown Indexから分離した。`tools/calibration/measurement-config.ts`でJP固定のfont/em/canvas/baseline、`tools/calibration/rasterize.ts`で同じroot em条件のnative/composition alpha mask、`tools/calibration/measure-operator.ts`でcoverage gate・Loss v1・root slot optimizer・operator別holdout Gateを扱う。2026-09-10時点では⿰がSans/Serif Gateを通過し、`data/layout-profiles/v0.2.json`へ小さなGeneric Profileだけを統合している。runtimeへCanvas/SVGやper-character evidenceを導入しない。
