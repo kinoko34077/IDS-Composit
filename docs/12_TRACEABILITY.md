@@ -53,6 +53,8 @@
 |DATA-234|`tools/calibration/sampling-policy.ts`, `tools/calibration/generate-multisource-corpus.ts`, `data/calibration/`|`tests/calibration/sampling-policy.test.ts`, `tests/calibration/generate-multisource-corpus.test.ts`, `npm run calibration:build:multisource`, primary/alternate corpus report|
 |CAL-235|`tools/calibration/measurement-config.ts`, `tools/calibration/rasterize.ts`|`tests/calibration/measurement-config.test.ts`, `tests/calibration/rasterize.test.ts`, `npm run typecheck:tools`（Canvasはtools限定）|
 |CAL-236|`tools/calibration/measure-sample.ts`|`tests/calibration/measure-sample.test.ts`, `npm run typecheck:tools`（native/composition maskと暫定lossの測定入口）|
+|CAL-C0|`docs/validation/PHASE_C0_CALIBRATION_BASELINE.md`|fresh v0.2.0-dev.0 test/typecheck/build/pages/pack gate（41 files / 217 tests）|
+|CAL-C1-C4|`tools/calibration/sources/`, `tools/calibration/select.ts`, `tools/calibration/split.ts`|Calibration source policy, ambiguity, primary/alternate/diagnostic, character-hash split tests|
 |PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`, `vite.config.ts`, `vite.pages.config.ts`|`tests/examples/v0-2-surface.test.ts`, `tests/examples/index.test.ts`, `npm run build:pages`（Full Known asset出力）、dev server実ブラウザ確認|
 
 Phase 0〜9.2およびv0.2 first sliceの実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。
