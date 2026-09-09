@@ -60,7 +60,7 @@ describe('operator calibration runner', () => {
     expect(result.summary.profile).toBeNull();
   });
 
-  it('emits a reproducible compact artifact without raw distribution evidence', () => {
+  it('emits a reproducible compact artifact with aggregate distribution evidence', () => {
     const sans = {
       id: 'sans', family: 'Source Han Sans JP', version: 'fixture', sha256: 'sha256:sans', fontPath: 'sans.otf',
       metrics: DEFAULT_CALIBRATION_FONT_METRICS,
@@ -84,6 +84,6 @@ describe('operator calibration runner', () => {
       sourceCorpusSha256: 'sha256:corpus',
       operator: '⿰',
     });
-    expect('profileDistributions' in artifact).toBe(false);
+    expect('profileDistributions' in artifact).toBe(true);
   });
 });

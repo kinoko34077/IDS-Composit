@@ -114,22 +114,22 @@ export type OperatorCalibrationResult = {
   profileReport: LayoutProfileBuildResult;
 };
 
-export type OperatorCalibrationArtifact = Omit<OperatorCalibrationSummary, 'schemaVersion' | 'profileDistributions'> & {
+export type OperatorCalibrationArtifact = Omit<OperatorCalibrationSummary, 'schemaVersion'> & {
   schemaVersion: 'ids-composit-operator-calibration-report/v0.2';
   sourceCorpusSha256: `sha256:${string}`;
 };
 
 /**
  * Create the small tracked report from a full in-memory measurement summary.
- * Per-character evidence and coordinate distributions remain in ignored raw
- * output; the report keeps only reproducibility metadata, gate metrics, and
- * the accepted generic profile.
+ * Per-character evidence remains in ignored raw output; the tracked report
+ * keeps aggregate coordinate distributions alongside gate metrics and the
+ * accepted generic profile.
  */
 export function buildOperatorCalibrationArtifact(
   summary: OperatorCalibrationSummary,
   sourceCorpusSha256: `sha256:${string}`,
 ): OperatorCalibrationArtifact {
-  const { schemaVersion: _summarySchemaVersion, profileDistributions: _profileDistributions, ...compactSummary } = summary;
+  const { schemaVersion: _summarySchemaVersion, ...compactSummary } = summary;
   return {
     schemaVersion: 'ids-composit-operator-calibration-report/v0.2',
     sourceCorpusSha256,

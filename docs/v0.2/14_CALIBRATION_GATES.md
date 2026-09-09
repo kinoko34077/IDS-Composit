@@ -118,7 +118,7 @@ npm run pack:check
 | `npm run typecheck:tools` | passed |
 | `npm run calibration:verify-fonts` | Sans/Serifのarchive・OTF hash passed |
 | `npm run build` | passed; library JS 22.42 kB / gzip 6.75 kB |
-| `npm run build:pages` | passed; Calibration report 3.22 kB、Full Known asset 12,932.05 kB |
+| `npm run build:pages` | passed; Calibration report 4.86 kB、Full Known asset 12,932.05 kB |
 | `npm run pack:check` | passed; package 16.7 kB / 45 files |
 | `git diff --check` | clean（Gitの改行変換warningのみ） |
 
