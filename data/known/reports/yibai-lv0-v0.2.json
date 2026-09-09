@@ -1,0 +1,272 @@
+{
+  "schemaVersion": "ids-composit-yibai-import-report/v0.2",
+  "level": "lv0",
+  "stats": {
+    "files": 1,
+    "lines": 102032,
+    "comments": 0,
+    "records": 166718,
+    "uniquePairs": 122157,
+    "duplicatePairs": 44561,
+    "uniqueIds": 121954,
+    "ambiguousIds": 131,
+    "uniquelyResolvableIds": 121823,
+    "uniquelyResolvableRate": 0.9989258244912016,
+    "primary": 156839,
+    "alternative": 9879,
+    "verified": 0,
+    "candidate": 166718,
+    "specialSyntax": 153921,
+    "unsupportedStructuralIdc": 38,
+    "issues": 0
+  },
+  "files": [
+    {
+      "file": "ids_lv0.txt",
+      "level": "lv0",
+      "lines": 102032,
+      "comments": 0,
+      "records": 166718,
+      "primary": 156839,
+      "alternative": 9879,
+      "verified": 0,
+      "candidate": 166718,
+      "specialSyntax": 153921,
+      "unsupportedStructuralIdc": 38,
+      "issues": 0
+    }
+  ],
+  "examples": {
+    "street": [
+      "⿴行圭"
+    ]
+  },
+  "resolutionSamples": [
+    {
+      "ids": "#",
+      "characters": [
+        "◜",
+        "◝",
+        "◞",
+        "◟",
+        "⺄",
+        "⺆",
+        "〇",
+        "コ",
+        "㇀",
+        "㇁",
+        "㇂",
+        "㇄",
+        "㇅",
+        "㇇",
+        "㇈",
+        "㇉",
+        "㇊",
+        "㇋",
+        "㇌",
+        "㇍",
+        "㇎",
+        "㇘",
+        "㇝",
+        "㇢",
+        "㔾",
+        "㠯",
+        "一",
+        "丨",
+        "丶",
+        "丿",
+        "乀",
+        "乁",
+        "乙",
+        "乚",
+        "乛",
+        "亅",
+        "了",
+        "人",
+        "冂",
+        "冖",
+        "几",
+        "凵",
+        "凸",
+        "凹",
+        "匚",
+        "厂",
+        "又",
+        "口",
+        "尸",
+        "己",
+        "巳",
+        "弓",
+        "阝",
+        "𠂆",
+        "𠃉",
+        "𠃊",
+        "𠃋",
+        "𠃌",
+        "𠃍",
+        "𠃎",
+        "𠃑",
+        "𠄌",
+        "𠄎",
+        "𠕄",
+        "𠙴",
+        "𠤬",
+        "𡰣",
+        "𡿨",
+        "𢎧",
+        "𤕪",
+        "𬼁",
+        "𬼂",
+        "𬼄",
+        "𱍫"
+      ],
+      "kind": "ambiguous"
+    },
+    {
+      "ids": "{?0㬵}⿰月.交.",
+      "characters": [
+        "㬵"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0㮣}⿱既.木.",
+      "characters": [
+        "㮣"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0㮣}⿱既.木d",
+      "characters": [
+        "㮣"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䆋}⿰禾d龜K",
+      "characters": [
+        "䆋"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䏓}⿰月.元.",
+      "characters": [
+        "䏓"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䏙}⿰月.冘.",
+      "characters": [
+        "䏙"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䐋}⿰月.忩T",
+      "characters": [
+        "䐋"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䐠}⿰月.⿳艹H亡y𫶧.",
+      "characters": [
+        "䐠"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䐠}⿰月.荒.",
+      "characters": [
+        "䐠"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䑃}⿰月.蒙.",
+      "characters": [
+        "䑃"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䑃}⿰月.蒙H",
+      "characters": [
+        "䑃"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0䰗}⿵鬥亀",
+      "characters": [
+        "䰗"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0丗}⿻⿺𠃊.〢一.",
+      "characters": [
+        "丗"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0尒}⿱入H小.",
+      "characters": [
+        "尒"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0尵}⿺尣貴",
+      "characters": [
+        "尵"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0径}⿰彳圣",
+      "characters": [
+        "径"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0暅}⿰日恆",
+      "characters": [
+        "暅"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0曚}⿰日𫎇",
+      "characters": [
+        "曚"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{?0朦}⿰月.蒙.",
+      "characters": [
+        "朦"
+      ],
+      "kind": "match"
+    }
+  ],
+  "issues": [],
+  "source": {
+    "name": "Yi Bai IDS lv0",
+    "version": "snapshot-2026-09-01-lv0",
+    "retrievalMethod": "HTTPS raw download from a pinned repository revision",
+    "fileHash": "sha256:b979b4e952bb5eb91299201f968f781975a6ddc367a42a08844b4c1c956bde60",
+    "repository": "https://github.com/yi-bai/ids",
+    "revision": "13081e8b223b740fcc234780b95a386d895fbf16d",
+    "license": "MIT",
+    "files": [
+      "ids_lv0.txt"
+    ]
+  }
+}

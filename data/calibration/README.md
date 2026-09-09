@@ -15,3 +15,11 @@ source revision・hash・licenseはcorpusの`source` objectと[CHISE-IDS-CORPUS-
 ```text
 npm run calibration:build:corpus
 ```
+
+複数Source用の`corpus-multisource-v0.2.json`は、Unified Known artifactを明示入力して生成します。characterごとに決定的に1件を`primary`へ選び、残りのIDS表現を`alternate`へ分離するため、同じ完成字がtrain分布を不自然に重くしません。初期Source優先順位はCHISE、BabelStone、Yi Bai lv0/lv1/lv2です。これは測定前のsampling policyであり、配置精度やconfidenceを意味しません。
+
+```text
+npm run calibration:build:multisource
+```
+
+CHISE由来の`corpus-v0.2.json`はbaselineとして保持し、複数Source corpusで上書きしません。測定条件の固定は`tools/calibration/measurement-config.ts`、tools限定Canvas rasterizationは`tools/calibration/rasterize.ts`にあります。実fontの存在確認、native/compositionのraster evidence、optimizer・profile採用は別Gateです。

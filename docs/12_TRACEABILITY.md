@@ -47,6 +47,12 @@
 |DATA-229|`src/known/types.ts`, `src/known/index.ts`|`tests/known/index.test.ts` compact optional artifact hydrate and native resolve|
 |CALIBRATION|`src/calibration/`, `tools/calibration/`, `data/calibration/`, `data/layout-profiles/`|`tests/calibration/metrics.test.ts`, `tests/calibration/corpus.test.ts`, `tests/calibration/generate-corpus.test.ts`, `tests/calibration/report.test.ts`, `tests/calibration/optimizer.test.ts`, `tests/calibration/profile.test.ts`|
 |DATA-230|`tools/calibration/generate-corpus.ts`, `data/calibration/`|`tests/calibration/generate-corpus.test.ts`, `npm run calibration:build:corpus`, source-hash-preserving corpus report|
-|PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`|`tests/examples/v0-2-surface.test.ts`, `npm run build:pages`|
+|DATA-231|`tools/known/import-babelstone-ids.ts`, `tools/known/external-ids.ts`, `data/known/generated/`, `data/known/reports/`|`tests/known/import-babelstone-ids.test.ts`, `npm run known:import:babelstone`, fixed file-date/hash audit|
+|DATA-232|`tools/known/import-yibai-ids.ts`, `tools/known/external-ids.ts`, `data/known/generated/`, `data/known/reports/`|`tests/known/import-yibai-ids.test.ts`, `npm run known:import:yibai`, lv0/lv1/lv2 fixed-revision audit|
+|DATA-233|`tools/known/merge-known-sources.ts`, `src/known/types.ts`, `src/known/index.ts`|`tests/known/merge-known-sources.test.ts`, `tests/public-api/public-api.test.ts`, `npm run known:merge`, unified source/ambiguity report|
+|DATA-234|`tools/calibration/sampling-policy.ts`, `tools/calibration/generate-multisource-corpus.ts`, `data/calibration/`|`tests/calibration/sampling-policy.test.ts`, `tests/calibration/generate-multisource-corpus.test.ts`, `npm run calibration:build:multisource`, primary/alternate corpus report|
+|CAL-235|`tools/calibration/measurement-config.ts`, `tools/calibration/rasterize.ts`|`tests/calibration/measurement-config.test.ts`, `tests/calibration/rasterize.test.ts`, `npm run typecheck:tools`（Canvasはtools限定）|
+|CAL-236|`tools/calibration/measure-sample.ts`|`tests/calibration/measure-sample.test.ts`, `npm run typecheck:tools`（native/composition maskと暫定lossの測定入口）|
+|PAGES-V0.2|`examples/playground-model.ts`, `examples/index.ts`, `examples/index.css`, `vite.config.ts`, `vite.pages.config.ts`|`tests/examples/v0-2-surface.test.ts`, `tests/examples/index.test.ts`, `npm run build:pages`（Full Known asset出力）、dev server実ブラウザ確認|
 
 Phase 0〜9.2およびv0.2 first sliceの実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。

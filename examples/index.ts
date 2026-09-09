@@ -1,14 +1,65 @@
-import { renderIds, type RenderIdsOptions } from '../src/public-api';
+import {
+  createKnownCharacterIndex,
+  entriesFromKnownRecordsArtifact,
+  renderIds,
+  type KnownCharacterIndex,
+  type KnownCharacterMergedRecordsArtifact,
+  type RenderIdsOptions,
+} from '../src/public-api';
 import './index.css';
 import { PATTERN_CASES, toDisplaySource, type PatternCase } from './playground-model';
 
-type PlaygroundRenderer = (
+export type PlaygroundRenderer = (
   target: HTMLElement,
-  options?: Pick<RenderIdsOptions, 'chise'>,
+  options?: Pick<RenderIdsOptions, 'chise' | 'knownIndex'>,
 ) => Promise<void>;
+
+export type FullKnownIndexLoader = () => Promise<KnownCharacterIndex>;
+
+type ResolutionMode = 'local' | 'chise' | 'full-known' | 'full-known-chise';
+
+type RenderContext = {
+  mode: ResolutionMode;
+  options: Pick<RenderIdsOptions, 'chise' | 'knownIndex'>;
+  knownIndex?: KnownCharacterIndex;
+};
 
 function text(document: Document, value: string): Text {
   return document.createTextNode(value);
+}
+
+function sourceFromInput(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.startsWith('⟦') && trimmed.endsWith('⟧')) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+export async function loadFullKnownIndexFromPages(): Promise<KnownCharacterIndex> {
+  const response = await fetch('./data/known-index-v0.2.json', { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`Full Known Indexの取得に失敗しました (HTTP ${response.status})`);
+  }
+  const artifact = (await response.json()) as KnownCharacterMergedRecordsArtifact;
+  if (artifact.schemaVersion !== 'ids-composit-known-records-merged/v0.2') {
+    throw new Error('Full Known Indexのschemaが対応していません。');
+  }
+  return createKnownCharacterIndex(entriesFromKnownRecordsArtifact(artifact));
+}
+
+function modeFromValue(value: string): ResolutionMode {
+  if (value === 'chise' || value === 'full-known' || value === 'full-known-chise') return value;
+  return 'local';
+}
+
+function modeDescription(mode: ResolutionMode): string {
+  switch (mode) {
+    case 'chise': return 'CHISE API';
+    case 'full-known': return 'Full Known Index';
+    case 'full-known-chise': return 'Full Known + CHISE';
+    default: return 'Local only';
+  }
 }
 
 function createHeading(document: Document): HTMLElement {
@@ -70,6 +121,7 @@ function setStatus(element: HTMLElement, message: string, kind: 'ready' | 'error
 export async function initializePlayground(
   root: HTMLElement,
   renderer: PlaygroundRenderer = renderIds,
+  loadFullKnownIndex: FullKnownIndexLoader = loadFullKnownIndexFromPages,
 ): Promise<void> {
   const document = root.ownerDocument;
   root.replaceChildren();
@@ -115,18 +167,31 @@ export async function initializePlayground(
   }
   candidateLabel.append(candidate);
 
+  const modeLabel = document.createElement('label');
+  modeLabel.htmlFor = 'resolution-mode';
+  modeLabel.textContent = 'Resolution mode';
+  const mode = document.createElement('select');
+  mode.id = 'resolution-mode';
+  mode.name = 'resolution-mode';
+  const modes: ReadonlyArray<readonly [ResolutionMode, string]> = [
+    ['local', 'Local only'],
+    ['chise', 'CHISE API'],
+    ['full-known', 'Full Known Index'],
+    ['full-known-chise', 'Full Known + CHISE'],
+  ];
+  for (const [value, label] of modes) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = label;
+    mode.append(option);
+  }
+  modeLabel.append(mode);
+
   const renderButton = document.createElement('button');
   renderButton.type = 'submit';
   renderButton.textContent = '入力を表示';
 
-  const chiseLabel = document.createElement('label');
-  chiseLabel.className = 'checkbox-label';
-  const chise = document.createElement('input');
-  chise.id = 'chise-toggle';
-  chise.type = 'checkbox';
-  chiseLabel.append(chise, text(document, ' CHISE native優先'));
-
-  form.append(inputLabel, candidateLabel, renderButton, chiseLabel);
+  form.append(inputLabel, candidateLabel, modeLabel, renderButton);
   root.append(form);
 
   const status = document.createElement('p');
@@ -135,6 +200,12 @@ export async function initializePlayground(
   status.setAttribute('role', 'status');
   status.setAttribute('aria-live', 'polite');
   root.append(status);
+
+  const telemetry = document.createElement('dl');
+  telemetry.id = 'resolution-telemetry';
+  telemetry.className = 'telemetry';
+  telemetry.setAttribute('aria-live', 'polite');
+  root.append(telemetry);
 
   const previewSection = document.createElement('section');
   previewSection.className = 'panel';
@@ -179,11 +250,80 @@ export async function initializePlayground(
   linksSection.append(linksHeading, links);
   root.append(linksSection);
 
-  const chiseOptions = (): Pick<RenderIdsOptions, 'chise'> => ({ chise: chise.checked });
+  let fullKnownIndexPromise: Promise<KnownCharacterIndex> | undefined;
 
-  const renderTarget = async (target: HTMLElement): Promise<boolean> => {
+  const ensureFullKnownIndex = async (): Promise<KnownCharacterIndex> => {
+    if (fullKnownIndexPromise === undefined) {
+      fullKnownIndexPromise = loadFullKnownIndex().catch((error: unknown) => {
+        fullKnownIndexPromise = undefined;
+        throw error;
+      });
+    }
+    return fullKnownIndexPromise;
+  };
+
+  const getRenderContext = async (): Promise<RenderContext> => {
+    const selectedMode = modeFromValue(mode.value);
+    if (selectedMode === 'full-known' || selectedMode === 'full-known-chise') {
+      setStatus(status, 'Full Known Indexを読み込んでいます…');
+      const knownIndex = await ensureFullKnownIndex();
+      return {
+        mode: selectedMode,
+        knownIndex,
+        options: {
+          knownIndex,
+          chise: selectedMode === 'full-known-chise',
+        },
+      };
+    }
+    return {
+      mode: selectedMode,
+      options: { chise: selectedMode === 'chise' },
+    };
+  };
+
+  const setTelemetry = (ids: string, context: RenderContext): void => {
+    const known = context.knownIndex?.resolve(ids);
+    const knownText = context.knownIndex === undefined
+      ? '未ロード（Full Known Index未選択）'
+      : known?.kind === 'match'
+        ? `hit: ${known.character}`
+        : known?.kind === 'ambiguous'
+          ? 'ambiguous'
+          : 'miss';
+    const chiseText = known?.kind === 'match'
+      ? 'not queried (Known hit)'
+      : context.options.chise === true
+        ? 'enabled / queried as needed'
+        : 'disabled';
+    const resultText = known?.kind === 'match'
+      ? `native ${known.character}`
+      : context.options.chise === true
+        ? 'native / composition / fallback（CHISE結果依存）'
+        : 'composition / fallback';
+
+    telemetry.replaceChildren();
+    const rows: ReadonlyArray<readonly [string, string]> = [
+      ['Input', `⟦${ids}⟧`],
+      ['Known lookup', knownText],
+      ['CHISE', chiseText],
+      ['Result', resultText],
+      ['Mode', modeDescription(context.mode)],
+    ];
+    for (const [label, value] of rows) {
+      const term = document.createElement('dt');
+      term.textContent = label;
+      const detail = document.createElement('dd');
+      detail.textContent = value;
+      telemetry.append(term, detail);
+    }
+  };
+
+  const renderTarget = async (target: HTMLElement, ids: string): Promise<boolean> => {
     try {
-      await renderer(target, chiseOptions());
+      const context = await getRenderContext();
+      await renderer(target, context.options);
+      setTelemetry(ids, context);
       return true;
     } catch (error) {
       setStatus(status, `表示中にエラーが発生しました: ${String(error)}`, 'error');
@@ -192,21 +332,23 @@ export async function initializePlayground(
   };
 
   const renderPreview = async (): Promise<void> => {
-    const source = toDisplaySource(input.value);
+    const ids = sourceFromInput(input.value);
+    const source = toDisplaySource(ids);
     preview.replaceChildren(source.length > 0 ? text(document, source) : text(document, ''));
-    if (source.length === 0) {
+    if (ids.length === 0) {
       setStatus(status, 'IDSを入力してください。', 'error');
       return;
     }
-    const rendered = await renderTarget(preview);
-    if (rendered) setStatus(status, `${chise.checked ? 'CHISE native優先' : 'local composition'}で表示しました。`);
+    const rendered = await renderTarget(preview, ids);
+    if (rendered) setStatus(status, `${modeDescription(modeFromValue(mode.value))}で表示しました。`);
   };
 
   const renderTable = async (): Promise<void> => {
     const body = root.querySelector<HTMLTableSectionElement>('#pattern-table-body');
     if (body === null) return;
-    const rendered = await renderTarget(body);
-    if (rendered) setStatus(status, `${chise.checked ? 'CHISE native優先' : 'local composition'}で一覧を表示しました。`);
+    const ids = sourceFromInput(input.value);
+    const rendered = await renderTarget(body, ids);
+    if (rendered) setStatus(status, `${modeDescription(modeFromValue(mode.value))}で一覧を表示しました。`);
   };
 
   form.addEventListener('submit', (event) => {
@@ -220,7 +362,7 @@ export async function initializePlayground(
       void renderPreview();
     }
   });
-  chise.addEventListener('change', () => {
+  mode.addEventListener('change', () => {
     void renderPreview();
     void renderTable();
   });

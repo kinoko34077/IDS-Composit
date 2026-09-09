@@ -2,6 +2,7 @@ import type {
   KnownCharacterEntry,
   KnownCharacterIndex,
   KnownCharacterLookup,
+  KnownCharacterMergedRecordsArtifact,
   KnownCharacterRecordsArtifact,
 } from './types';
 import { normalizeKnownLookupKey } from './normalize-lookup-key.ts';
@@ -58,8 +59,28 @@ export function createKnownCharacterIndex(entries: readonly KnownCharacterEntry[
  * runtime never discovers or imports bulk data by itself.
  */
 export function entriesFromKnownRecordsArtifact(
-  artifact: KnownCharacterRecordsArtifact,
+  artifact: KnownCharacterRecordsArtifact | KnownCharacterMergedRecordsArtifact,
 ): KnownCharacterEntry[] {
+  if (artifact.schemaVersion === 'ids-composit-known-records-merged/v0.2') {
+    return artifact.records.flatMap((record) => {
+      const sources = record.sourceIndexes
+        .map((index) => artifact.sources[index])
+        .filter((source): source is KnownCharacterMergedRecordsArtifact['sources'][number] => source !== undefined);
+      if (sources.length === 0) return [];
+      return [{
+        ids: record.ids,
+        character: record.character,
+        source: sources.map((source) => source.name).join(' + '),
+        sourceVersion: sources.map((source) => source.version).join(' + '),
+        retrievalMethod: 'multi-source merge',
+        ...(sources.every((source) => source.fileHash !== undefined)
+          ? { sourceHash: sources.map((source) => source.fileHash).join(' + ') }
+          : {}),
+        status: record.status,
+      }];
+    });
+  }
+
   return artifact.records.map((record) => ({
     ids: record.ids,
     character: record.character,
@@ -77,6 +98,7 @@ export type {
   KnownCharacterEntry,
   KnownCharacterIndex,
   KnownCharacterLookup,
+  KnownCharacterMergedRecordsArtifact,
   KnownCharacterRecordsArtifact,
   KnownCharacterStatus,
 } from './types';

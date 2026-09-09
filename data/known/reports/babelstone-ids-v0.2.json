@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "ids-composit-babelstone-import-report/v0.2",
+  "stats": {
+    "files": 1,
+    "lines": 98040,
+    "comments": 360,
+    "notes": 937,
+    "records": 108425,
+    "uniquePairs": 108408,
+    "duplicatePairs": 17,
+    "uniqueIds": 108184,
+    "ambiguousIds": 210,
+    "uniquelyResolvableIds": 107974,
+    "uniquelyResolvableRate": 0.9980588626783997,
+    "verified": 105773,
+    "candidate": 2652,
+    "specialComponents": 2652,
+    "unsupportedStructuralIdc": 286,
+    "issues": 0
+  },
+  "files": [
+    {
+      "file": "IDS.TXT",
+      "lines": 98040,
+      "comments": 360,
+      "notes": 937,
+      "records": 108425,
+      "verified": 105773,
+      "candidate": 2652,
+      "specialComponents": 2652,
+      "unsupportedStructuralIdc": 286,
+      "issues": 0
+    }
+  ],
+  "examples": {
+    "street": [
+      "⿲彳圭亍"
+    ]
+  },
+  "resolutionSamples": [
+    {
+      "ids": "{41}",
+      "characters": [
+        "𠕋"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "{48}",
+      "characters": [
+        "㐄"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{101}{102}",
+      "characters": [
+        "癶"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}刀",
+      "characters": [
+        "𠚲"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}刂",
+      "characters": [
+        "刋"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}千",
+      "characters": [
+        "𠦅"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}土",
+      "characters": [
+        "圱"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}萬",
+      "characters": [
+        "𦼌"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}谷",
+      "characters": [
+        "谸"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{109}阝",
+      "characters": [
+        "䢴"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{10}隹",
+      "characters": [
+        "𨾑"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}伞",
+      "characters": [
+        "𮎘"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}刀",
+      "characters": [
+        "㓪"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}刂",
+      "characters": [
+        "剆"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}力",
+      "characters": [
+        "勆"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}卩",
+      "characters": [
+        "𭅺"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}善",
+      "characters": [
+        "𫅞"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}并",
+      "characters": [
+        "𦫏"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}开",
+      "characters": [
+        "𦫍"
+      ],
+      "kind": "match"
+    },
+    {
+      "ids": "⿰{17}斤",
+      "characters": [
+        "𣂞"
+      ],
+      "kind": "match"
+    }
+  ],
+  "issues": [],
+  "source": {
+    "name": "BabelStone IDS",
+    "version": "Unicode-16.0-file-2025-06-27",
+    "retrievalMethod": "HTTPS download of the pinned upstream file-date snapshot",
+    "fileHash": "sha256:6667fe6ecdafcb2a3f4bc75cb4f9cb02267707fca120c2642a8d265c7b41eaa4",
+    "repository": "https://www.babelstone.co.uk/CJK/index.html",
+    "revision": "file-date-2025-06-27",
+    "license": "BabelStone IDS data terms",
+    "files": [
+      "IDS.TXT"
+    ]
+  }
+}

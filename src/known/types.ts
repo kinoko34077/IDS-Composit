@@ -28,6 +28,19 @@ export type KnownCharacterRecordsArtifact = {
     ids: string;
     character: string;
     status: KnownCharacterStatus;
+    /** Optional source-specific annotation; ignored by the runtime index. */
+    variantTag?: string;
+  }[];
+};
+
+export type KnownCharacterMergedRecordsArtifact = {
+  schemaVersion: 'ids-composit-known-records-merged/v0.2';
+  sources: readonly KnownCharacterArtifactSource[];
+  records: readonly {
+    ids: string;
+    character: string;
+    status: KnownCharacterStatus;
+    sourceIndexes: readonly number[];
   }[];
 };
 

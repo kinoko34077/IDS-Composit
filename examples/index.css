@@ -79,6 +79,26 @@ button {
   color: #d64b4b;
 }
 
+.telemetry {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.telemetry dt {
+  font-weight: 700;
+}
+
+.telemetry dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .preview {
   min-height: 3.5rem;
   display: flex;

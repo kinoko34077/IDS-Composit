@@ -1,7 +1,14 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it } from 'vitest';
 import { createKnownCharacterIndex } from '../../src/known';
-import { observeIds, renderIds, type IdsObserverHandle } from '../../src/public-api';
+import {
+  createKnownCharacterIndex as createPublicKnownCharacterIndex,
+  entriesFromKnownRecordsArtifact,
+  observeIds,
+  renderIds,
+  type IdsObserverHandle,
+  type KnownCharacterMergedRecordsArtifact,
+} from '../../src/public-api';
 
 async function flushObserver(): Promise<void> {
   await new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -12,6 +19,24 @@ describe('renderIds', () => {
   it('keeps the observer handle type public', () => {
     const handle: IdsObserverHandle = { stop() {} };
     expect(handle.stop).toBeTypeOf('function');
+  });
+
+  it('exposes explicit hydration for an optional merged Known artifact', () => {
+    const artifact: KnownCharacterMergedRecordsArtifact = {
+      schemaVersion: 'ids-composit-known-records-merged/v0.2',
+      sources: [
+        { name: 'CHISE IDS database', version: 'fixture', retrievalMethod: 'fixture' },
+        { name: 'BabelStone IDS', version: 'fixture', retrievalMethod: 'fixture' },
+      ],
+      records: [
+        { ids: '⿴行圭', character: '街', status: 'verified', sourceIndexes: [0] },
+        { ids: '⿲彳圭亍', character: '街', status: 'verified', sourceIndexes: [1] },
+      ],
+    };
+
+    const index = createPublicKnownCharacterIndex(entriesFromKnownRecordsArtifact(artifact));
+    expect(index.resolve('⿴行圭')).toEqual({ kind: 'match', character: '街' });
+    expect(index.resolve('⿲彳圭亍')).toEqual({ kind: 'match', character: '街' });
   });
 
   it('renders a native provider result without exposing parser details', async () => {

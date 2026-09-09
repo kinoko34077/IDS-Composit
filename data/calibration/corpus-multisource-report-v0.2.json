@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "ids-composit-multisource-calibration-corpus-report/v0.2",
+  "stats": {
+    "inputRecords": 155442,
+    "eligibleRecords": 146983,
+    "primaryCharacters": 101660,
+    "primary": 101660,
+    "alternate": 45323,
+    "train": 117586,
+    "holdout": 29397,
+    "excluded": 8459
+  }
+}

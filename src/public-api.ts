@@ -63,12 +63,14 @@ export function observeIds(root: HTMLElement, options: RenderIdsOptions = {}): I
 }
 
 export { createMemoryMatchCache } from './chise';
-export { createKnownCharacterIndex } from './known';
+export { createKnownCharacterIndex, entriesFromKnownRecordsArtifact } from './known';
 export { normalizeKnownLookupKey } from './known';
 export type {
   KnownCharacterEntry,
   KnownCharacterIndex,
   KnownCharacterLookup,
+  KnownCharacterMergedRecordsArtifact,
+  KnownCharacterRecordsArtifact,
   KnownCharacterStatus,
 } from './known';
 export type { LayoutProfile } from './calibration';

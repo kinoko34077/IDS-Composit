@@ -15,6 +15,8 @@ export type ExternalKnownRecord = {
   ids: string;
   character: string;
   status: KnownCharacterEntry['status'];
+  /** Source-specific metadata retained in bulk artifacts, not runtime entries. */
+  variantTag?: string;
 };
 
 export type GeneratedKnownIndexArtifact = {
@@ -47,6 +49,13 @@ function compareText(left: string, right: string): number {
 
 function compareEntries(left: KnownCharacterEntry, right: KnownCharacterEntry): number {
   return compareText(`${left.ids}\u0000${left.character}\u0000${left.status}`, `${right.ids}\u0000${right.character}\u0000${right.status}`);
+}
+
+function compareRecords(left: ExternalKnownRecord, right: ExternalKnownRecord): number {
+  return compareText(
+    `${left.ids}\u0000${left.character}\u0000${left.status}\u0000${left.variantTag ?? ''}`,
+    `${right.ids}\u0000${right.character}\u0000${right.status}\u0000${right.variantTag ?? ''}`,
+  );
 }
 
 function normalizeSource(source: ExternalKnownSource): ExternalKnownSource {
@@ -104,8 +113,9 @@ export function generateKnownRecordsArtifact(
       ids: requiredSourceValue(record.ids, 'ids'),
       character: requiredSourceValue(record.character, 'character'),
       status: record.status,
+      ...(record.variantTag === undefined ? {} : { variantTag: requiredSourceValue(record.variantTag, 'variantTag') }),
     }))
-    .sort((left, right) => compareText(`${left.ids}\u0000${left.character}\u0000${left.status}`, `${right.ids}\u0000${right.character}\u0000${right.status}`));
+    .sort(compareRecords);
 
   return {
     schemaVersion: 'ids-composit-known-records/v0.2',

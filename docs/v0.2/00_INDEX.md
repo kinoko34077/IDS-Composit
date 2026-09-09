@@ -17,6 +17,7 @@ v0.2の正本文書入口。実装時は必要な章だけを読み、原文全�
 |Pages確認面・holdout|[09_PAGES_AND_VALIDATION.md](09_PAGES_AND_VALIDATION.md)|
 |Gate・非目標|[10_GATES_AND_NON_GOALS.md](10_GATES_AND_NON_GOALS.md)|
 |実装順|[11_IMPLEMENTATION_ORDER.md](11_IMPLEMENTATION_ORDER.md)|
+|Known Character Multi-Source統合|[12_MULTI_SOURCE_KNOWN.md](12_MULTI_SOURCE_KNOWN.md)|
 
 ## 原文・実装指示
 

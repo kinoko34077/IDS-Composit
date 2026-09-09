@@ -60,15 +60,17 @@ v0.2の構造処理で対応する空間IDCは次の14種類です。`⿾`（反
 
 v0.2のoptional Known bulk dataは、固定revisionのCHISE IDS抽象文字ファイルから`npm run known:import:chise`で再生成できます。artifactはruntimeへ自動importせず、由来・hash・licenseは[data notice](data/known/generated/CHISE-IDS-DATA-NOTICE.md)とartifactの`source`で確認します。
 
+複数Sourceの検証用bulk dataは、BabelStone IDSとYi Bai IDS（lv0/lv1/lv2）のsource-specific importer、`npm run known:merge`で生成します。`known-index-v0.2.json`はCHISE・BabelStone・Yi Bai lv2の対応集合をまとめたoptional artifactで、default bundleへ自動同梱しません。利用側が明示的にJSONを読み込み、公開APIの`entriesFromKnownRecordsArtifact()`と`createKnownCharacterIndex()`へ渡す経路だけを提供します。`⿴行圭 → 街`と`⿲彳圭亍 → 街`のような異なるIDS表現は同一characterの別mappingとして保持します。
+
 ## 開発状況
 
-v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在の開発版は`0.2.0-dev.0`で、v0.2のKnown Index、14 spatial IDC、native-first resolver chain、calibration foundationを実装中です。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。
+v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在の開発版は`0.2.0-dev.0`で、v0.2のKnown Index、14 spatial IDC、native-first resolver chain、calibration foundation、Known Character Multi-Source importer/mergeを実装中です。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md)、[v0.2章別索引](docs/v0.2/00_INDEX.md) に記録しています。
 
 ## スマートフォンからの確認
 
 GitHub Pagesの入口: <https://kinoko34077.github.io/IDS-Composit/>
 
-入口ではIDSの直接入力、候補select、local composition / CHISE native優先の切替、対応パターン一覧を試せます。詳細ページへ直接移動する場合は、[Basic](https://kinoko34077.github.io/IDS-Composit/basic.html)、[Visual validation](https://kinoko34077.github.io/IDS-Composit/validation.html)、[CHISE live / CORS preflight](https://kinoko34077.github.io/IDS-Composit/chise-preflight.html)、[Consumer demo](https://kinoko34077.github.io/IDS-Composit/consumer.html)を使用してください。
+入口ではIDSの直接入力、候補select、`Local only` / `CHISE API` / `Full Known Index` / `Full Known + CHISE`の切替、対応パターン一覧を試せます。Full Known Indexは選択時だけPages用JSONを読み込み、Known hit/miss、CHISEの照会有無、native/composition/fallbackの診断を入口へ表示します。`⿲彳圭亍`をFull Known Indexで表示すると、BabelStone由来の`街`へのnative解決を確認できます。詳細ページへ直接移動する場合は、[Basic](https://kinoko34077.github.io/IDS-Composit/basic.html)、[Visual validation](https://kinoko34077.github.io/IDS-Composit/validation.html)、[CHISE live / CORS preflight](https://kinoko34077.github.io/IDS-Composit/chise-preflight.html)、[Consumer demo](https://kinoko34077.github.io/IDS-Composit/consumer.html)を使用してください。
 
 初回のみRepositoryのSettings → Pages → Build and deployment → Sourceで`GitHub Actions`を選択します。以後は`main`へのpushで`.github/workflows/pages.yml`がlibrary build後にPagesを更新します。
 
@@ -89,4 +91,12 @@ GitHub Pagesの入口: <https://kinoko34077.github.io/IDS-Composit/>
 
 ## License
 
-MIT Licenseです。詳細は [LICENSE](LICENSE) を参照してください。
+ライセンスは成果物ごとに異なります。
+
+- Source code / npm runtime package: MIT（[LICENSE](LICENSE)）
+- CHISE-derived generated data: GPL-2.0-or-later（[data notice](data/known/generated/CHISE-IDS-DATA-NOTICE.md)）
+- BabelStone-derived data: upstream IDS.TXTの利用条件（[data notice](data/known/generated/BABELSTONE-IDS-DATA-NOTICE.md)）
+- Yi Bai-derived data: MIT（[data notice](data/known/generated/YIBAI-IDS-DATA-NOTICE.md)）
+- 複数Sourceの統合artifact: 各Sourceのnoticeとartifactの`source(s)` metadataに従う
+
+CHISE・BabelStone・Yi Baiのbulk artifactはMITのnpm runtime packageへ自動同梱しません。
