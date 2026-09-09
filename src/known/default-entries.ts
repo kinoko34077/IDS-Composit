@@ -1,0 +1,11 @@
+import type { KnownCharacterEntry } from './types';
+
+export const DEFAULT_KNOWN_CHARACTER_ENTRIES: readonly KnownCharacterEntry[] = [
+  {
+    ids: '⿲彳圭亍',
+    character: '街',
+    source: 'IDS-Composit v0.2 specification seed',
+    sourceVersion: '2026-09-09',
+    status: 'verified',
+  },
+];

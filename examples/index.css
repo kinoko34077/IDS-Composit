@@ -70,6 +70,11 @@ button {
   margin: 0.75rem 0;
 }
 
+.metadata {
+  font-size: 0.9rem;
+  opacity: 0.78;
+}
+
 .status[data-status='error'] {
   color: #d64b4b;
 }
@@ -96,7 +101,7 @@ button {
 
 table {
   width: 100%;
-  min-width: 44rem;
+  min-width: 62rem;
   border-collapse: collapse;
 }
 

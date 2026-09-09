@@ -1,4 +1,5 @@
 import type { Box, IdsNode, LayoutNode, StructuralRole } from '../core/types';
+import type { LayoutProfile } from '../calibration';
 import { LAYOUT_TEMPLATES, type LayoutTemplateChild } from '../data/layout-templates';
 import { VARIANT_MAP, type VariantMap } from '../data/variants';
 import { resolveVariant } from '../variants';
@@ -17,7 +18,22 @@ function placeBox(parent: Box, child: LayoutTemplateChild): Box {
 
 export type ComposeOptions = {
   variantMap?: VariantMap;
+  layoutProfiles?: Readonly<Record<string, LayoutProfile>>;
 };
+
+function isValidProfileSlot(slot: LayoutProfile['slots'][number]): boolean {
+  return [slot.x, slot.y, slot.width, slot.height].every(Number.isFinite)
+    && slot.x >= 0 && slot.y >= 0 && slot.width >= 0 && slot.height >= 0
+    && slot.x + slot.width <= 1 && slot.y + slot.height <= 1;
+}
+
+function getTemplate(operator: string, childCount: number, profiles: ComposeOptions['layoutProfiles']): LayoutTemplateChild[] | undefined {
+  const profile = profiles?.[operator];
+  if (profile !== undefined && profile.slots.length === childCount && profile.slots.every(isValidProfileSlot)) {
+    return profile.slots.map(({ x, y, width, height }) => ({ x, y, width, height }));
+  }
+  return LAYOUT_TEMPLATES[operator];
+}
 
 function composeNode(ast: IdsNode, box: Box, role: StructuralRole | undefined, options: ComposeOptions): LayoutNode {
   if (ast.type === 'char') {
@@ -25,7 +41,7 @@ function composeNode(ast: IdsNode, box: Box, role: StructuralRole | undefined, o
     return { type: 'glyph', value, ...(role === undefined ? {} : { role }), box };
   }
 
-  const template = LAYOUT_TEMPLATES[ast.operator];
+  const template = getTemplate(ast.operator, ast.children.length, options.layoutProfiles);
   if (template === undefined) {
     throw new Error(`Unsupported IDS operator: ${ast.operator}`);
   }

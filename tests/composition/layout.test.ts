@@ -121,7 +121,7 @@ describe('composeLayout', () => {
     expect(() =>
       composeLayout({
         type: 'composition',
-        operator: '⿻',
+        operator: '⿾',
         children: [
           { type: 'char', value: '木' },
           { type: 'char', value: '可' },

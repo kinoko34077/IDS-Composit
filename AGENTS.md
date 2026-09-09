@@ -6,11 +6,13 @@
 
 目的は、CHISE を文字情報基盤として利用し、通常 Web 本文中の IDS 表現を、既存 Unicode 文字または既存 Unicode 部品の DOM/CSS 合成によって簡易表示することである。
 
-このプロジェクトは新しい文字情報基盤・Glyph Registry・Unicode 代替規格を作らない。
+このプロジェクトは新しい文字情報基盤・Character ontology・Glyph Registry・Unicode 代替規格を作らない。
 
 ---
 
 ## 1. Source of Truth
+
+v0.2の作業では、要件の入口を`docs/v0.2/00_INDEX.md`とし、対象章および`source/`の原資料を必要な範囲だけ参照する。v0.1の既存正本は互換基準として保持する。
 
 参照優先順位：
 
@@ -48,13 +50,12 @@
 明示的な仕様変更がない限り、以下を実装しない。
 
 - 独自 Glyph Registry
-- 独自文字 DB
+- 独自 Character ontology / CHISE 複製 DB
 - CHISE の複製
 - 独自 Character ID / CID 体系
-- SVG Renderer
-- SVG 字形 DB
+- runtime SVG Renderer / SVG 字形 DB
 - KAGE / GlyphWiki 生成
-- Canvas Renderer
+- runtime Canvas Renderer
 - OpenType / WebFont 生成
 - PUA 自動割当
 - IME
@@ -62,6 +63,13 @@
 - ブラウザ shaping engine 改造
 - 人手 glyph editor
 - 公共 glyph 投稿基盤
+
+### v0.2 で限定的に許可するもの
+
+- 出典付き Known Character Index（CHISE の補完であり、ontology / Registryではない）
+- generated / manual を分離した mapping data
+- `tools/calibration/` 内だけの Canvas/SVG measurement
+- calibration evidence、holdout report、Generic Layout Profile
 
 「将来使えそう」を理由に先回り実装しない。
 
@@ -170,7 +178,7 @@ Phase 0 の表示は「正しい字形生成」ではなく **判読可能な fa
 
 して 1em 相当の inline box 内へ配置する。
 
-字形品質向上のために SVG/KAGE 等を追加してはならない。まず実測で単純合成の限界を確認する。
+production rendererへSVG/KAGE/Canvas等を追加してはならない。v0.2では開発用Calibrationに限り測定手段として許可し、runtimeはDOM/CSSを維持する。
 
 ---
 
@@ -258,5 +266,6 @@ Phase 文書の Gate を満たし、関連テストが通り、実利用経路�
 - Parser が Web API や DOM を知り始めた
 - fixed layout の検証前に optical correction を大量追加した
 - CHISE API response を独自 ontology として永続化し始めた
+- 既知字の個別calibration結果をruntimeの文字別配置DBとして直接利用し始めた
 
 このプロジェクトの価値は、**既存文字基盤を再発明せず、未表示 IDS を Web 上で薄く表示可能にすること**にある。

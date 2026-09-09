@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it, vi } from 'vitest';
 import { initializePlayground } from '../../examples/index';
+import { PATTERN_CASES } from '../../examples/playground-model';
 
 async function flushUi(): Promise<void> {
   await new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -19,9 +20,12 @@ describe('mobile playground UI', () => {
     const tableRows = root.querySelectorAll('#pattern-table-body tr');
 
     expect(input).not.toBeNull();
-    expect(candidate?.options).toHaveLength(10);
-    expect(tableRows).toHaveLength(10);
+    expect(candidate?.options).toHaveLength(PATTERN_CASES.length);
+    expect(tableRows).toHaveLength(PATTERN_CASES.length);
     expect(root.querySelector<HTMLTableCellElement>('#pattern-table-body tr td code')?.textContent).toBe('⿰木可');
+    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Known Index hit → native 街');
+    expect(root.querySelector('#pattern-table-body')?.textContent).toContain('Unsupported IDC → source preserved');
+    expect(root.querySelector('thead')?.textContent).toContain('解決経路（目安）');
     expect(render).toHaveBeenCalledTimes(1);
 
     if (input === null || candidate === null || form === null) throw new Error('Playground controls are missing');

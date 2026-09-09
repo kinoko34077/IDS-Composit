@@ -56,7 +56,7 @@ describe('parseIds', () => {
     ['empty', '', 'empty'],
     ['missing child', '⿰木', 'missing-child'],
     ['trailing input', '木可', 'trailing-input'],
-    ['unknown operator', '⿻木可', 'unknown-operator'],
+    ['unknown operator', '⿾木可', 'unknown-operator'],
   ])('reports %s input without producing an AST', (_label, source, kind) => {
     const result = parseIds(source);
     expect(result.ok).toBe(false);

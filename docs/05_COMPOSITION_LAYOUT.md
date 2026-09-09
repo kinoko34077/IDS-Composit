@@ -1,5 +1,9 @@
 # Composition & Layout Specification
 
+## v0.2 profile boundary
+
+v0.2では14種のspatial IDCをdata-driven definitionで扱う。Generic Layout Profileは未知字に適用可能なpure dataであり、既知字の個別calibration結果やCHISEをComposition Coreへ持ち込まない。Profile miss時は従来のfixed templateへfallbackする。
+
 ## 1. 目的
 
 未解決IDSを、既存Unicode部品の配置として判読可能にする。

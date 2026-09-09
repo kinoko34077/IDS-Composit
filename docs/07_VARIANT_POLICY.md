@@ -1,5 +1,9 @@
 # Position Variant Policy
 
+## v0.2 relationship
+
+Position variantは引き続き表示時の部品選択であり、Known Character Indexの文字同定やCalibrationの教師データを兼ねない。variant追加はStructural Coverage・Known Index・Layout Profileの責務を越えてはならない。
+
 ## 1. 目的
 
 完成文字を単純圧縮するより既存の偏・旁・冠・脚用Unicode形を利用した方が判読性が高い場合、それを自動選択する。

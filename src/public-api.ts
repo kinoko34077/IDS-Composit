@@ -1,7 +1,10 @@
 import './renderer/styles.css';
 import type { CharacterKnowledgeProvider, ChiseProviderOptions } from './chise';
 import { createChiseProvider } from './chise';
-import { resolveIds } from './resolver';
+import { DEFAULT_KNOWN_CHARACTER_INDEX } from './known/default';
+import type { KnownCharacterIndex } from './known';
+import type { LayoutProfile } from './calibration';
+import { resolveIdsWithChain } from './resolver';
 import { renderIdsInElement, renderIdsInElementAsync } from './renderer/render-document';
 import { observeIdsInElement, type IdsObserverHandle } from './runtime/observe-dom';
 import type { IdsResolver } from './runtime/resolve-batch';
@@ -11,32 +14,40 @@ export type { IdsObserverHandle } from './runtime/observe-dom';
 export type RenderIdsOptions = {
   chise?: boolean;
   provider?: CharacterKnowledgeProvider;
+  knownIndex?: KnownCharacterIndex;
+  layoutProfiles?: Readonly<Record<string, LayoutProfile>>;
   chiseOptions?: ChiseProviderOptions;
   contentEditable?: boolean;
   maxConcurrency?: number;
 };
 
-function createProvider(options: RenderIdsOptions): CharacterKnowledgeProvider | undefined {
-  return options.provider ?? (options.chise === true ? createChiseProvider(options.chiseOptions) : undefined);
-}
-
-function createResolver(provider: CharacterKnowledgeProvider | undefined): IdsResolver {
-  return (ids) => resolveIds(ids, provider);
+function createResolver(options: RenderIdsOptions): IdsResolver {
+  const knownIndex = options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX;
+  const explicitProvider = options.provider;
+  const chiseProvider = explicitProvider === undefined && options.chise === true
+    ? createChiseProvider(options.chiseOptions)
+    : undefined;
+  return (ids) => resolveIdsWithChain(ids, { explicitProvider, knownIndex, chiseProvider });
 }
 
 function createRenderTarget(options: RenderIdsOptions): (target: HTMLElement) => Promise<void> {
   const includeContentEditable = options.contentEditable === true;
-  const provider = createProvider(options);
-  if (provider === undefined) {
+  if (options.provider === undefined && options.knownIndex === undefined && options.chise !== true) {
     return async (target) => {
-      renderIdsInElement(target, { includeContentEditable });
+      renderIdsInElement(target, {
+        includeContentEditable,
+        knownIndex: DEFAULT_KNOWN_CHARACTER_INDEX,
+        layoutProfiles: options.layoutProfiles,
+      });
     };
   }
 
-  const resolve = createResolver(provider);
+  const resolve = createResolver(options);
   return (target) => renderIdsInElementAsync(target, resolve, {
     includeContentEditable,
     maxConcurrency: options.maxConcurrency,
+    knownIndex: options.knownIndex ?? DEFAULT_KNOWN_CHARACTER_INDEX,
+    layoutProfiles: options.layoutProfiles,
   });
 }
 
@@ -52,6 +63,14 @@ export function observeIds(root: HTMLElement, options: RenderIdsOptions = {}): I
 }
 
 export { createMemoryMatchCache } from './chise';
+export { createKnownCharacterIndex } from './known';
+export type {
+  KnownCharacterEntry,
+  KnownCharacterIndex,
+  KnownCharacterLookup,
+  KnownCharacterStatus,
+} from './known';
+export type { LayoutProfile } from './calibration';
 export type {
   CharacterKnowledgeProvider,
   ChiseProviderOptions,

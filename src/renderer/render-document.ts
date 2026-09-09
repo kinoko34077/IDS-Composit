@@ -1,4 +1,6 @@
 import type { Resolution } from '../core/types';
+import type { LayoutProfile } from '../calibration';
+import type { KnownCharacterIndex } from '../known';
 import { composeLayout } from '../composition';
 import { parseIds, scanEmbeddedIds, type TextSegment } from '../parser';
 import { resolveUniqueIds, type IdsResolver } from '../runtime/resolve-batch';
@@ -8,6 +10,8 @@ import { renderLayout } from './render-layout';
 export type RenderIdsInElementOptions = {
   includeContentEditable?: boolean;
   maxConcurrency?: number;
+  knownIndex?: KnownCharacterIndex;
+  layoutProfiles?: Readonly<Record<string, LayoutProfile>>;
 };
 
 function isContentEditable(element: Element): boolean {
@@ -33,7 +37,12 @@ function collectTextNodes(node: Node, textNodes: Text[], includeContentEditable:
   }
 }
 
-function appendSegment(fragment: DocumentFragment, segment: TextSegment, document: Document): void {
+function appendSegment(
+  fragment: DocumentFragment,
+  segment: TextSegment,
+  document: Document,
+  options: RenderIdsInElementOptions,
+): void {
   if (segment.type === 'text' || segment.type === 'invalid') {
     fragment.append(document.createTextNode(segment.type === 'text' ? segment.value : segment.raw));
     return;
@@ -45,19 +54,30 @@ function appendSegment(fragment: DocumentFragment, segment: TextSegment, documen
       fragment.append(document.createTextNode(segment.raw));
       return;
     }
-    fragment.append(renderLayout(composeLayout(parsed.ast), document, segment.source));
+    const known = options.knownIndex?.resolve(segment.source);
+    if (known?.kind === 'match') {
+      fragment.append(document.createTextNode(known.character));
+      return;
+    }
+    fragment.append(renderLayout(composeLayout(parsed.ast, { layoutProfiles: options.layoutProfiles }), document, segment.source));
   } catch {
     fragment.append(document.createTextNode(segment.raw));
   }
 }
 
-function appendResolution(fragment: DocumentFragment, resolution: Resolution, document: Document, raw: string): void {
+function appendResolution(
+  fragment: DocumentFragment,
+  resolution: Resolution,
+  document: Document,
+  raw: string,
+  layoutProfiles?: Readonly<Record<string, LayoutProfile>>,
+): void {
   if (resolution.kind === 'native') {
     fragment.append(document.createTextNode(resolution.text));
     return;
   }
   if (resolution.kind === 'compose') {
-    fragment.append(renderLayout(composeLayout(resolution.ast), document, resolution.sourceIds));
+    fragment.append(renderLayout(composeLayout(resolution.ast, { layoutProfiles }), document, resolution.sourceIds));
     return;
   }
   fragment.append(document.createTextNode(raw));
@@ -75,7 +95,7 @@ export function renderIdsInElement(root: HTMLElement, options: RenderIdsInElemen
 
     const fragment = textNode.ownerDocument.createDocumentFragment();
     for (const segment of segments) {
-      appendSegment(fragment, segment, textNode.ownerDocument);
+      appendSegment(fragment, segment, textNode.ownerDocument, options);
     }
     parent.replaceChild(fragment, textNode);
   }
@@ -110,7 +130,7 @@ export async function renderIdsInElementAsync(
       if (resolution === undefined) {
         fragment.append(textNode.ownerDocument.createTextNode(segment.raw));
       } else {
-        appendResolution(fragment, resolution, textNode.ownerDocument, segment.raw);
+        appendResolution(fragment, resolution, textNode.ownerDocument, segment.raw, options.layoutProfiles);
       }
     }
     parent.replaceChild(fragment, textNode);

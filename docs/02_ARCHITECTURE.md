@@ -1,5 +1,21 @@
 # Architecture
 
+## v0.2 responsibility extension
+
+v0.1 Runtime / Render APIを互換基準として、v0.2では以下の薄いOrchestrator構造を追加する。
+
+```text
+Runtime API
+    ↑
+Thin Orchestrator
+ ┌───────┼────────┐
+ ↓       ↓        ↓
+Known   Coverage  Layout Profile
+Index
+```
+
+Known Character Indexは文字対応だけ、Structural CoverageはIDC構造だけ、Layout Profileはpure dataだけを担当する。Parser→DOM、Coverage→Known/CHISE、Known→Layout/DOM、Runtime→Calibrationの依存は禁止する。詳細は [docs/v0.2/02_RESPONSIBILITIES.md](v0.2/02_RESPONSIBILITIES.md) を参照する。
+
 ## 1. 基本構造
 
 ```text

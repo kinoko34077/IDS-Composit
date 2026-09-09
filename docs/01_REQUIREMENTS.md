@@ -1,6 +1,8 @@
 # Requirements Specification
 ## CHISE IDS Inline Renderer v0.1
 
+> v0.1の基準要件。本リポジトリのv0.2要件は[章別index](v0.2/00_INDEX.md)を正本文書入口とする。
+
 ## 1. 目的
 
 CHISEを文字情報基盤として利用し、通常Web本文中へ埋め込まれたIDS表現を認識し、

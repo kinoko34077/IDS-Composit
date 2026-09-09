@@ -1,5 +1,7 @@
 # Documentation Index
 
+v0.2の要件・実装順は [v0.2 Documentation Index](v0.2/00_INDEX.md) を入口とする。v0.1の既存正本は互換基準として残し、v0.2で変更された点は各章とADRへ追記する。
+
 ## 正本
 
 |文書|役割|読む時|

@@ -1,5 +1,9 @@
 # Development Roadmap
 
+## v0.2
+
+v0.1.0（commit `25e0449`）をtag/Releaseで固定した後、Known Character Index、Resolver chain、Spatial IDC Coverage、Calibration evidence、Generic Layout Profile、Pages比較、holdout validationの順に進める。詳細は [docs/v0.2/11_IMPLEMENTATION_ORDER.md](v0.2/11_IMPLEMENTATION_ORDER.md) を参照する。
+
 ## Phase 0 — Foundation
 
 成果：

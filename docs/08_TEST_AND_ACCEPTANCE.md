@@ -1,5 +1,9 @@
 # Test & Acceptance Specification
 
+## v0.2 gates
+
+v0.2では既存ACに加え、14 spatial IDC、Known Indexのprovenance/many-to-many/ambiguity、resolver chain、Calibrationのtrain/holdout分離、Generic Profileのmedian/p75比較を確認する。v0.1公開APIとfallbackの回帰は`tests/compat/`で固定する。章別の受入条件は [docs/v0.2/10_GATES_AND_NON_GOALS.md](v0.2/10_GATES_AND_NON_GOALS.md) に集約する。
+
 ## 1. テスト層
 
 ### Unit

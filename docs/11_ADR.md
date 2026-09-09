@@ -80,3 +80,35 @@ Phase 0では字ごとの最適化をせず、IDC単位の固定比率を使う�
 
 ### 理由
 先に単純方式の限界を測るため。
+
+---
+
+## ADR-007 v0.1をv0.2互換基準APIとして保持
+
+Status: Accepted
+
+`v0.1.0` tagのRuntime API、fallback、DOM integration、Observer、copy/accessibilityをv0.2でも維持する。既知IDSがnative Unicodeへ改善されることは互換違反としない。
+
+## ADR-008 Known Character IndexはCHISE補完Indexとする
+
+Status: Accepted
+
+出典付きmany-to-many mappingを`generated`/`manual`に分離して保持する。ただしCHISE ontology、独自Character ID、Glyph Registryへ拡張しない。verifiedの曖昧候補は勝手に確定しない。
+
+## ADR-009 CalibrationではCanvas/SVGを開発用途に限定許可
+
+Status: Accepted
+
+native/compositionのraster測定、loss計算、optimizer、reportは`tools/calibration/`に限定する。production runtime rendererはDOM/CSSを維持する。
+
+## ADR-010 個別最適化からGeneric Profileを導出
+
+Status: Accepted
+
+既知字の個別placementは教師evidenceとして保存し、IDC/Structural Role単位で集計したProfileだけを未知字runtimeへ適用する。既知字はnative Unicodeを優先する。
+
+## ADR-011 v0.2資料を章別管理する
+
+Status: Accepted
+
+v0.2要件は`docs/v0.2/00_INDEX.md`から章単位で参照し、受領原文は`docs/v0.2/source/`へ保全する。root正本には重複全文を置かず、変更理由と参照リンクだけを記録する。

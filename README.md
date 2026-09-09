@@ -16,6 +16,7 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 ## ドキュメント
 
 - [ドキュメント索引](docs/00_INDEX.md)
+- [v0.2仕様章別索引](docs/v0.2/00_INDEX.md)
 - [要求仕様](docs/01_REQUIREMENTS.md)
 - [アーキテクチャ](docs/02_ARCHITECTURE.md)
 - [CHISE 依存境界](docs/03_CHISE_DEPENDENCY.md)
@@ -31,11 +32,11 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 
 ## 現行スコープ外
 
-独自 Glyph Registry、独自文字 DB、SVG、Canvas、KAGE、OpenType/WebFont 生成、IME、OS font fallback hook、独自文字コードは現行 v0.1 の対象外です。
+独自 Glyph Registry、独自文字 DB、runtime SVG、runtime Canvas、KAGE、OpenType/WebFont 生成、IME、OS font fallback hook、独自文字コードは対象外です。Canvas/SVGはv0.2でも`tools/calibration/`の測定用途に限ります。
 
 ## Supported IDC
 
-v0.1で対応するIDCは次の5種類です。未対応IDCは元の `⟦IDS⟧` を保持して表示します。
+v0.2の構造処理で対応する空間IDCは次の14種類です。`⿾`（反転）と`⿿`（回転）は未対応で、元の `⟦IDS⟧` を保持して表示します。
 
 |IDC|arity|構図|
 |---|---:|---|
@@ -44,10 +45,21 @@ v0.1で対応するIDCは次の5種類です。未対応IDCは元の `⟦IDS⟧`
 |`⿴`|2|外/内|
 |`⿲`|3|左/中/右|
 |`⿳`|3|上/中/下|
+|`⿵`|2|上包み|
+|`⿶`|2|下包み|
+|`⿷`|2|左包み|
+|`⿸`|2|左上包み|
+|`⿹`|2|右上包み|
+|`⿺`|2|左下包み|
+|`⿻`|2|重ね合わせ|
+|`⿼`|2|角包み|
+|`⿽`|2|逆角包み|
+
+`v0.1.0`の公開APIとfallback挙動を維持しながら、v0.2では出典付きKnown Character Index（初期seed: `⿲彳圭亍 → 街`）、resolver chain、Generic Layout Profileの校正基盤を追加しています。詳細は[v0.2仕様章別索引](docs/v0.2/00_INDEX.md)を参照してください。
 
 ## 開発状況
 
-Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。
+v0.1.0を公開済みです。Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）をv0.1互換基準として固定しています。現在はv0.2のKnown Index、14 spatial IDC、resolver chain、calibration foundationを実装中です。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。
 
 ## スマートフォンからの確認
 

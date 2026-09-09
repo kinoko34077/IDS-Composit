@@ -34,14 +34,14 @@ describe('renderIds', () => {
     expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
   });
 
-  it('uses local composition when no provider is configured', async () => {
+  it('uses the default Known Index when no provider is configured', async () => {
     const root = document.createElement('p');
     root.textContent = '⟦⿲彳圭亍⟧';
 
     await renderIds(root);
 
-    expect(root.textContent).toBe('彳圭亍');
-    expect(root.querySelectorAll('.ids-part')).toHaveLength(3);
+    expect(root.textContent).toBe('街');
+    expect(root.querySelectorAll('.ids-part')).toHaveLength(0);
   });
 
   it('renders the local path before the public async call yields', async () => {
@@ -158,6 +158,6 @@ describe('renderIds', () => {
     expect(peak).toBeLessThanOrEqual(2);
     expect(calls).toHaveLength(3);
     expect(new Set(calls)).toEqual(new Set(['⿰木可', '⿱日月', '⿲彳圭亍']));
-    expect(root.textContent).toBe('木可 日月 彳圭亍 木可');
+    expect(root.textContent).toBe('木可 日月 街 木可');
   });
 });

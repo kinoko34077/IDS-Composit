@@ -1,4 +1,4 @@
-export type StructuralRole = 'left' | 'middle' | 'right' | 'top' | 'bottom' | 'outer' | 'inner';
+export type StructuralRole = 'left' | 'middle' | 'right' | 'top' | 'bottom' | 'outer' | 'inner' | 'first' | 'second';
 
 export type Box = {
   x: number;

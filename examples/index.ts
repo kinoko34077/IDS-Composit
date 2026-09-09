@@ -37,7 +37,9 @@ function createPatternRow(document: Document, pattern: PatternCase): HTMLTableRo
 
   const description = document.createElement('td');
   description.textContent = pattern.description;
-  row.append(label, sourceCell, previewCell, description);
+  const resolution = document.createElement('td');
+  resolution.textContent = pattern.resolution;
+  row.append(label, sourceCell, previewCell, resolution, description);
   return row;
 }
 
@@ -45,7 +47,7 @@ function createPatternTable(document: Document): HTMLTableElement {
   const table = document.createElement('table');
   const head = document.createElement('thead');
   const headRow = document.createElement('tr');
-  for (const label of ['候補', 'IDS source', '表示', '確認対象']) {
+  for (const label of ['候補', 'IDS source', '表示', '解決経路（目安）', '確認対象']) {
     const cell = document.createElement('th');
     cell.scope = 'col';
     cell.textContent = label;
@@ -76,6 +78,11 @@ export async function initializePlayground(
   const introduction = document.createElement('p');
   introduction.textContent = 'IDSを直接入力するか候補を選び、local compositionとCHISE native優先の表示をスマートフォンで確認できます。';
   root.append(introduction);
+
+  const calibrationNotice = document.createElement('p');
+  calibrationNotice.className = 'metadata';
+  calibrationNotice.textContent = 'v0.2 Generic Layout Profile: 現在は校正データ未収録のため、profile miss時のv0.1 fixed templateへfallbackします。';
+  root.append(calibrationNotice);
 
   const form = document.createElement('form');
   form.id = 'ids-form';

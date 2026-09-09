@@ -22,6 +22,16 @@ describe('mobile playground model', () => {
       '⿰鬱青',
       '⿱龜心',
       '⿵門日',
+      '⿶一凵',
+      '⿷匚口',
+      '⿸广木',
+      '⿹戸口',
+      '⿺廴日',
+      '⿻木口',
+      '⿼句口',
+      '⿽乙丶',
+      '⿾木可',
     ]));
+    expect(PATTERN_CASES.find((pattern) => pattern.source === '⿲彳圭亍')?.resolution).toContain('Known Index hit');
   });
 });

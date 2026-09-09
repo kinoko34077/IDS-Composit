@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { resolveIds } from '../../src/resolver/resolve-ids';
+import { createKnownCharacterIndex } from '../../src/known';
 
 describe('resolveIds', () => {
   it('prefers a CHISE native match', async () => {
@@ -31,6 +32,16 @@ describe('resolveIds', () => {
     const result = await resolveIds('⿰木可');
 
     expect(result).toMatchObject({ kind: 'compose', sourceIds: '⿰木可' });
+  });
+
+  it('accepts an optional Known Index without changing the provider argument', async () => {
+    const knownIndex = createKnownCharacterIndex([{
+      ids: '⿰木可', character: '某', source: 'test', status: 'verified',
+    }]);
+
+    await expect(resolveIds('⿰木可', undefined, knownIndex)).resolves.toEqual({
+      kind: 'native', text: '某', sourceIds: '⿰木可',
+    });
   });
 
   it('returns unresolved for malformed IDS', async () => {
