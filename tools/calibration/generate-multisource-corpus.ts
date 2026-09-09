@@ -15,10 +15,8 @@ export type MultiSourceCalibrationEntry = {
   character: string;
   operator: string;
   components: string[];
-  source: string;
-  sourceVersion?: string;
-  retrievalMethod?: string;
-  sourceHash?: string;
+  /** Indices into the corpus-level sources array; avoids repeated metadata. */
+  sourceIndexes: number[];
   sampleRole: 'primary' | 'alternate';
 };
 
@@ -81,12 +79,24 @@ function withSampleRole(entry: CalibrationSample, sampleRole: 'primary' | 'alter
 function toEntries(
   entries: readonly CalibrationSample[],
   sampleRole: 'primary' | 'alternate',
+  sources: KnownCharacterMergedRecordsArtifact['sources'],
 ): { train: MultiSourceCalibrationEntry[]; holdout: MultiSourceCalibrationEntry[] } {
   const corpus = buildCalibrationCorpus(entries.map((entry) => withSampleRole(entry, sampleRole)));
-  const convert = (entry: typeof corpus.train[number]): MultiSourceCalibrationEntry => ({
-    ...entry,
-    sampleRole,
-  });
+  const convert = (entry: typeof corpus.train[number]): MultiSourceCalibrationEntry => {
+    const sourceIndexes = entry.source
+      .split(' + ')
+      .map((name) => sources.findIndex((source) => source.name === name))
+      .filter((index) => index >= 0);
+    if (sourceIndexes.length === 0) throw new Error(`Calibration source is not present in merged sources: ${entry.source}`);
+    return {
+      ids: entry.ids,
+      character: entry.character,
+      operator: entry.operator,
+      components: entry.components,
+      sourceIndexes,
+      sampleRole,
+    };
+  };
   return {
     train: corpus.train.map(convert),
     holdout: corpus.holdout.map(convert),
@@ -99,8 +109,8 @@ export function buildMultiSourceCalibrationCorpusArtifact(
   const entries = entriesFromKnownRecordsArtifact(artifact);
   const eligible = entries.filter(isCalibrationEligible);
   const samples = selectCalibrationSamples(eligible);
-  const primary = toEntries(samples.primary, 'primary');
-  const alternate = toEntries(samples.alternate, 'alternate');
+  const primary = toEntries(samples.primary, 'primary', artifact.sources);
+  const alternate = toEntries(samples.alternate, 'alternate', artifact.sources);
   const selected = primary.train.length + primary.holdout.length + alternate.train.length + alternate.holdout.length;
   return {
     corpus: {

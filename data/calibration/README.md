@@ -16,7 +16,7 @@ source revision・hash・licenseはcorpusの`source` objectと[CHISE-IDS-CORPUS-
 npm run calibration:build:corpus
 ```
 
-複数Source用の`corpus-multisource-v0.2.json`は、Unified Known artifactを明示入力して生成します。characterごとに決定的に1件を`primary`へ選び、残りのIDS表現を`alternate`へ分離するため、同じ完成字がtrain分布を不自然に重くしません。初期Source優先順位はCHISE、BabelStone、Yi Bai lv0/lv1/lv2です。これは測定前のsampling policyであり、配置精度やconfidenceを意味しません。
+複数Source用の`corpus-multisource-v0.2.json`は、Unified Known artifactを明示入力して生成します。characterごとに決定的に1件を`primary`へ選び、残りのIDS表現を`alternate`へ分離するため、同じ完成字がtrain分布を不自然に重くしません。初期Source優先順位はCHISE、BabelStone、Yi Bai lv0/lv1/lv2です。各レコードは`sourceIndexes`でcorpus-level `sources`を参照するcompact形式とし、出典metadataを繰り返しません。これは測定前のsampling policyであり、配置精度やconfidenceを意味しません。
 
 ```text
 npm run calibration:build:multisource

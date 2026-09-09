@@ -30,5 +30,7 @@ describe('multi-source calibration corpus generator', () => {
     expect(result.corpus.primary.holdout.map((entry) => entry.character)).toEqual(['柯']);
     expect(result.corpus.alternate.holdout.map((entry) => entry.ids)).toEqual(['⿲彳圭亍']);
     expect(result.corpus.alternate.holdout[0]?.sampleRole).toBe('alternate');
+    expect(result.corpus.primary.train[0]?.sourceIndexes).toEqual([0]);
+    expect(result.corpus.alternate.holdout[0]?.sourceIndexes).toEqual([1]);
   });
 });
