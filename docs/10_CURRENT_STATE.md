@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## 現在段階
 
-**v0.1.0 released / v0.2.0-dev.0 Known Character Multi-Source統合中**
+**v0.1.0 released / v0.2.0-dev.0 Calibration実測基盤 C0〜C4**
 
 ## 最新確定方針
 
@@ -50,6 +50,7 @@ Updated: 2026-09-09
 - v0.2 Resolver/Index hardening: scannerは閉じたunsupported IDCをnative問い合わせ可能なIDS segmentとして保持。explicit provider miss後のCHISE fallback、Known IndexのNFC lookup、原文provenance保持、external source generator、manual candidate policyを回帰テスト付きで固定。
 - v0.2 Structural Coverage: 14 spatial IDCのarity/role/layout/DOM処理をデータ駆動で追加。`⿾`/`⿿`は未対応のまま。
 - v0.2 Calibration Foundation: ink metrics、corpus split、loss report、純粋slot optimizer、IDC/role別Generic Layout Profile集約、profile適用の型・テストを追加。CHISE固定Known artifactからUnicode-onlyの97,482件（train 77,985 / holdout 19,497）をcompact corpusへ生成し、source hash/provenanceを保持。C1〜C3として`tools/calibration/measurement-config.ts`にfont/em/canvas/baseline条件、`tools/calibration/rasterize.ts`にtools専用native/composition alpha-mask rasterizer、`tools/calibration/measure-sample.ts`にmask比較とslot evidenceの入口を追加し、fake Canvasテストでnested root-absolute描画を固定した。実font raster測定・profile採用は未実施で、production runtimeへCanvas/SVGは導入していない。
+- v0.2 Calibration Source Boundary C0〜C4: `CalibrationSourceRecord`をKnown statusから分離し、BabelStone direct-J/X/Z、CHISE `@apparent`/functional、Yi Bai lv0 primary/alternativeをsource-specific adapterで分類する。NFC IDS ambiguityはdiagnosticへ残してtrainingから除外し、1 character 1 primaryとSHA-256 character単位80/20 splitを`tools/calibration/select.ts`、`split.ts`、`generate-source-corpus.ts`へ固定した。既存Unified Known/corpusはCalibration正本にせず保持している。
 - Mobile Pages v0.2 surface: 14 spatial IDC、Known candidate/nativeの区別、local composition、未対応IDCのsource-preserving fallbackを入力・候補・一覧で試せる状態へ更新。Full Known modeでは統合artifactの`⿲彳圭亍 → 街`を含むnative hit、CHISE not queried、結果表示を確認できる。巨大artifactはnpm packageへ入れず、Pages buildへassetとして出力し、dev serverでは同じURLを読み取り専用middlewareで配信する。
 
 ## 運用観測 / 次作業
@@ -65,7 +66,7 @@ v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3が
 - baseline補正値
 - npm registry/CDNへの公開手順
 - optional persistent cacheの必要性と仕様
-- v0.2 calibration corpusからの実fontによるtools限定raster測定、文字単位optimization、profile生成、holdout gate（固定条件・rasterizer・sampling policyまでは実装済み）
+- v0.2 Calibration C5以降: 固定font manifest/hash、fontkit coverage、Skia raster geometry、loss v1、optimizer、median profile、Sans/Serif holdout gate
 - 実fontの存在/tofu確認、native/compositionのC1〜C3 raster evidence、文字単位optimization、profile生成・holdout gate
 - v0.2 resolver pathの実測表示とCHISE live環境での再確認
 

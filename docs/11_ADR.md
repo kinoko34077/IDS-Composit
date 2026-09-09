@@ -112,3 +112,21 @@ Status: Accepted
 Status: Accepted
 
 v0.2要件は`docs/v0.2/00_INDEX.md`から章単位で参照し、受領原文は`docs/v0.2/source/`へ保全する。root正本には重複全文を置かず、変更理由と参照リンクだけを記録する。
+
+---
+
+## ADR-012 Resolver KnownとCalibration Sourceを分離
+
+Status: Accepted
+
+### 判断
+
+`known-index-v0.2.json`はnative Resolver専用とし、CalibrationはBabelStone/CHISE `@apparent`/Yi Bai lv0のsource adapterから専用`CalibrationSourceRecord`を生成する。
+
+### 理由
+
+文字同定としてのverified、functional IDS、地域variant、実glyph教師としての適格性は同じ判定ではない。Unified Indexをそのまま教師にすると、地域情報・apparent情報・ambiguityの意味が失われる。
+
+### 境界
+
+Calibration固有のrole・sampling・raster evidenceをResolver runtime型へ持ち込まない。既存Known/corpus artifactは履歴・比較用に保持する。

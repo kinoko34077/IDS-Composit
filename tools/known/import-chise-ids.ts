@@ -68,14 +68,24 @@ export type ChiseIdsFileStats = {
 
 export type ChiseIdsParseResult = {
   records: ExternalKnownRecord[];
+  /** The raw @apparent view is exposed for Calibration only; it is not a Known mapping. */
+  apparentRecords: ChiseApparentRecord[];
   issues: ChiseIdsIssue[];
   warnings: ChiseIdsWarning[];
   stats: ChiseIdsFileStats;
 };
 
+export type ChiseApparentRecord = {
+  ids: string;
+  character: string;
+  file: string;
+  line: number;
+};
+
 export type ChiseIdsParseBundle = {
   files: ChiseIdsFile[];
   records: ExternalKnownRecord[];
+  apparentRecords: ChiseApparentRecord[];
   issues: ChiseIdsIssue[];
   warnings: ChiseIdsWarning[];
   fileStats: ChiseIdsFileStats[];
@@ -163,6 +173,7 @@ function issue(
  */
 export function parseChiseIdsFile(text: string, file: string): ChiseIdsParseResult {
   const records: ExternalKnownRecord[] = [];
+  const apparentRecords: ChiseApparentRecord[] = [];
   const issues: ChiseIdsIssue[] = [];
   const warnings: ChiseIdsWarning[] = [];
   let comments = 0;
@@ -192,7 +203,15 @@ export function parseChiseIdsFile(text: string, file: string): ChiseIdsParseResu
       issues.push(issue(file, line, 'invalid-codepoint', `invalid Unicode scalar value: ${fields[0]}`));
       return;
     }
+    const character = String.fromCodePoint(codePoint);
+    if (sourceCharacter.length > 0 && sourceCharacter !== character) {
+      issues.push(issue(file, line, 'character-mismatch', `character field does not match ${fields[0]}`));
+      return;
+    }
     if (sourceCharacter.length > 0 && ids.length === 0 && apparentFields.length > 0) {
+      apparentFields.forEach((field) => {
+        apparentRecords.push({ ids: field.slice('@apparent='.length), character, file, line });
+      });
       warnings.push({
         file,
         line,
@@ -206,17 +225,15 @@ export function parseChiseIdsFile(text: string, file: string): ChiseIdsParseResu
       return;
     }
 
-    const character = String.fromCodePoint(codePoint);
-    if (sourceCharacter !== character) {
-      issues.push(issue(file, line, 'character-mismatch', `character field does not match ${fields[0]}`));
-      return;
-    }
-
+    apparentFields.forEach((field) => {
+      apparentRecords.push({ ids: field.slice('@apparent='.length), character, file, line });
+    });
     records.push({ ids, character, status: 'verified' });
   });
 
   return {
     records,
+    apparentRecords,
     issues,
     warnings,
     stats: {
@@ -236,6 +253,7 @@ export function parseChiseIdsFiles(files: readonly ChiseIdsFile[]): ChiseIdsPars
   return {
     files: [...files],
     records: results.flatMap((result) => result.records),
+    apparentRecords: results.flatMap((result) => result.apparentRecords),
     issues: results.flatMap((result) => result.issues),
     warnings: results.flatMap((result) => result.warnings),
     fileStats: results.map((result) => result.stats),

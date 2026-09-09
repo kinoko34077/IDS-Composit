@@ -25,6 +25,12 @@ describe('CHISE IDS importer', () => {
       { ids: '⿴行圭', character: '街', status: 'verified' },
       { ids: '⿱一木', character: '𠀀', status: 'verified' },
     ]);
+    expect(result.apparentRecords).toEqual([{
+      ids: '⿲彳圭亍',
+      character: '街',
+      file: 'IDS-UCS-Basic.txt',
+      line: 2,
+    }]);
     expect(result.stats).toEqual({
       file: 'IDS-UCS-Basic.txt',
       lines: 3,
@@ -45,6 +51,7 @@ describe('CHISE IDS importer', () => {
     ].join('\n'), 'broken.txt');
 
     expect(result.records).toEqual([]);
+    expect(result.apparentRecords).toEqual([]);
     expect(result.warnings).toEqual([]);
     expect(result.issues.map((issue) => issue.kind)).toEqual([
       'character-mismatch',
@@ -84,6 +91,12 @@ describe('CHISE IDS importer', () => {
     const result = parseChiseIdsFile('U-0002090E\t𠤎\t\t@apparent=⿻乚丿', 'IDS-UCS-Ext-B-1.txt');
 
     expect(result.records).toEqual([]);
+    expect(result.apparentRecords).toEqual([{
+      ids: '⿻乚丿',
+      character: '𠤎',
+      file: 'IDS-UCS-Ext-B-1.txt',
+      line: 1,
+    }]);
     expect(result.issues).toEqual([]);
     expect(result.warnings).toEqual([{
       file: 'IDS-UCS-Ext-B-1.txt',
