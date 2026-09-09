@@ -35,10 +35,11 @@ Updated: 2026-09-09
 - Phase 9.1 Release Audit: CHISE query-only variant normalization、unique IDSのbounded parallel resolve、normalized query単位のin-flight dedupe、実ブラウザ単一glyph copy確認、Supported IDC/LICENSE/CI gate整備
 - Phase 9.2 Internal Refactor: Layout→DOM、Text Node document rendering、copy/a11y、batch resolve、MutationObserverを責務別moduleへ分離。公開API・既存内部adapterの挙動は維持し、不要な`dom-renderer.ts` compatibility barrelを削除
 - Phase 9.2 Optimization Pass: providerなしの`renderIds`/`observeIds`は同期local composition経路を使用。MutationObserverは同一callback内の追加を親要素へ集約し、containment dedup後にrenderする。公開API・CHISE有効時のasync batch semanticsは維持
+- Mobile GitHub Pages: `examples/index.html`のスマホ確認入口、IDS入力・候補select・local/CHISE切替・パターン一覧、Pages専用multi-page build、main push deploy workflowを追加。入口URLは`https://kinoko34077.github.io/IDS-Composit/`
 
 ## 運用観測 / 次作業
 
-実装commit `6c016ab` のGitHub Actions CI Run #17、およびCI maintenance commit `f2e8f9b` のRun #19がgreenであることを確認済み。Run #19ではNode 20 deprecation warningも解消した。v0.1 RC2として実サイトdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
+実装commit `6c016ab` のGitHub Actions CI Run #17、およびCI maintenance commit `f2e8f9b` のRun #19がgreenであることを確認済み。Run #19ではNode 20 deprecation warningも解消した。スマートフォン確認面はPages workflowの初回deploy後にdogfoodingへ進み、追加課題は実利用で再現した箇所だけ小さく改善する。
 
 ## 残課題 / manual validation
 

@@ -23,6 +23,8 @@ CHISE を文字情報基盤として利用し、IDS（Ideographic Description Se
 - [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)
 - [Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)
 - [Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md)
+- [スマホ用Pages設計](docs/superpowers/specs/2026-09-09-mobile-pages-design.md)
+- [スマホ用Pages実装計画](docs/superpowers/plans/2026-09-09-mobile-pages.md)
 - [エージェント向け Phase 資料](docs/agent/PHASE_00_FOUNDATION.md)
 
 旧方針の要件定義書・ロードマップは [docs/archive](docs/archive/) に保存しています。現在の仕様と混同せず、方針変更の履歴・参考資料として扱います。
@@ -46,6 +48,14 @@ v0.1で対応するIDCは次の5種類です。未対応IDCは元の `⟦IDS⟧`
 ## 開発状況
 
 Phase 0〜9.2の実装（CHISE Adapter、local fallback、三項IDC、公開ESM/browser package、MutationObserver、contenteditable policy、cache hardening、a11y/copy、Release Audit、内部責務分離、targeted optimization）まで完了しています。観測結果と未決定事項は [Phase 6 visual validation記録](docs/validation/PHASE_06_VISUAL_VALIDATION.md)、[Phase 9 hardening記録](docs/validation/PHASE_09_HARDENING.md)、[Phase 9.2 refactor・optimization記録](docs/validation/PHASE_09_2_REFACTOR.md) に記録しています。
+
+## スマートフォンからの確認
+
+GitHub Pagesの入口: <https://kinoko34077.github.io/IDS-Composit/>
+
+入口ではIDSの直接入力、候補select、local composition / CHISE native優先の切替、対応パターン一覧を試せます。詳細ページへ直接移動する場合は、[Basic](https://kinoko34077.github.io/IDS-Composit/basic.html)、[Visual validation](https://kinoko34077.github.io/IDS-Composit/validation.html)、[CHISE live / CORS preflight](https://kinoko34077.github.io/IDS-Composit/chise-preflight.html)、[Consumer demo](https://kinoko34077.github.io/IDS-Composit/consumer.html)を使用してください。
+
+初回のみRepositoryのSettings → Pages → Build and deployment → Sourceで`GitHub Actions`を選択します。以後は`main`へのpushで`.github/workflows/pages.yml`がlibrary build後にPagesを更新します。
 
 ## 利用例
 

@@ -25,6 +25,7 @@
 - `validation/PHASE_06_VISUAL_VALIDATION.md`: Phase 6 corpusのbrowser目視・CHISE CORS preflight
 - `validation/PHASE_09_HARDENING.md`: Phase 8.5 GateとPhase 9 hardening記録
 - `validation/PHASE_09_2_REFACTOR.md`: Phase 9.2 refactor/targeted optimization scope、baseline、受入条件
+- `superpowers/specs/2026-09-09-mobile-pages-design.md`: スマートフォン用GitHub Pages確認面の設計
 
 ## Agent Phase Docs
 

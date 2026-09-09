@@ -30,5 +30,6 @@
 |REQ-026|`src/public-api.ts`, `src/renderer/render-document.ts`|`tests/public-api/public-api.test.ts` local provider-disabled synchronous fast path|
 |REQ-027|`src/runtime/observe-dom.ts`|`tests/runtime/observe-dom.test.ts`, `tests/performance/profile.test.ts` same-callback parent batching and containment dedup|
 |REQ-028|`.github/workflows/ci.yml`|GitHub Actions `CI #19` green、Node 20 deprecation warning解消のworkflow runtime更新|
+|REQ-029|`examples/index.html`, `examples/index.ts`, `examples/index.css`, `examples/playground-model.ts`, `vite.pages.config.ts`, `.github/workflows/pages.yml`|`tests/examples/playground-model.test.ts`, `tests/examples/index.test.ts`, `npm run build:pages`, Pages実ブラウザ確認|
 
 Phase 0〜9.1の実装済み項目は実ファイルとテストへ対応付けています。手動観測・次の仕様判断はvalidation recordとCurrent Stateへ分離しています。
