@@ -47,7 +47,7 @@ Updated: 2026-09-09
 
 ## 運用観測 / 次作業
 
-実装commit `6c016ab` のGitHub Actions CI Run #17、およびCI maintenance commit `f2e8f9b` のRun #19がgreenであることを確認済み。Run #19ではNode 20 deprecation warningも解消した。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。v0.2 first sliceの次はcalibration用raster測定・profile生成・holdout評価を実データで行い、Pagesで各解決経路を実ブラウザ確認する。
+v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。実ブラウザ確認を含む詳細は[v0.2 first slice validation record](validation/V0.2_FIRST_SLICE.md)に記録した。次はcalibration用raster測定・profile生成・holdout評価を実データで行い、Pagesのresolver表示を実測telemetryへ拡張するかを判断する。
 
 ## 残課題 / manual validation
 
