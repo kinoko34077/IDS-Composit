@@ -251,6 +251,14 @@ export async function initializePlayground(
   root.append(linksSection);
 
   let fullKnownIndexPromise: Promise<KnownCharacterIndex> | undefined;
+  let intentGeneration = 0;
+
+  const beginIntent = (): number => {
+    intentGeneration += 1;
+    return intentGeneration;
+  };
+
+  const isCurrentIntent = (generation: number): boolean => generation === intentGeneration;
 
   const ensureFullKnownIndex = async (): Promise<KnownCharacterIndex> => {
     if (fullKnownIndexPromise === undefined) {
@@ -262,10 +270,12 @@ export async function initializePlayground(
     return fullKnownIndexPromise;
   };
 
-  const getRenderContext = async (): Promise<RenderContext> => {
-    const selectedMode = modeFromValue(mode.value);
+  const getRenderContext = async (
+    selectedMode: ResolutionMode,
+    generation: number,
+  ): Promise<RenderContext> => {
     if (selectedMode === 'full-known' || selectedMode === 'full-known-chise') {
-      setStatus(status, 'Full Known Indexを読み込んでいます…');
+      if (isCurrentIntent(generation)) setStatus(status, 'Full Known Indexを読み込んでいます…');
       const knownIndex = await ensureFullKnownIndex();
       return {
         mode: selectedMode,
@@ -319,55 +329,82 @@ export async function initializePlayground(
     }
   };
 
-  const renderTarget = async (target: HTMLElement, ids: string): Promise<boolean> => {
+  const renderTarget = async (
+    target: HTMLElement,
+    ids: string,
+    selectedMode: ResolutionMode,
+    generation: number,
+  ): Promise<RenderContext | undefined> => {
     try {
-      const context = await getRenderContext();
-      await renderer(target, context.options);
+      const context = await getRenderContext(selectedMode, generation);
+      if (!isCurrentIntent(generation)) return undefined;
+
+      const stagedTarget = target.cloneNode(true) as HTMLElement;
+      await renderer(stagedTarget, context.options);
+      if (!isCurrentIntent(generation)) return undefined;
+
+      target.replaceChildren(...Array.from(stagedTarget.childNodes));
       setTelemetry(ids, context);
-      return true;
+      return context;
     } catch (error) {
-      setStatus(status, `表示中にエラーが発生しました: ${String(error)}`, 'error');
-      return false;
+      if (isCurrentIntent(generation)) {
+        setStatus(status, `表示中にエラーが発生しました: ${String(error)}`, 'error');
+      }
+      return undefined;
     }
   };
 
-  const renderPreview = async (): Promise<void> => {
+  const renderPreview = async (generation: number): Promise<void> => {
     const ids = sourceFromInput(input.value);
+    const selectedMode = modeFromValue(mode.value);
     const source = toDisplaySource(ids);
+    if (!isCurrentIntent(generation)) return;
     preview.replaceChildren(source.length > 0 ? text(document, source) : text(document, ''));
     if (ids.length === 0) {
       setStatus(status, 'IDSを入力してください。', 'error');
       return;
     }
-    const rendered = await renderTarget(preview, ids);
-    if (rendered) setStatus(status, `${modeDescription(modeFromValue(mode.value))}で表示しました。`);
+    const context = await renderTarget(preview, ids, selectedMode, generation);
+    if (context !== undefined && isCurrentIntent(generation)) {
+      setStatus(status, `${modeDescription(context.mode)}で表示しました。`);
+    }
   };
 
-  const renderTable = async (): Promise<void> => {
+  const renderTable = async (generation: number): Promise<void> => {
     const body = root.querySelector<HTMLTableSectionElement>('#pattern-table-body');
     if (body === null) return;
     const ids = sourceFromInput(input.value);
-    const rendered = await renderTarget(body, ids);
-    if (rendered) setStatus(status, `${modeDescription(modeFromValue(mode.value))}で一覧を表示しました。`);
+    const selectedMode = modeFromValue(mode.value);
+    const context = await renderTarget(body, ids, selectedMode, generation);
+    if (context !== undefined && isCurrentIntent(generation)) {
+      setStatus(status, `${modeDescription(context.mode)}で一覧を表示しました。`);
+    }
   };
 
+  input.addEventListener('input', () => {
+    beginIntent();
+  });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    void renderPreview();
+    const generation = beginIntent();
+    void renderPreview(generation);
   });
   candidate.addEventListener('change', () => {
     const selected = PATTERN_CASES.find((pattern) => pattern.id === candidate.value);
     if (selected !== undefined) {
       input.value = selected.source;
-      void renderPreview();
+      const generation = beginIntent();
+      void renderPreview(generation);
     }
   });
   mode.addEventListener('change', () => {
-    void renderPreview();
-    void renderTable();
+    const generation = beginIntent();
+    void renderPreview(generation);
+    void renderTable(generation);
   });
 
-  await renderTable();
+  const initialGeneration = beginIntent();
+  await renderTable(initialGeneration);
 }
 
 const playground = document.querySelector<HTMLElement>('#playground');
