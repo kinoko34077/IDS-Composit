@@ -47,7 +47,9 @@ describe('mobile playground UI', () => {
     if (input === null || candidate === null || form === null) throw new Error('Playground controls are missing');
     candidate.value = 'nested';
     candidate.dispatchEvent(new Event('change'));
+    await flushUi();
     expect(input.value).toBe('⿰木⿱日月');
+    expect(render).toHaveBeenCalledTimes(2);
 
     input.value = '⿰木可';
     form.requestSubmit();
