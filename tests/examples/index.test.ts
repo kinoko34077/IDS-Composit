@@ -12,6 +12,17 @@ async function flushUi(): Promise<void> {
   await new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
 
+function deferred<T>(): {
+  promise: Promise<T>;
+  resolve: (value: T) => void;
+} {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 describe('mobile playground UI', () => {
   it('renders the candidate catalog and lets a user submit an IDS source', async () => {
     const root = document.createElement('main');
@@ -36,7 +47,9 @@ describe('mobile playground UI', () => {
     if (input === null || candidate === null || form === null) throw new Error('Playground controls are missing');
     candidate.value = 'nested';
     candidate.dispatchEvent(new Event('change'));
+    await flushUi();
     expect(input.value).toBe('⿰木⿱日月');
+    expect(render).toHaveBeenCalledTimes(2);
 
     input.value = '⿰木可';
     form.requestSubmit();
@@ -89,6 +102,56 @@ describe('mobile playground UI', () => {
       chise: false,
       knownIndex,
     }));
+  });
+
+  it('keeps the newest input and mode when an older Full Known render completes later', async () => {
+    const root = document.createElement('main');
+    const knownIndex = createKnownCharacterIndex([{
+      ids: '⿲彳圭亍',
+      character: '街',
+      source: 'BabelStone IDS',
+      status: 'verified',
+    }]);
+    const pendingKnown = deferred<typeof knownIndex>();
+    const loadFullKnownIndex = vi.fn(() => pendingKnown.promise);
+    const render = vi.fn<PlaygroundRenderer>(async (target, options) => {
+      const marker = target.ownerDocument.createElement('i');
+      marker.textContent = options?.knownIndex ? 'KNOWN-RENDER' : 'LOCAL-RENDER';
+      target.append(marker);
+    });
+
+    await initializePlayground(root, render, loadFullKnownIndex);
+
+    const input = root.querySelector<HTMLInputElement>('#ids-input');
+    const mode = root.querySelector<HTMLSelectElement>('#resolution-mode');
+    const form = root.querySelector<HTMLFormElement>('#ids-form');
+    if (input === null || mode === null || form === null) throw new Error('Playground controls are missing');
+
+    input.value = '⿲彳圭亍';
+    mode.value = 'full-known';
+    mode.dispatchEvent(new Event('change'));
+    await flushUi();
+
+    input.value = '⿰木可';
+    mode.value = 'local';
+    form.requestSubmit();
+    await flushUi();
+
+    expect(root.querySelector('#preview')?.textContent).toContain('⟦⿰木可⟧');
+    expect(root.querySelector('#preview')?.textContent).toContain('LOCAL-RENDER');
+    expect(root.querySelector('#resolution-telemetry')?.textContent).toContain('Input⟦⿰木可⟧');
+    expect(root.querySelector('#resolution-telemetry')?.textContent).toContain('ModeLocal only');
+
+    pendingKnown.resolve(knownIndex);
+    await flushUi();
+    await flushUi();
+
+    expect(root.querySelector('#preview')?.textContent).toContain('⟦⿰木可⟧');
+    expect(root.querySelector('#preview')?.textContent).toContain('LOCAL-RENDER');
+    expect(root.querySelector('#preview')?.textContent).not.toContain('KNOWN-RENDER');
+    expect(root.querySelector('#resolution-telemetry')?.textContent).toContain('Input⟦⿰木可⟧');
+    expect(root.querySelector('#resolution-telemetry')?.textContent).toContain('ModeLocal only');
+    expect(root.querySelector('#status')?.textContent).toBe('Local onlyで表示しました。');
   });
 
   it('hydrates the Pages asset through the explicit loader boundary', async () => {

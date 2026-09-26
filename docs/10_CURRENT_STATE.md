@@ -1,6 +1,6 @@
 # Current State
 
-Updated: 2026-09-10
+Updated: 2026-09-26
 
 ## 現在段階
 
@@ -38,6 +38,7 @@ Updated: 2026-09-10
 - Phase 9.2 Internal Refactor: Layout→DOM、Text Node document rendering、copy/a11y、batch resolve、MutationObserverを責務別moduleへ分離。公開API・既存内部adapterの挙動は維持し、不要な`dom-renderer.ts` compatibility barrelを削除
 - Phase 9.2 Optimization Pass: providerなしの`renderIds`/`observeIds`は同期local composition経路を使用。MutationObserverは同一callback内の追加を親要素へ集約し、containment dedup後にrenderする。公開API・CHISE有効時のasync batch semanticsは維持
 - Mobile GitHub Pages: `examples/index.html`のスマホ確認入口、IDS入力・候補select・`Local only`/`CHISE API`/`Full Known Index`/`Full Known + CHISE`切替・パターン一覧、Pages専用multi-page build、main push deploy workflowを追加。Full Known artifactは選択時だけ遅延ロードし、Known lookup/CHISE照会有無/native・composition・fallbackのtelemetryを表示する。入口URLは`https://kinoko34077.github.io/IDS-Composit/`
+- Mobile Pages async lifecycle maintenance: input/candidate/modeの各user intentをgenerationで識別し、rendererはdetached DOMへ描画した後、最新intentだけをpreview/table/status/telemetryへcommitする。遅いFull Known/CHISE処理が後から完了しても新しいLocal/input状態を上書きしない。requestごとにinput/modeをcaptureし、成功statusもそのcontextに基づく。Full Knownの遅延load・共有Promise・resolver順序は変更していない。
 - v0.2 Documentation: 新要件を`docs/v0.2/`の章別文書へ分割し、`docs/v0.2/00_INDEX.md`を参照入口とした。原資料は`docs/v0.2/source/`に保存。
 - v0.2 Compatibility: `tests/compat/v0-1-runtime.test.ts`で公開API、fallback、contenteditable、provider障害、observer停止、copy/a11y metadataの基準を固定。
 - v0.2 Known Character Index: NFC lookup key、出典付きverified/candidate、many-to-many lookup、ambiguity handlingを実装。初期手動seed `⿲彳圭亍 → 街`は外部確認待ちのcandidateとして保持し、native/Calibrationから除外。external source artifactの決定的generator、compact bulk artifactの明示hydrate境界も追加。
@@ -56,7 +57,7 @@ Updated: 2026-09-10
 
 ## 運用観測 / 次作業
 
-v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。hardening commit `bb5e5a6` はpush済みで、GitHub Actions CI Run #27とPages Run #5もcompleted successfully、公開入口のcandidate表記を含む現行Pagesを確認済み。Importer・Calibration corpus追加後のcommit `95fb6cf` は全33 test files / 188 tests、本体・tools typecheck、library/Pages build、package dry-runを通過し、同commitのCI Run #29とPages Run #7がcompleted/success、公開入口がHTTP 200であることをGitHub APIでも確認済み。直近の実データ生成ではBabelStone、Yi Bai lv0/lv1/lv2、CHISE+各SourceのUnified artifact、cross-source report、sampling corpusを固定hash付きで生成した。今回のC0〜C16では、Calibration専用source corpus、固定font manifest/hash、fontkit coverage、実Skia raster、Loss v1、optimizer、median profile、Sans/Serif gate、runtime profile、Pages三者比較までを追加した。⿰のcompact gate reportは`data/calibration/operator-u2ff0-v0.2.json`、runtime profileは`data/layout-profiles/v0.2.json`に保存している。C17最終Gate（2026-09-10）は全57 test files / 257 tests、runtime/tools typecheck、font hash verification、library build、Pages build、pack dry-run、artifact/package境界、git diff checkを通過した。library bundleは22.42 kB（gzip 6.75 kB）、PagesにはCalibration reportとFull Known assetを出力し、npm packageは16.7 kB / 45 filesでfont binary・bulk artifactを含まない。v0.2.0-dev.0はv0.2 RC候補として扱い、次はresolver pathの実測再確認、dogfooding、必要な追加operator測定のみとする。
+v0.2 first-slice commit `7f62c6e` のGitHub Actions CI Run #25とPages Run #3がcompleted successfullyであることを確認済み。v0.1.0 Releaseは[GitHub Release](https://github.com/kinoko34077/IDS-Composit/releases/tag/v0.1.0)で公開済み。hardening commit `bb5e5a6` はpush済みで、GitHub Actions CI Run #27とPages Run #5もcompleted successfully、公開入口のcandidate表記を含む現行Pagesを確認済み。Importer・Calibration corpus追加後のcommit `95fb6cf` は全33 test files / 188 tests、本体・tools typecheck、library/Pages build、package dry-runを通過し、同commitのCI Run #29とPages Run #7がcompleted/success、公開入口がHTTP 200であることをGitHub APIでも確認済み。直近の実データ生成ではBabelStone、Yi Bai lv0/lv1/lv2、CHISE+各SourceのUnified artifact、cross-source report、sampling corpusを固定hash付きで生成した。今回のC0〜C16では、Calibration専用source corpus、固定font manifest/hash、fontkit coverage、実Skia raster、Loss v1、optimizer、median profile、Sans/Serif gate、runtime profile、Pages三者比較までを追加した。⿰のcompact gate reportは`data/calibration/operator-u2ff0-v0.2.json`、runtime profileは`data/layout-profiles/v0.2.json`に保存している。C17最終Gate（2026-09-10）は全57 test files / 257 tests、runtime/tools typecheck、font hash verification、library build、Pages build、pack dry-run、artifact/package境界、git diff checkを通過した。library bundleは22.42 kB（gzip 6.75 kB）、PagesにはCalibration reportとFull Known assetを出力し、npm packageは16.7 kB / 45 filesでfont binary・bulk artifactを含まない。v0.2.0-dev.0はv0.2 RC候補として扱う。2026-09-26のPages async lifecycle maintenanceでは、out-of-order Full Known completionを再現する回帰を追加し、latest-intent commit境界を実装した。CI `36232476670` で258/258 tests、本体・tools typecheck、library build、package contents checkがsuccess。次はresolver pathの実測再確認、dogfooding、必要な追加operator測定のみとする。
 
 ## 残課題 / manual validation
 
