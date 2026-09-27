@@ -251,14 +251,21 @@ export async function initializePlayground(
   root.append(linksSection);
 
   let fullKnownIndexPromise: Promise<KnownCharacterIndex> | undefined;
-  let intentGeneration = 0;
+  let previewIntentGeneration = 0;
+  let tableIntentGeneration = 0;
 
-  const beginIntent = (): number => {
-    intentGeneration += 1;
-    return intentGeneration;
+  const beginPreviewIntent = (): number => {
+    previewIntentGeneration += 1;
+    return previewIntentGeneration;
   };
 
-  const isCurrentIntent = (generation: number): boolean => generation === intentGeneration;
+  const beginTableIntent = (): number => {
+    tableIntentGeneration += 1;
+    return tableIntentGeneration;
+  };
+
+  const isCurrentPreviewIntent = (generation: number): boolean => generation === previewIntentGeneration;
+  const isCurrentTableIntent = (generation: number): boolean => generation === tableIntentGeneration;
 
   const ensureFullKnownIndex = async (): Promise<KnownCharacterIndex> => {
     if (fullKnownIndexPromise === undefined) {
@@ -273,6 +280,7 @@ export async function initializePlayground(
   const getRenderContext = async (
     selectedMode: ResolutionMode,
     generation: number,
+    isCurrentIntent: (generation: number) => boolean,
   ): Promise<RenderContext> => {
     if (selectedMode === 'full-known' || selectedMode === 'full-known-chise') {
       if (isCurrentIntent(generation)) setStatus(status, 'Full Known Indexを読み込んでいます…');
@@ -334,9 +342,10 @@ export async function initializePlayground(
     ids: string,
     selectedMode: ResolutionMode,
     generation: number,
+    isCurrentIntent: (generation: number) => boolean,
   ): Promise<RenderContext | undefined> => {
     try {
-      const context = await getRenderContext(selectedMode, generation);
+      const context = await getRenderContext(selectedMode, generation, isCurrentIntent);
       if (!isCurrentIntent(generation)) return undefined;
 
       const stagedTarget = target.cloneNode(true) as HTMLElement;
@@ -358,14 +367,14 @@ export async function initializePlayground(
     const ids = sourceFromInput(input.value);
     const selectedMode = modeFromValue(mode.value);
     const source = toDisplaySource(ids);
-    if (!isCurrentIntent(generation)) return;
+    if (!isCurrentPreviewIntent(generation)) return;
     preview.replaceChildren(source.length > 0 ? text(document, source) : text(document, ''));
     if (ids.length === 0) {
       setStatus(status, 'IDSを入力してください。', 'error');
       return;
     }
-    const context = await renderTarget(preview, ids, selectedMode, generation);
-    if (context !== undefined && isCurrentIntent(generation)) {
+    const context = await renderTarget(preview, ids, selectedMode, generation, isCurrentPreviewIntent);
+    if (context !== undefined && isCurrentPreviewIntent(generation)) {
       setStatus(status, `${modeDescription(context.mode)}で表示しました。`);
     }
   };
@@ -375,35 +384,36 @@ export async function initializePlayground(
     if (body === null) return;
     const ids = sourceFromInput(input.value);
     const selectedMode = modeFromValue(mode.value);
-    const context = await renderTarget(body, ids, selectedMode, generation);
-    if (context !== undefined && isCurrentIntent(generation)) {
+    const context = await renderTarget(body, ids, selectedMode, generation, isCurrentTableIntent);
+    if (context !== undefined && isCurrentTableIntent(generation)) {
       setStatus(status, `${modeDescription(context.mode)}で一覧を表示しました。`);
     }
   };
 
   input.addEventListener('input', () => {
-    beginIntent();
+    beginPreviewIntent();
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const generation = beginIntent();
+    const generation = beginPreviewIntent();
     void renderPreview(generation);
   });
   candidate.addEventListener('change', () => {
     const selected = PATTERN_CASES.find((pattern) => pattern.id === candidate.value);
     if (selected !== undefined) {
       input.value = selected.source;
-      const generation = beginIntent();
+      const generation = beginPreviewIntent();
       void renderPreview(generation);
     }
   });
   mode.addEventListener('change', () => {
-    const generation = beginIntent();
-    void renderPreview(generation);
-    void renderTable(generation);
+    const previewGeneration = beginPreviewIntent();
+    const tableGeneration = beginTableIntent();
+    void renderPreview(previewGeneration);
+    void renderTable(tableGeneration);
   });
 
-  const initialGeneration = beginIntent();
+  const initialGeneration = beginTableIntent();
   await renderTable(initialGeneration);
 }
 
