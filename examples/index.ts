@@ -253,6 +253,7 @@ export async function initializePlayground(
   let fullKnownIndexPromise: Promise<KnownCharacterIndex> | undefined;
   let previewIntentGeneration = 0;
   let tableIntentGeneration = 0;
+  let presentationIntentGeneration = 0;
 
   const beginPreviewIntent = (): number => {
     previewIntentGeneration += 1;
@@ -264,8 +265,14 @@ export async function initializePlayground(
     return tableIntentGeneration;
   };
 
+  const beginPresentationIntent = (): number => {
+    presentationIntentGeneration += 1;
+    return presentationIntentGeneration;
+  };
+
   const isCurrentPreviewIntent = (generation: number): boolean => generation === previewIntentGeneration;
   const isCurrentTableIntent = (generation: number): boolean => generation === tableIntentGeneration;
+  const isCurrentPresentationIntent = (generation: number): boolean => generation === presentationIntentGeneration;
 
   const ensureFullKnownIndex = async (): Promise<KnownCharacterIndex> => {
     if (fullKnownIndexPromise === undefined) {
@@ -280,10 +287,13 @@ export async function initializePlayground(
   const getRenderContext = async (
     selectedMode: ResolutionMode,
     generation: number,
+    presentationGeneration: number,
     isCurrentIntent: (generation: number) => boolean,
   ): Promise<RenderContext> => {
     if (selectedMode === 'full-known' || selectedMode === 'full-known-chise') {
-      if (isCurrentIntent(generation)) setStatus(status, 'Full Known Indexを読み込んでいます…');
+      if (isCurrentIntent(generation) && isCurrentPresentationIntent(presentationGeneration)) {
+        setStatus(status, 'Full Known Indexを読み込んでいます…');
+      }
       const knownIndex = await ensureFullKnownIndex();
       return {
         mode: selectedMode,
@@ -342,10 +352,16 @@ export async function initializePlayground(
     ids: string,
     selectedMode: ResolutionMode,
     generation: number,
+    presentationGeneration: number,
     isCurrentIntent: (generation: number) => boolean,
   ): Promise<RenderContext | undefined> => {
     try {
-      const context = await getRenderContext(selectedMode, generation, isCurrentIntent);
+      const context = await getRenderContext(
+        selectedMode,
+        generation,
+        presentationGeneration,
+        isCurrentIntent,
+      );
       if (!isCurrentIntent(generation)) return undefined;
 
       const stagedTarget = target.cloneNode(true) as HTMLElement;
@@ -353,68 +369,99 @@ export async function initializePlayground(
       if (!isCurrentIntent(generation)) return undefined;
 
       target.replaceChildren(...Array.from(stagedTarget.childNodes));
-      setTelemetry(ids, context);
+      if (isCurrentPresentationIntent(presentationGeneration)) {
+        setTelemetry(ids, context);
+      }
       return context;
     } catch (error) {
-      if (isCurrentIntent(generation)) {
+      if (isCurrentIntent(generation) && isCurrentPresentationIntent(presentationGeneration)) {
         setStatus(status, `表示中にエラーが発生しました: ${String(error)}`, 'error');
       }
       return undefined;
     }
   };
 
-  const renderPreview = async (generation: number): Promise<void> => {
+  const renderPreview = async (generation: number, presentationGeneration: number): Promise<void> => {
     const ids = sourceFromInput(input.value);
     const selectedMode = modeFromValue(mode.value);
     const source = toDisplaySource(ids);
     if (!isCurrentPreviewIntent(generation)) return;
     preview.replaceChildren(source.length > 0 ? text(document, source) : text(document, ''));
     if (ids.length === 0) {
-      setStatus(status, 'IDSを入力してください。', 'error');
+      if (isCurrentPresentationIntent(presentationGeneration)) {
+        setStatus(status, 'IDSを入力してください。', 'error');
+      }
       return;
     }
-    const context = await renderTarget(preview, ids, selectedMode, generation, isCurrentPreviewIntent);
-    if (context !== undefined && isCurrentPreviewIntent(generation)) {
+    const context = await renderTarget(
+      preview,
+      ids,
+      selectedMode,
+      generation,
+      presentationGeneration,
+      isCurrentPreviewIntent,
+    );
+    if (
+      context !== undefined
+      && isCurrentPreviewIntent(generation)
+      && isCurrentPresentationIntent(presentationGeneration)
+    ) {
       setStatus(status, `${modeDescription(context.mode)}で表示しました。`);
     }
   };
 
-  const renderTable = async (generation: number): Promise<void> => {
+  const renderTable = async (generation: number, presentationGeneration: number): Promise<void> => {
     const body = root.querySelector<HTMLTableSectionElement>('#pattern-table-body');
     if (body === null) return;
     const ids = sourceFromInput(input.value);
     const selectedMode = modeFromValue(mode.value);
-    const context = await renderTarget(body, ids, selectedMode, generation, isCurrentTableIntent);
-    if (context !== undefined && isCurrentTableIntent(generation)) {
+    const context = await renderTarget(
+      body,
+      ids,
+      selectedMode,
+      generation,
+      presentationGeneration,
+      isCurrentTableIntent,
+    );
+    if (
+      context !== undefined
+      && isCurrentTableIntent(generation)
+      && isCurrentPresentationIntent(presentationGeneration)
+    ) {
       setStatus(status, `${modeDescription(context.mode)}で一覧を表示しました。`);
     }
   };
 
   input.addEventListener('input', () => {
     beginPreviewIntent();
+    beginPresentationIntent();
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const generation = beginPreviewIntent();
-    void renderPreview(generation);
+    const presentationGeneration = beginPresentationIntent();
+    void renderPreview(generation, presentationGeneration);
   });
   candidate.addEventListener('change', () => {
     const selected = PATTERN_CASES.find((pattern) => pattern.id === candidate.value);
     if (selected !== undefined) {
       input.value = selected.source;
       const generation = beginPreviewIntent();
-      void renderPreview(generation);
+      const presentationGeneration = beginPresentationIntent();
+      void renderPreview(generation, presentationGeneration);
     }
   });
   mode.addEventListener('change', () => {
     const previewGeneration = beginPreviewIntent();
     const tableGeneration = beginTableIntent();
-    void renderPreview(previewGeneration);
-    void renderTable(tableGeneration);
+    const presentationGeneration = beginPresentationIntent();
+    void renderPreview(previewGeneration, presentationGeneration);
+    void renderTable(tableGeneration, presentationGeneration);
   });
 
   const initialGeneration = beginTableIntent();
-  await renderTable(initialGeneration);
+  const initialPresentationGeneration = beginPresentationIntent();
+  await renderTable(initialGeneration, initialPresentationGeneration);
 }
 
 const playground = document.querySelector<HTMLElement>('#playground');
