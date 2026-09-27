@@ -1,10 +1,28 @@
 # Current State
 
-Updated: 2026-09-26
+Updated: 2026-09-27
 
 ## 現在段階
 
 **v0.1.0 released / v0.2.0-dev.0 Calibration実測基盤 C0〜C17**
+
+## Current accepted main — Pages lifecycle maintenance
+
+- Accepted main: `b6343b6cc870ea9c385538a9a0aac4fb41e46a6d`
+- Accepted maintenance: Issue #3 / PR #4, `f8851da9a96e871c79d40f36bbbd9dc60ccc58b5` before merge
+- Current-head CI: `36307532543` — tests, runtime/tools typecheck, builds, and package-content checks passed
+- Scope: Pages validation UI request lifecycle only; resolver, Known, CHISE, calibration, and runtime-renderer semantics are unchanged
+
+### Intent authority
+
+- Preview and pattern table have independent intent generations.
+- Input/candidate changes invalidate preview and shared presentation only; they do not discard independent in-flight table work.
+- Resolution-mode changes invalidate preview, table, and shared presentation.
+- Status/telemetry commits require the shared presentation generation to remain current.
+- An older table/Full Known completion may finish valid table work for its own table intent, but cannot overwrite newer preview, status, or telemetry state.
+- Detached staging and request-local input/mode capture remain in force.
+
+The exact acceptance contract is `docs/v0.2/09_PAGES_AND_VALIDATION.md`; the older combined-generation wording below is historical context, not a competing authority.
 
 ## 最新確定方針
 
@@ -38,7 +56,7 @@ Updated: 2026-09-26
 - Phase 9.2 Internal Refactor: Layout→DOM、Text Node document rendering、copy/a11y、batch resolve、MutationObserverを責務別moduleへ分離。公開API・既存内部adapterの挙動は維持し、不要な`dom-renderer.ts` compatibility barrelを削除
 - Phase 9.2 Optimization Pass: providerなしの`renderIds`/`observeIds`は同期local composition経路を使用。MutationObserverは同一callback内の追加を親要素へ集約し、containment dedup後にrenderする。公開API・CHISE有効時のasync batch semanticsは維持
 - Mobile GitHub Pages: `examples/index.html`のスマホ確認入口、IDS入力・候補select・`Local only`/`CHISE API`/`Full Known Index`/`Full Known + CHISE`切替・パターン一覧、Pages専用multi-page build、main push deploy workflowを追加。Full Known artifactは選択時だけ遅延ロードし、Known lookup/CHISE照会有無/native・composition・fallbackのtelemetryを表示する。入口URLは`https://kinoko34077.github.io/IDS-Composit/`
-- Mobile Pages async lifecycle maintenance: input/candidate/modeの各user intentをgenerationで識別し、rendererはdetached DOMへ描画した後、最新intentだけをpreview/table/status/telemetryへcommitする。遅いFull Known/CHISE処理が後から完了しても新しいLocal/input状態を上書きしない。requestごとにinput/modeをcaptureし、成功statusもそのcontextに基づく。Full Knownの遅延load・共有Promise・resolver順序は変更していない。
+- Mobile Pages async lifecycle maintenance (Issue #3 / PR #4): preview/tableのintent generationを分離し、input/candidate変更はpreview + shared presentationのみ、mode変更はpreview + table + shared presentationをinvalidateする。status/telemetryはshared presentation generationで保護し、古いtable/Full Known処理は自分のtable描画を完了できても新しいpreview/status/telemetryを上書きしない。detached stagingとrequestごとのinput/mode captureを維持し、Full Knownの遅延load・共有Promise・resolver順序・resolver/Known/CHISE/calibration/runtime-renderer意味論は変更していない。
 - v0.2 Documentation: 新要件を`docs/v0.2/`の章別文書へ分割し、`docs/v0.2/00_INDEX.md`を参照入口とした。原資料は`docs/v0.2/source/`に保存。
 - v0.2 Compatibility: `tests/compat/v0-1-runtime.test.ts`で公開API、fallback、contenteditable、provider障害、observer停止、copy/a11y metadataの基準を固定。
 - v0.2 Known Character Index: NFC lookup key、出典付きverified/candidate、many-to-many lookup、ambiguity handlingを実装。初期手動seed `⿲彳圭亍 → 街`は外部確認待ちのcandidateとして保持し、native/Calibrationから除外。external source artifactの決定的generator、compact bulk artifactの明示hydrate境界も追加。
