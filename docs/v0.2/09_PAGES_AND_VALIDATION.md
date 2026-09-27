@@ -18,4 +18,6 @@ Calibration評価はtrainingを使わずholdoutだけで判定する。v0.1 fixe
 
 Full Known artifactは初期表示へ含めず、mode選択時にだけ`data/known-index-v0.2.json`から取得する。同一ページ内では読み込みPromiseを共有する。入口のtelemetryは、入力、Known lookup、CHISE照会予定、結果を表示する。Known hit時は`not queried (Known hit)`と示す。これはPages検証用の選択経路・Known lookup診断であり、CHISE live responseを捏造するものではない。
 
+Pagesの非同期commit権限はsurfaceごとに分離する。previewとpattern tableは独立したgenerationを持ち、入力・候補変更はpreviewだけをinvalidateし、resolution mode変更はpreviewとtableの双方をinvalidateする。これにより初期table render中の単なる入力でtable commitを失わない。一方、status/telemetryは共有presentation generationで保護し、古いtable/Full Known処理が新しいpreviewの入力・mode表示を後から上書きしない。
+
 代表受入例は、CHISEの`⿴行圭 → 街`とalternate sourceの`⿲彳圭亍 → 街`をFull Known Indexへhydrateし、双方をnative resolveできることである。表のresolver pathは固定説明、入口telemetryは選択modeとKnown artifactの実測結果として区別する。
