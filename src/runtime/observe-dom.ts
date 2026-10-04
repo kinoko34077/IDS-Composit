@@ -24,10 +24,16 @@ function elementForNode(node: Node): Element | null {
 
 function mutationTarget(mutation: MutationRecord): HTMLElement | null {
   if (mutation.target.nodeType === Node.ELEMENT_NODE) return mutation.target as HTMLElement;
+  if (mutation.type === 'characterData') return mutation.target.parentElement;
   return mutation.addedNodes[0]?.parentElement ?? null;
 }
 
-function hasNonGlyphAddition(mutation: MutationRecord): boolean {
+function hasRelevantNonGlyphMutation(mutation: MutationRecord): boolean {
+  if (mutation.type === 'characterData') {
+    const element = elementForNode(mutation.target);
+    return element !== null && element.closest('.ids-inline-glyph') === null;
+  }
+
   return Array.from(mutation.addedNodes).some((node) => {
     const element = elementForNode(node);
     return element?.closest('.ids-inline-glyph') === null;
@@ -41,7 +47,7 @@ function collectMutationTargets(
 ): HTMLElement[] {
   const targets: HTMLElement[] = [];
   for (const mutation of mutations) {
-    if (!hasNonGlyphAddition(mutation)) continue;
+    if (!hasRelevantNonGlyphMutation(mutation)) continue;
     const target = mutationTarget(mutation);
     if (target === null || target.classList.contains('ids-inline-glyph')) continue;
     if (target !== root && !root.contains(target)) continue;
@@ -77,7 +83,7 @@ export function observeIdsInElement(root: HTMLElement, options: ObserveIdsOption
   const observer = new MutationObserver((mutations) => {
     for (const target of collectMutationTargets(mutations, root, includeContentEditable)) enqueue(target);
   });
-  observer.observe(root, { childList: true, subtree: true });
+  observer.observe(root, { childList: true, characterData: true, subtree: true });
   enqueue(root);
 
   return {
