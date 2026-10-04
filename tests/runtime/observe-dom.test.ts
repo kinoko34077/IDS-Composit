@@ -8,6 +8,27 @@ async function flushObserver(): Promise<void> {
 }
 
 describe('observeIdsInElement', () => {
+  it('observes in-place characterData changes outside rendered glyphs', async () => {
+    const root = document.createElement('div');
+    const text = document.createTextNode('plain');
+    root.append(text);
+    const renderedTargets: HTMLElement[] = [];
+    const handle = observeIdsInElement(root, {
+      render: async (target) => {
+        renderedTargets.push(target);
+      },
+    });
+
+    await flushObserver();
+    renderedTargets.length = 0;
+
+    text.data = '⟦⿰木可⟧';
+    await flushObserver();
+
+    expect(renderedTargets).toEqual([root]);
+    handle.stop();
+  });
+
   it('coalesces same-callback additions to their common parent', async () => {
     const root = document.createElement('div');
     const renderedTargets: HTMLElement[] = [];
