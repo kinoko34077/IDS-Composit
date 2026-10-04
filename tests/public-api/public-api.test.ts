@@ -124,6 +124,54 @@ describe('renderIds', () => {
     expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
   });
 
+  it('observes an existing Text node changed in place to IDS', async () => {
+    const root = document.createElement('div');
+    const text = document.createTextNode('plain');
+    root.append(text);
+    const handle = observeIds(root);
+
+    await flushObserver();
+    text.data = 'X⟦⿰木可⟧Y';
+    await flushObserver();
+
+    expect(root.textContent).toBe('X木可Y');
+    expect(root.querySelectorAll('.ids-inline-glyph')).toHaveLength(1);
+    handle.stop();
+  });
+
+  it('does not overwrite newer Text content with a stale async provider result', async () => {
+    const root = document.createElement('div');
+    const text = document.createTextNode('A⟦⿰木可⟧B');
+    root.append(text);
+
+    let signalStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      signalStarted = resolve;
+    });
+    let releaseProvider!: () => void;
+    const providerResult = new Promise<{ found: true; text: string }>((resolve) => {
+      releaseProvider = () => resolve({ found: true, text: '字' });
+    });
+
+    const pending = renderIds(root, {
+      provider: {
+        matchIds: async () => {
+          signalStarted();
+          return providerResult;
+        },
+      },
+    });
+
+    await started;
+    text.data = 'newer source';
+    releaseProvider();
+    await pending;
+
+    expect(root.firstChild).toBe(text);
+    expect(root.textContent).toBe('newer source');
+    expect(root.querySelector('.ids-inline-glyph')).toBeNull();
+  });
+
   it('observes dynamic additions and stops without reprocessing rendered content', async () => {
     const root = document.createElement('div');
     const providerCalls: string[] = [];

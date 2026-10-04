@@ -110,16 +110,20 @@ export async function renderIdsInElementAsync(
   const textNodes: Text[] = [];
   collectTextNodes(root, textNodes, options.includeContentEditable === true);
   const scannedNodes = textNodes
-    .map((textNode) => ({ textNode, segments: scanEmbeddedIds(textNode.data) }))
+    .map((textNode) => ({
+      textNode,
+      source: textNode.data,
+      segments: scanEmbeddedIds(textNode.data),
+    }))
     .filter(({ segments }) => segments.some((segment) => segment.type === 'ids'));
   const ids = scannedNodes.flatMap(({ segments }) => segments
     .filter((segment): segment is Extract<TextSegment, { type: 'ids' }> => segment.type === 'ids')
     .map((segment) => segment.source));
   const resolutions = await resolveUniqueIds(ids, resolve, options.maxConcurrency);
 
-  for (const { textNode, segments } of scannedNodes) {
+  for (const { textNode, source, segments } of scannedNodes) {
     const parent = textNode.parentNode;
-    if (parent === null) continue;
+    if (parent === null || textNode.data !== source) continue;
 
     const fragment = textNode.ownerDocument.createDocumentFragment();
     for (const segment of segments) {
