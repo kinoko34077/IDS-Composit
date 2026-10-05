@@ -1,12 +1,29 @@
 # Current State
 
-Updated: 2026-09-27
+Updated: 2026-10-06
 
 ## 現在段階
 
 **v0.1.0 released / v0.2.0-dev.0 Calibration実測基盤 C0〜C17**
 
-## Current accepted main — Pages lifecycle maintenance
+## Current accepted main — observer / async source freshness maintenance
+
+- Accepted main: `e9d3917defb11a8f22fc3b7b4dae837e199b5988`
+- Accepted repair: Issue #7 / PR #8, reviewed head `abb003cc8915700dc61f1fe9114778be602b459c`
+- Exact-head CI: `37172242172` — tests, runtime/tools typecheck, library build, and package-content checks passed
+- Post-main CI: `37174888303` — SUCCESS
+- Explicitly authorized prior Pages deployment: `37174888348` — SUCCESS
+- Scope: public DOM observer / async Text-source freshness only; resolver priority, Known/CHISE authority, calibration, Pages intent generations, and DOM/CSS glyph structure are unchanged
+
+### Accepted freshness behavior
+
+- `observeIds()` / `observeIdsInElement()` observe relevant non-glyph `characterData` mutations as well as child-list additions.
+- In-place mutation of an existing Text node from ordinary text to IDS enters the existing render queue.
+- Async rendering retains the exact scanned Text source and commits only while the same Text node is still attached and unchanged.
+- A stale provider/CHISE completion cannot overwrite newer application-authored Text content.
+- Glyph self-mutation filtering, contenteditable default-off behavior, child-list coalescing, `stop()`, local synchronous rendering, and the public API remain preserved.
+
+## Prior accepted maintenance — Pages lifecycle (historical)
 
 - Accepted main: `b6343b6cc870ea9c385538a9a0aac4fb41e46a6d`
 - Accepted maintenance: Issue #3 / PR #4, `f8851da9a96e871c79d40f36bbbd9dc60ccc58b5` before merge
