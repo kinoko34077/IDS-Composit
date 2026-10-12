@@ -6,6 +6,7 @@
 import { createHash } from 'node:crypto';
 import { lstat, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { GeneratedKnownRecordsArtifact } from './generate-index.ts';
 import { mergeKnownRecordsArtifacts } from './merge-known-sources.ts';
 
@@ -78,7 +79,7 @@ export async function checkKnownMerge(): Promise<void> {
 }
 
 const entry = process.argv[1];
-if (entry !== undefined && resolve(entry) === resolve(new URL(import.meta.url).pathname)) {
+if (entry !== undefined && resolve(entry) === resolve(fileURLToPath(import.meta.url))) {
   checkKnownMerge().catch((error: unknown) => {
     console.error(error instanceof Error ? error.message : String(error));
     process.exitCode = 1;
