@@ -26,6 +26,8 @@ jobs:
         run: npm run typecheck
       - name: Typecheck tools
         run: npm run typecheck:tools
+      - name: Verify tracked Known merge (read-only)
+        run: npm run known:check:merge
       - name: Build package
         run: npm run build
       - name: Check package contents
