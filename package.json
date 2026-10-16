@@ -18,6 +18,7 @@
     "known:import:babelstone": "node --experimental-strip-types tools/known/import-babelstone-ids.ts",
     "known:import:yibai": "node --experimental-strip-types tools/known/import-yibai-ids.ts",
     "known:merge": "node --experimental-strip-types tools/known/merge-known-sources.ts",
+    "known:check:merge": "node --experimental-strip-types tools/known/check-merged-artifacts.ts",
     "pack:check": "npm pack --dry-run",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
