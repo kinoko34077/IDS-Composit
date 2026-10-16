@@ -1,12 +1,21 @@
 # Current State
 
-Updated: 2026-10-06
+Updated: 2026-10-16
 
 ## 現在段階
 
 **v0.1.0 released / v0.2.0-dev.0 Calibration実測基盤 C0〜C17**
 
-## Current accepted main — observer / async source freshness maintenance
+## Current accepted main — read-only Known verification and Pages (2026-10-16)
+
+- Accepted protected `main`: `e97c073cdd8e17dca6b205a45751694a46ec90c1`, after owner-authorized, guarded squash merges of [PR #12](https://github.com/kinoko34077/IDS-Composit/pull/12) and [PR #13](https://github.com/kinoko34077/IDS-Composit/pull/13).
+- [PR #12](https://github.com/kinoko34077/IDS-Composit/pull/12): fixed three Known source inputs; read-only in-memory regeneration and exact UTF-8 byte verification for two existing tracked outputs, via `npm run known:check:merge` added to regular CI. No artifact or notice rewrite. Merged as `e22e8fb073d4ec197c754fc413ce7e40eca1b69e`.
+- [PR #13](https://github.com/kinoko34077/IDS-Composit/pull/13): immutable reviewed devflow `7f4deb40c1d90268cef2a3cd3fdd75d35f05fbb5` pinned read-only `.github/workflows/verified-artifacts-rollout.yml`, `mode: dry-run` only, `contents:read`. Merged as current `main`. Caller is installed but no IDS Caller dispatch/live producer E2E proof or privileged writeback is accepted.
+- Final exact-main [CI #38852665151](https://github.com/kinoko34077/IDS-Composit/actions/runs/38852665151) **SUCCESS** including the Known merge step; final [Deploy GitHub Pages #38852665052](https://github.com/kinoko34077/IDS-Composit/actions/runs/38852665052) **SUCCESS** with build and deploy jobs. These source-only changes do not alter the IDS runtime renderer. Independent browser/HTTP rendering was not established by this GitHub Actions evidence.
+- The earlier docs-only [Issue #9](https://github.com/kinoko34077/IDS-Composit/issues/9) / [PR #10](https://github.com/kinoko34077/IDS-Composit/pull/10) publication is separately accepted (former main `0f8d37b4313271e1c447e847abb7f4046ea7331c`). Earlier observer/async-source repair below remains an accepted historical baseline, not the latest main.
+- **First unfinished:** [Issue #11](https://github.com/kinoko34077/IDS-Composit/issues/11) `W1_4_PRIVILEGED_IDS_WRITER_TARGET_SPECIFIC_SECURITY_HUMAN_ADMISSION`, separately gated and not authorized; [devflow #386](https://github.com/kinoko34077/devflow/issues/386) fleet rollout remains NO_GO. No `contents:write`, generated-output write, credential/permission/protection change, or automatic writer activation follows from these publications.
+
+## Historical accepted main — observer / async source freshness maintenance
 
 - Accepted main: `e9d3917defb11a8f22fc3b7b4dae837e199b5988`
 - Accepted repair: Issue #7 / PR #8, reviewed head `abb003cc8915700dc61f1fe9114778be602b459c`
