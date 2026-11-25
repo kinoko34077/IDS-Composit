@@ -77,10 +77,25 @@ GitHub Pagesの入口: <https://kinoko34077.github.io/IDS-Composit/>
 
 ## 利用例
 
+### npm + bundler（Vite等）
+
+インストール済みパッケージの公開exportsを、bundlerが処理するJavaScriptモジュールから利用します。
+
+```js
+import 'chise-ids-inline-renderer/style.css';
+import { observeIds, renderIds } from 'chise-ids-inline-renderer';
+await renderIds(document.body);
+const observer = observeIds(document.body);
+```
+
+### 静的HTML（bundlerなし）
+
+利用する版のパッケージ内 `dist/ids-composit.js` と `dist/ids-composit.css` をWeb配信先の `vendor/` に配置し、HTMLから相対URLで読み込みます。npmのexports名をそのままブラウザのURLとして指定しません。
+
 ```html
-<link rel="stylesheet" href="node_modules/chise-ids-inline-renderer/style.css" />
+<link rel="stylesheet" href="./vendor/ids-composit.css" />
 <script type="module">
-  import { observeIds, renderIds } from 'chise-ids-inline-renderer';
+  import { observeIds, renderIds } from './vendor/ids-composit.js';
   await renderIds(document.body);
   const observer = observeIds(document.body);
 </script>
